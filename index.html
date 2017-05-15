@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Computação Gráfica :: RCBDraw</title>
+	<link rel="stylesheet" type="text/css" href="libs/bootstrap/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+	<script type="text/javascript" src="libs/jquery/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="libs/bootstrap/bootstrap.min.js"></script>
+</head>
+<body>
+	<nav class="navbar navbar-default">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#">RCBDraw</a>
+			</div>
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Arquivo<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Novo</a></li>
+							<li><a href="#">Abrir...</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#">Salvar</a></li>
+							<li><a href="#">Salvar como...</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#">Sair</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ferramentas<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Seleção</a></li>
+							<li><a href="#">Exclusão</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#">Polígono</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Ajuda<span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<li><a href="#">Ajuda</a></li>
+							<li><a href="#" data-toggle="modal" data-target="#sobre">Sobre</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div id="sobre" class="modal fade">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title">RCBDraw</h3>
+					<p><em>Rosa, Canabarro & Baldi.</em></p>
+				</div>
+				<div class="modal-body">
+					<p>Ferramenta web para manipulação de polígonos 2D.</p>
+					<p><br></p>
+					<p>Trabalho da disciplina de Computação Gráfica do curso de Ciência da Computação da Universidade Estadual do Oeste do Paraná (UNIOESTE) sob orientação do professor Adair Santa Catarina.</p>
+					<p><br></p>
+					<p>Cascavel, Paraná - 2017</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('dropdown-toggle').dropdown()
+		});
+	</script>
+</body>
+</html>
