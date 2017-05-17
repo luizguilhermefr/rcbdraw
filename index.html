@@ -37,7 +37,7 @@
                         <li><a href="#">Excluir</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">Mão livre</a></li>
-                        <li><a href="#">Polígono de n lados</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#poligono_n">Polígono de n lados</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -68,7 +68,30 @@
                 <p>Cascavel, Paraná - 2017</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Adicionar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="poligono_n" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Poligono de N Lados</h3>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Lados</label>
+                    <input id="sides-number" min="3" type="number" class="form-control" placeholder="Lados">
+                    <label>Tamanho</label>
+                    <input value="5" id="size-number" min="5" type="number" class="form-control" placeholder="Tamanho (px)">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="sides-number-ok" type="button" class="btn btn-primary">
+                    Ok
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>
@@ -79,12 +102,26 @@
     Procure atualizá-lo.
 </canvas>
 <script type="text/javascript">
-  $(document).ready(function () {
-    $('dropdown-toggle').dropdown();
-    var drawInterface = new Interface(document.getElementById('drawpanel'));
-    drawInterface.drawExample();
-    drawInterface.clearAll();
-  });
+    $(document).ready(function () {
+        $('dropdown-toggle').dropdown();
+        var drawInterface = new Interface(document.getElementById('drawpanel'));
+        $('#sides-number-ok').click(function () {
+            sides = $('#sides-number').val();
+            size = $('#size-number').val();
+            if (sides < 3) {
+                alert('nao deu (lados)');
+                $('#sides-number').val('');
+            } else if (size < 5) {
+                alert('nao deu (tamanho)');
+                $('#size-number').val(5);
+            } else {
+                drawInterface.drawPolygon(sides);
+                $('#poligono_n').modal('hide');
+                $('#sides-number').val('');
+                $('#size-number').val(5);
+            }
+        });
+    });
 </script>
 </body>
 </html>
