@@ -1,0 +1,16 @@
+html, body {
+    overflow: hidden;
+}
+
+.navbar {
+    margin-bottom: 0;
+}
+
+div.drawpanel{
+    padding:0;
+}
+
+canvas#drawpanel {
+    background-color: #eeeeee;
+    width: 100%;
+}
