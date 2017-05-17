@@ -74,18 +74,17 @@
     </div>
 </div>
 <div class="col-md-1" style="border: solid 1px black">Here goes the toolbar</div>
-<div class="col-md-11 drawpanel">
-    <canvas id="drawpanel">
-        Seu navegador não suporta o Canvas do HTML5. <br>
-        Procure atualizá-lo.
-    </canvas>
-</div>
+<canvas id="drawpanel" width="1366" height="768" class="col-md-11">
+    Seu navegador não suporta o Canvas do HTML5. <br>
+    Procure atualizá-lo.
+</canvas>
 <script type="text/javascript">
   $(document).ready(function () {
     $('dropdown-toggle').dropdown();
-    var Interface = new Interface(document.getElementById('drawpanel'));
-    //Interface.drawExample();
-  })
+    var drawInterface = new Interface(document.getElementById('drawpanel'));
+    drawInterface.drawExample();
+    drawInterface.clearAll();
+  });
 </script>
 </body>
 </html>
