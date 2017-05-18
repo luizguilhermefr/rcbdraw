@@ -49,6 +49,11 @@
                     </ul>
                 </li>
             </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <div class="navbar-header">
+                    <a class="navbar-brand" id="helper"></a>
+                </div>
+            </ul>
         </div>
     </div>
 </nav>
@@ -103,12 +108,17 @@
     Procure atualizá-lo.
 </canvas>
 <script type="text/javascript">
-
-
+    var welcome = 'Bem-vindo ao RCBDraw!';
     $(document).ready(function () {
-        $('dropdown-toggle').dropdown(); // gerencia do modal bootrstap
+
+        $('dropdown-toggle').dropdown(); // gerencia do modal bootstrap
+
         var drawInterface = new Interface(document.getElementById('drawpanel'));
         var panel = $('#drawpanel');
+        var helper = $('#helper');
+
+        helper.text(welcome);
+
         $('#sides-number-ok').click(function () {
             var sidesNumber = $('#sides-number');
             var sizeNumber = $('#size-number');
@@ -121,11 +131,13 @@
                 console.error('size < 5');
                 sizeNumber.val(5);
             } else {
+                helper.text('Posicione o polígono.')
                 $('#poligono_n').modal('hide');
                 sidesNumber.val('');
                 sizeNumber.val(5);
                 panel.css('cursor', 'pointer');
                 panel.click(function (e) {
+                    helper.text(welcome);
                     drawInterface.drawPolygon(1, 1, e.clientX , e.clientY);
                     panel.css( 'cursor', 'default' );
                     panel.unbind();
