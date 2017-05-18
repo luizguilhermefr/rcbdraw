@@ -84,7 +84,8 @@
                     <label>Lados</label>
                     <input id="sides-number" min="3" type="number" class="form-control" placeholder="Lados">
                     <label>Tamanho</label>
-                    <input value="5" id="size-number" min="5" type="number" class="form-control" placeholder="Tamanho (px)">
+                    <input value="5" id="size-number" min="5" type="number" class="form-control"
+                           placeholder="Tamanho (px)">
                 </div>
             </div>
             <div class="modal-footer">
@@ -102,23 +103,33 @@
     Procure atualizá-lo.
 </canvas>
 <script type="text/javascript">
+
+
     $(document).ready(function () {
-        $('dropdown-toggle').dropdown();
+        $('dropdown-toggle').dropdown(); // gerencia do modal bootrstap
         var drawInterface = new Interface(document.getElementById('drawpanel'));
+        var panel = $('#drawpanel');
         $('#sides-number-ok').click(function () {
-            sides = $('#sides-number').val();
-            size = $('#size-number').val();
+            var sidesNumber = $('#sides-number');
+            var sizeNumber = $('#size-number');
+            sides = sidesNumber.val();
+            size = sizeNumber.val();
             if (sides < 3) {
-                alert('nao deu (lados)');
-                $('#sides-number').val('');
+                console.error('sides < 3');
+                sidesNumber.val('');
             } else if (size < 5) {
-                alert('nao deu (tamanho)');
-                $('#size-number').val(5);
+                console.error('size < 5');
+                sizeNumber.val(5);
             } else {
-                drawInterface.drawPolygon(sides);
                 $('#poligono_n').modal('hide');
-                $('#sides-number').val('');
-                $('#size-number').val(5);
+                sidesNumber.val('');
+                sizeNumber.val(5);
+                panel.css('cursor', 'pointer');
+                panel.click(function (e) {
+                    drawInterface.drawPolygon(1, 1, e.clientX , e.clientY);
+                    panel.css( 'cursor', 'default' );
+                    panel.unbind();
+                });
             }
         });
     });
