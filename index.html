@@ -138,7 +138,7 @@
                 panel.css('cursor', 'pointer');
                 panel.click(function (e) {
                     helper.text(welcome);
-                    drawInterface.drawPolygon(1, 1, e.clientX , e.clientY);
+                    drawInterface.drawPolygon(sides, size, e.clientX , e.clientY);
                     panel.css( 'cursor', 'default' );
                     panel.unbind();
                 });
