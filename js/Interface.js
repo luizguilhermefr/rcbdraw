@@ -26,6 +26,13 @@ function Interface (newCanvas) {
         var teta = ((2*Math.PI)/sides);
         dotX = 0;
         dotY = size;
+
+        if(sides % 2 == 0){
+            temp = dotX;
+            dotX = this.getNewDotX(dotX, dotY, (2*Math.PI)/8);
+            dotY = this.getNewDotY(temp, dotY, (2*Math.PI)/8);
+        }
+
         x = this.getRelativeX(x);
         y = this.getRelativeY(y);
         this.context.beginPath();
