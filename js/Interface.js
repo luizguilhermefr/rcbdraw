@@ -23,6 +23,7 @@ function Interface (newCanvas) {
     };
 
     this.redraw = function () {
+        this.clearAll();
         var polygons = this.scene.getPolygons();
         for (var i = 0; i < polygons.length; i++) {
             for (var j = 0; j < polygons[i].countVertices(); j++) {
@@ -59,6 +60,11 @@ function Interface (newCanvas) {
         }
         this.scene.addPolygon(new Polygon(tempVertices, false));
         this.redraw();
+    };
+
+    this.resetScene = function () {
+      this.scene = new Scene();
+      this.redraw();
     };
 
     this.clearAll = function () {

@@ -24,7 +24,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">Arquivo<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#">Novo</a></li>
+                        <li><a href="#" id="new-file">Novo</a></li>
                         <li><a href="#">Abrir...</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">Salvar (Download)</a></li>
@@ -76,7 +76,7 @@
                 <p>Cascavel, Paraná - 2017</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Adicionar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
             </div>
         </div>
     </div>
@@ -115,6 +115,10 @@
     var panel;
     var helper;
     var welcome = 'Bem-vindo ao RCBDraw!';
+
+    $('#new-file').click(function () {
+       drawInterface.resetScene();
+    });
 
     $('#regular-polygon-ok').click(function () {
         var sidesNumber = $('#regular-polygon-sides');
