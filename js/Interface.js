@@ -4,6 +4,7 @@ function Interface (newCanvas) {
     this.rect = this.canvas.getBoundingClientRect();
     this.context.lineWidth = 2;
     this.context.strokeStyle = 'red';
+    this.scene = new Scene();
 
     this.getRelativeX = function (x) {
         return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
@@ -21,10 +22,24 @@ function Interface (newCanvas) {
         return (x * Math.sin(teta)) + (y * Math.cos(teta));
     };
 
-    this.drawPolygon = function (sides, size, x, y) {
+    this.redraw = function () {
+        var polygons = this.scene.getPolygons();
+        for (var i = 0; i < polygons.length; i++) {
+            for (var j = 0; j < polygons[i].countVertices(); j++) {
+                // write vertex
+                var vertex = polygons[i].vertexAt(j);
+                this.context.beginPath();
+                this.context.fillRect(vertex.getX(), vertex.getY(), 4, 4);
+                this.context.stroke();
+            }
+        }
+    };
+
+    this.newPolygon = function (sides, size, x, y) {
         var dotX;
         var dotY;
         var temp;
+        var tempVertices = [];
         var teta = ((2 * Math.PI) / sides);
         dotX = 0;
         dotY = size;
@@ -35,17 +50,15 @@ function Interface (newCanvas) {
         }
         x = this.getRelativeX(x);
         y = this.getRelativeY(y);
-        this.context.beginPath();
-        this.context.fillRect(dotX + x, (dotY * (-1)) + y, 4, 4);
-        this.context.stroke();
+        tempVertices.push(new Vertex(dotX + x, (dotY * (-1)) + y));
         for (var i = 0; i < sides; i++) {
             temp = dotX;
             dotX = this.getNewDotX(dotX, dotY, teta);
             dotY = this.getNewDotY(temp, dotY, teta);
-            this.context.beginPath();
-            this.context.fillRect(dotX + x, (dotY * (-1)) + y, 4, 4);
-            this.context.stroke();
+            tempVertices.push(new Vertex(dotX + x, (dotY * (-1)) + y));
         }
+        this.scene.addPolygon(new Polygon(tempVertices, false));
+        this.redraw();
     };
 
     this.clearAll = function () {

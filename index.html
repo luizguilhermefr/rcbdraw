@@ -7,6 +7,9 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="text/javascript" src="libs/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="libs/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/Vertex.js"></script>
+    <script type="text/javascript" src="js/Polygon.js"></script>
+    <script type="text/javascript" src="js/Scene.js"></script>
     <script type="text/javascript" src="js/Interface.js"></script>
 </head>
 <body>
@@ -37,7 +40,7 @@
                         <li><a href="#">Excluir</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">Mão livre</a></li>
-                        <li><a href="#" data-toggle="modal" data-target="#poligono_n">Polígono de n lados</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#regular-polygon">Polígono Regular</a></li>
                     </ul>
                 </li>
                 <li class="dropdown">
@@ -78,23 +81,23 @@
         </div>
     </div>
 </div>
-<div id="poligono_n" class="modal fade">
+<div id="regular-polygon" class="modal fade">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">Poligono de N Lados</h3>
+                <h3 class="modal-title">Polígono Regular</h3>
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <label>Lados</label>
-                    <input id="sides-number" min="3" type="number" class="form-control" placeholder="Lados">
+                    <input id="regular-polygon-sides" min="3" type="number" class="form-control" placeholder="Lados">
                     <label>Tamanho</label>
-                    <input value="5" id="size-number" min="5" type="number" class="form-control"
+                    <input value="50" id="regular-polygon-size" min="50" type="number" class="form-control"
                            placeholder="Tamanho (px)">
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="sides-number-ok" type="button" class="btn btn-primary">
+                <button id="regular-polygon-ok" type="button" class="btn btn-primary">
                     Ok
                 </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
@@ -108,42 +111,47 @@
     Procure atualizá-lo.
 </canvas>
 <script type="text/javascript">
+    var drawInterface;
+    var panel;
+    var helper;
     var welcome = 'Bem-vindo ao RCBDraw!';
-    $(document).ready(function () {
 
-        $('dropdown-toggle').dropdown(); // gerencia do modal bootstrap
+    $('#regular-polygon-ok').click(function () {
+        var sidesNumber = $('#regular-polygon-sides');
+        var sizeNumber = $('#regular-polygon-size');
+        sides = sidesNumber.val();
+        size = sizeNumber.val();
+        if (sides < 3) {
+            console.error('sides < 3');
+            sidesNumber.val('');
+        } else if (size < 50) {
+            console.error('size < 50');
+            sizeNumber.val(50);
+        } else {
+            helper.text('Posicione o polígono.');
+            $('#regular-polygon').modal('hide');
+            sidesNumber.val('');
+            sizeNumber.val(50);
+            panel.css('cursor', 'pointer');
+            panel.click(function (e) {
+                helper.text(welcome);
+                drawInterface.newPolygon(sides, size, e.clientX, e.clientY);
+                panel.css('cursor', 'default');
+                panel.unbind();
+            });
+        }
+    });
 
-        var drawInterface = new Interface(document.getElementById('drawpanel'));
-        var panel = $('#drawpanel');
-        var helper = $('#helper');
-
+    function initialize () {
+        drawInterface = new Interface(document.getElementById('drawpanel'));
+        panel = $('#drawpanel');
+        helper = $('#helper');
         helper.text(welcome);
+    }
 
-        $('#sides-number-ok').click(function () {
-            var sidesNumber = $('#sides-number');
-            var sizeNumber = $('#size-number');
-            sides = sidesNumber.val();
-            size = sizeNumber.val();
-            if (sides < 3) {
-                console.error('sides < 3');
-                sidesNumber.val('');
-            } else if (size < 5) {
-                console.error('size < 5');
-                sizeNumber.val(5);
-            } else {
-                helper.text('Posicione o polígono.')
-                $('#poligono_n').modal('hide');
-                sidesNumber.val('');
-                sizeNumber.val(5);
-                panel.css('cursor', 'pointer');
-                panel.click(function (e) {
-                    helper.text(welcome);
-                    drawInterface.drawPolygon(sides, size, e.clientX , e.clientY);
-                    panel.css( 'cursor', 'default' );
-                    panel.unbind();
-                });
-            }
-        });
+    $(document).ready(function () {
+        $('dropdown-toggle').dropdown();
+        initialize();
     });
 </script>
 </body>
