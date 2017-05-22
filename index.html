@@ -27,7 +27,8 @@
                         <li><a href="#" id="new-file">Novo</a></li>
                         <li><a href="#">Abrir...</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#" id="save-file">Salvar (Download)</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#save-file-prompt" id="save-file">Salvar
+                            (Download)</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">Sair</a></li>
                     </ul>
@@ -81,6 +82,27 @@
         </div>
     </div>
 </div>
+<div id="save-file-prompt" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Salvar</h3>
+            </div>
+            <div class="modal-body">
+                <!--<div class="form-group">
+                    <label>Nome</label>
+                    <input id="save-file-name" class="form-control" placeholder="Nome">
+                </div>-->
+            </div>
+            <div class="modal-footer">
+                <a id="save-file-ok" type="button" class="btn btn-primary">
+                    Ok
+                </a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div id="regular-polygon" class="modal fade">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -121,7 +143,16 @@
     });
 
     $('#save-file').click(function () {
-        drawInterface.saveFile();
+        var json = JSON.stringify(drawInterface.generateSave());
+        var blob = new Blob([ json ], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.getElementById('save-file-ok');
+        a.download = 'rcb.json';
+        a.href = url;
+    });
+
+    $('#save-file-ok').click(function () {
+        $('#save-file-prompt').modal('hide');
     });
 
     $('#regular-polygon-ok').click(function () {
