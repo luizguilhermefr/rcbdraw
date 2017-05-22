@@ -27,7 +27,7 @@
                         <li><a href="#" id="new-file">Novo</a></li>
                         <li><a href="#">Abrir...</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Salvar (Download)</a></li>
+                        <li><a href="#" id="save-file">Salvar (Download)</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">Sair</a></li>
                     </ul>
@@ -117,7 +117,11 @@
     var welcome = 'Bem-vindo ao RCBDraw!';
 
     $('#new-file').click(function () {
-       drawInterface.resetScene();
+        drawInterface.resetScene();
+    });
+
+    $('#save-file').click(function () {
+        drawInterface.saveFile();
     });
 
     $('#regular-polygon-ok').click(function () {

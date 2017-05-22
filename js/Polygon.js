@@ -1,5 +1,4 @@
 function Polygon (vertices, open) {
-    console.log('Um novo poligono nasceu.');
     this.vertices = vertices;
     this.openNotClosed = open;
 

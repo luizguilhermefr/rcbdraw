@@ -3,7 +3,7 @@ function Interface (newCanvas) {
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
     this.context.lineWidth = 2;
-    this.context.strokeStyle = 'red';
+    this.context.strokeStyle = 'black';
     this.scene = new Scene();
 
     this.getRelativeX = function (x) {
@@ -26,13 +26,16 @@ function Interface (newCanvas) {
         this.clearAll();
         var polygons = this.scene.getPolygons();
         for (var i = 0; i < polygons.length; i++) {
-            for (var j = 0; j < polygons[i].countVertices(); j++) {
-                // write vertex
-                var vertex = polygons[i].vertexAt(j);
-                this.context.beginPath();
-                this.context.fillRect(vertex.getX(), vertex.getY(), 4, 4);
-                this.context.stroke();
+            this.context.beginPath();
+            this.context.moveTo(polygons[ i ].vertexAt(0).getX(), polygons[ i ].vertexAt(0).getY());
+            for (var j = 1; j < polygons[ i ].countVertices() - 1; j++) {
+                var vertex = polygons[ i ].vertexAt(j);
+                this.context.lineTo(vertex.getX(), vertex.getY());
             }
+            if (polygons[ i ].isClosed()) {
+                this.context.lineTo(polygons[ i ].vertexAt(0).getX(), polygons[ i ].vertexAt(0).getY());
+            }
+            this.context.stroke();
         }
     };
 
@@ -63,11 +66,30 @@ function Interface (newCanvas) {
     };
 
     this.resetScene = function () {
-      this.scene = new Scene();
-      this.redraw();
+        this.scene = new Scene();
+        this.redraw();
     };
 
     this.clearAll = function () {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    };
+
+    this.saveFile = function () {
+        this.generateSave();
+    };
+
+    this.generateSave = function () {
+        var polygons = this.scene.getPolygons();
+        var dump = {
+            polygons: []
+        };
+        for (var i = 0; i < polygons.length; i++) {
+            temp = [];
+            for (var j = 0; j < polygons[ i ].countVertices() - 1; j++) {
+                temp.push([ polygons[ i ].vertexAt(j).getX(), polygons[ i ].vertexAt(j).getY() ]);
+            }
+            dump.polygons.push(temp);
+        }
+        console.log(dump);
     };
 }
