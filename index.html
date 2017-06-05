@@ -25,9 +25,10 @@
                        aria-expanded="false">Arquivo<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#" id="new-file">Novo</a></li>
-                        <li><a href="#">Abrir...</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#open-file-prompt">Abrir...</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#" data-toggle="modal" data-target="#save-file-prompt" id="save-file">Salvar</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#save-file-prompt" id="save-file">Salvar</a>
+                        </li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">Sair</a></li>
                     </ul>
@@ -48,7 +49,7 @@
                        aria-expanded="false">Ajuda<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#">Ajuda</a></li>
-                        <li><a href="#" data-toggle="modal" data-target="#sobre">Sobre</a></li>
+                        <li><a href="#" data-toggle="modal" data-target="#about">Sobre</a></li>
                     </ul>
                 </li>
             </ul>
@@ -60,23 +61,20 @@
         </div>
     </div>
 </nav>
-<div id="sobre" class="modal fade">
+<div id="open-file-prompt" class="modal fade">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title">RCBDraw</h3>
-                <p><em>Rosa, Canabarro & Baldi.</em></p>
+                <h3 class="modal-title">Abrir</h3>
             </div>
             <div class="modal-body">
-                <p>Ferramenta web para manipulação de polígonos 2D.</p>
-                <p><br></p>
-                <p>Trabalho da disciplina de Computação Gráfica do curso de Ciência da Computação da Universidade
-                    Estadual do Oeste do Paraná (UNIOESTE), sob orientação do professor Adair Santa Catarina.</p>
-                <p><br></p>
-                <p>Cascavel, Paraná - 2017</p>
+                <input id="open-file-input" type="file" accept="application/json">
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+                <a id="open-file-ok" type="button" class="btn btn-primary">
+                    Ok
+                </a>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>
@@ -123,6 +121,27 @@
         </div>
     </div>
 </div>
+<div id="about" class="modal fade">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">RCBDraw</h3>
+                <p><em>Rosa, Canabarro & Baldi.</em></p>
+            </div>
+            <div class="modal-body">
+                <p>Ferramenta web para manipulação de polígonos 2D.</p>
+                <p><br></p>
+                <p>Trabalho da disciplina de Computação Gráfica do curso de Ciência da Computação da Universidade
+                    Estadual do Oeste do Paraná (UNIOESTE), sob orientação do professor Adair Santa Catarina.</p>
+                <p><br></p>
+                <p>Cascavel, Paraná - 2017</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="col-md-1">Here goes the toolbar</div>
 <canvas id="drawpanel" width="1366" height="768" class="col-md-11">
     Seu navegador não suporta o Canvas do HTML5. <br>
@@ -139,6 +158,10 @@
     });
 
     $('#save-file').click(function () {
+        if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+            alert('Por favor, atualize seu browser!');
+            return;
+        }
         var json = JSON.stringify(drawInterface.generateSave());
         var blob = new Blob([ json ], { type: 'application/json' });
         var url = URL.createObjectURL(blob);
@@ -149,6 +172,29 @@
 
     $('#save-file-ok').click(function () {
         $('#save-file-prompt').modal('hide');
+    });
+
+    $('#open-file-ok').click(function () {
+        if (!window.File || !window.FileReader || !window.FileList || !window.Blob) {
+            alert('Por favor, atualize seu browser!');
+            return;
+        }
+        var file = document.getElementById('open-file-input').files;
+        if (!file) {
+            alert('Por favor, atualize seu browser!');
+            return;
+        }
+        if (!file[ 0 ]) {
+            alert('Nenhum arquivo selecionado.');
+            return;
+        }
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            var contents = e.target.result;
+            drawInterface.openFile(JSON.parse(contents));
+        };
+        reader.readAsText(file[ 0 ]);
+        $('#open-file-prompt').modal('hide');
     });
 
     $('#regular-polygon-ok').click(function () {

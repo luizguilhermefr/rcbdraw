@@ -74,6 +74,10 @@ function Interface (newCanvas) {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     };
 
+    this.openFile = function (opened) {
+        console.log(opened)
+    };
+
     this.generateSave = function () {
         var polygons = this.scene.getPolygons();
         var dump = {
