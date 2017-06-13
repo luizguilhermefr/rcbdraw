@@ -1,4 +1,4 @@
-function Interface (newCanvas) {
+function Interface(newCanvas) {
     this.canvas = newCanvas;
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
@@ -27,14 +27,12 @@ function Interface (newCanvas) {
         var polygons = this.scene.getPolygons();
         for (var i = 0; i < polygons.length; i++) {
             this.context.beginPath();
-            this.context.moveTo(polygons[ i ].vertexAt(0).getX(), polygons[ i ].vertexAt(0).getY());
-            for (var j = 1; j < polygons[ i ].countVertices() - 1; j++) {
-                var vertex = polygons[ i ].vertexAt(j);
+            this.context.moveTo(polygons[i].vertexAt(0).getX(), polygons[i].vertexAt(0).getY());
+            for (var j = 1; j < polygons[i].countVertices() - 1; j++) {
+                var vertex = polygons[i].vertexAt(j);
                 this.context.lineTo(vertex.getX(), vertex.getY());
             }
-            if (polygons[ i ].isClosed()) {
-                this.context.lineTo(polygons[ i ].vertexAt(0).getX(), polygons[ i ].vertexAt(0).getY());
-            }
+            this.context.lineTo(polygons[i].vertexAt(0).getX(), polygons[i].vertexAt(0).getY());
             this.context.stroke();
         }
     };
@@ -61,7 +59,7 @@ function Interface (newCanvas) {
             dotY = this.getNewDotY(temp, dotY, teta);
             tempVertices.push(new Vertex(dotX + x, (dotY * (-1)) + y));
         }
-        this.scene.addPolygon(new Polygon(tempVertices, false));
+        this.scene.addPolygon(new Polygon(tempVertices));
         this.redraw();
     };
 
@@ -75,29 +73,26 @@ function Interface (newCanvas) {
     };
 
     this.openFile = function (opened) {
-        console.log(opened)
         var tempVertices = [];
-        for(var i = 0; i < opened.polygons.length; i++) {
-            for (var j = 0; j < opened.polygons[i].length; j++) {
-                tempVertices.push(new Vertex(opened.polygons[i][j][0], opened.polygons[i][j][1]));
+        for (var i = 0; i < opened.length; i++) {
+            for (var j = 0; j < opened[i].length; j++) {
+                tempVertices.push(new Vertex(opened[i][j][0], opened[i][j][1]));
             }
-            this.scene.addPolygon(poll = new Polygon(tempVertices,false));
-            console.log(poll);
+            this.scene.addPolygon(new Polygon(tempVertices));
+            tempVertices = [];
         }
         this.redraw();
     };
 
     this.generateSave = function () {
         var polygons = this.scene.getPolygons();
-        var dump = {
-            polygons: []
-        };
+        var dump = [];
         for (var i = 0; i < polygons.length; i++) {
             temp = [];
-            for (var j = 0; j < polygons[ i ].countVertices() - 1; j++) {
-                temp.push([ polygons[ i ].vertexAt(j).getX(), polygons[ i ].vertexAt(j).getY() ]);
+            for (var j = 0; j < polygons[i].countVertices(); j++) {
+                temp.push([polygons[i].vertexAt(j).getX(), polygons[i].vertexAt(j).getY()]);
             }
-            dump.polygons.push(temp);
+            dump.push(temp);
         }
         return dump;
     };
