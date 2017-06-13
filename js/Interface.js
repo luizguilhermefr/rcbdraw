@@ -76,6 +76,15 @@ function Interface (newCanvas) {
 
     this.openFile = function (opened) {
         console.log(opened)
+        var tempVertices = [];
+        for(var i = 0; i < opened.polygons.length; i++) {
+            for (var j = 0; j < opened.polygons[i].length; j++) {
+                tempVertices.push(new Vertex(opened.polygons[i][j][0], opened.polygons[i][j][1]));
+            }
+            this.scene.addPolygon(poll = new Polygon(tempVertices,false));
+            console.log(poll);
+        }
+        this.redraw();
     };
 
     this.generateSave = function () {
