@@ -40,7 +40,7 @@
                         <li><a href="#">Selecionar</a></li>
                         <li><a href="#">Excluir</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#">Mão livre</a></li>
+                        <li><a href="#" id="freehand">Mão livre</a></li>
                         <li><a href="#" data-toggle="modal" data-target="#regular-polygon">Polígono Regular</a></li>
                     </ul>
                 </li>
@@ -152,6 +152,23 @@
     var panel;
     var helper;
     var welcome = 'Bem-vindo ao RCBDraw!';
+    var freeHand = false;
+
+    function switchFreeHand() {
+        freeHand = !freeHand;
+        if (freeHand) {
+            panel.css('cursor', 'pointer');
+            helper.text('Ligue os pontos para criar o polígono.');
+            panel.click(function (e) {
+                drawInterface.pushFreeHandDot(e.clientX, e.clientY);
+            });
+        } else {
+            panel.unbind();
+            helper.text(welcome);
+            panel.css('cursor', 'default');
+            drawInterface.clearFreeHandDots();
+        }
+    }
 
     $('#new-file').click(function () {
         drawInterface.resetScene();
@@ -163,7 +180,7 @@
             return;
         }
         var json = JSON.stringify(drawInterface.generateSave());
-        var blob = new Blob([ json ], { type: 'application/json' });
+        var blob = new Blob([json], {type: 'application/json'});
         var url = URL.createObjectURL(blob);
         var a = document.getElementById('save-file-ok');
         a.download = 'rcb.json';
@@ -184,7 +201,7 @@
             alert('Por favor, atualize seu browser!');
             return;
         }
-        if (!file[ 0 ]) {
+        if (!file[0]) {
             alert('Nenhum arquivo selecionado.');
             return;
         }
@@ -193,8 +210,20 @@
             var contents = e.target.result;
             drawInterface.openFile(JSON.parse(contents));
         };
-        reader.readAsText(file[ 0 ]);
+        reader.readAsText(file[0]);
         $('#open-file-prompt').modal('hide');
+    });
+
+    $('#freehand').click(function () {
+        switchFreeHand();
+    });
+
+    $(document).keypress(function (e) {
+        if (freeHand) {
+            if (e.keyCode === 27) {
+                switchFreeHand();
+            }
+        }
     });
 
     $('#regular-polygon-ok').click(function () {
@@ -223,7 +252,7 @@
         }
     });
 
-    function initialize () {
+    function initialize() {
         drawInterface = new Interface(document.getElementById('drawpanel'));
         panel = $('#drawpanel');
         helper = $('#helper');

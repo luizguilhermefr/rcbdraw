@@ -5,6 +5,7 @@ function Interface(newCanvas) {
     this.context.lineWidth = 2;
     this.context.strokeStyle = 'black';
     this.scene = new Scene();
+    this.freeHandDots = [];
 
     this.getRelativeX = function (x) {
         return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
@@ -33,6 +34,18 @@ function Interface(newCanvas) {
                 this.context.lineTo(vertex.getX(), vertex.getY());
             }
             this.context.lineTo(polygons[i].vertexAt(0).getX(), polygons[i].vertexAt(0).getY());
+            this.context.stroke();
+        }
+        this.drawTemporaryPolygon();
+    };
+
+    this.drawTemporaryPolygon = function () {
+        this.context.beginPath();
+        if (this.freeHandDots.length > 1) {
+            this.context.moveTo(this.freeHandDots[0][0], this.freeHandDots[0][1]);
+            for (var n = 1; n < this.freeHandDots.length - 1; n++) {
+                this.context.lineTo(this.freeHandDots[n][0], this.freeHandDots[n][1]);
+            }
             this.context.stroke();
         }
     };
@@ -73,6 +86,7 @@ function Interface(newCanvas) {
     };
 
     this.openFile = function (opened) {
+        this.resetScene();
         var tempVertices = [];
         for (var i = 0; i < opened.length; i++) {
             for (var j = 0; j < opened[i].length; j++) {
@@ -96,4 +110,17 @@ function Interface(newCanvas) {
         }
         return dump;
     };
+
+    this.clearFreeHandDots = function () {
+        this.freeHandDots = [];
+        this.redraw();
+    };
+
+    this.pushFreeHandDot = function (x, y) {
+      this.freeHandDots.push([x, y]);
+    };
+
+    this.freeHand = function () {
+
+    }
 }
