@@ -50,7 +50,7 @@ function Interface (newCanvas) {
         }
     };
 
-    this.newPolygon = function (sides, size, x, y) {
+    this.newRegularPolygon = function (sides, size, x, y) {
         var dotX;
         var dotY;
         var temp;
@@ -148,5 +148,9 @@ function Interface (newCanvas) {
         }
         this.scene.addPolygon(new Polygon(tempVertices));
         this.redraw();
+    };
+
+    this.selectionClick = function (x, y) {
+        
     };
 }
