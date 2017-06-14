@@ -161,7 +161,7 @@
             panel.css('cursor', 'pointer');
             helper.text('Selecione um objeto.');
             panel.click(function (e) {
-                var selected = drawInterface.selectionClick(e.clientHeight, e.clientY);
+                var selected = drawInterface.selectionClick(e.clientX, e.clientY);
                 if (selected) {
                     switchSelection();
                 }
@@ -237,7 +237,7 @@
     });
 
     $('#selection').click(function () {
-        switchDelete();
+        switchSelection();
     });
 
     $('#delete').click(function () {

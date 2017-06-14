@@ -115,6 +115,13 @@ function Interface (newCanvas) {
         return Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2));
     };
 
+    this.distanceBetweenPointAndEdge = function (point, edge) {
+        var r = edge.y2 - edge.y1;
+        var s = -(edge.x2 - edge.x1);
+        var t = edge.x2 * edge.y1 - edge.x1 * edge.y2;
+        return Math.abs(r * point.x + s * point.y + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
+    };
+
     this.clearFreeHandDots = function () {
         this.freeHandDots = [];
         this.redraw();
@@ -151,6 +158,25 @@ function Interface (newCanvas) {
     };
 
     this.selectionClick = function (x, y) {
-        
+        var polygons = this.scene.getPolygons();
+        for (var i = 0; i < polygons.length; i++) {
+            for (var j = 0; j < polygons[ i ].countVertices() - 1; j++) {
+                var from = polygons[ i ].vertexAt(j);
+                var to = polygons[ i ].vertexAt(j + 1);
+                var edge = {
+                    x1: from.x,
+                    y1: from.y,
+                    x2: to.x,
+                    y2: to.y
+                };
+                var point = {
+                    x: this.getRelativeX(x),
+                    y: this.getRelativeY(y)
+                };
+                console.log('distance [' + i + '][' + j + '] = ' + this.distanceBetweenPointAndEdge(point, edge));
+            }
+        }
+
+        return false;
     };
 }
