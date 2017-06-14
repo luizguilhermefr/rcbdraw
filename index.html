@@ -151,8 +151,8 @@
     var drawInterface;
     var panel;
     var helper;
+    var freeHand;
     var welcome = 'Bem-vindo ao RCBDraw!';
-    var freeHand = false;
 
     function switchFreeHand() {
         freeHand = !freeHand;
@@ -160,7 +160,10 @@
             panel.css('cursor', 'pointer');
             helper.text('Ligue os pontos para criar o polígono.');
             panel.click(function (e) {
-                drawInterface.pushFreeHandDot(e.clientX, e.clientY);
+                var mustContinue = drawInterface.pushFreeHandDot(e.clientX, e.clientY);
+                if (!mustContinue) {
+                    switchFreeHand();
+                }
             });
         } else {
             panel.unbind();
@@ -257,6 +260,7 @@
         panel = $('#drawpanel');
         helper = $('#helper');
         helper.text(welcome);
+        freeHand = false;
     }
 
     $(document).ready(function () {

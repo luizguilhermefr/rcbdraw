@@ -1,4 +1,4 @@
-function Interface(newCanvas) {
+function Interface (newCanvas) {
     this.canvas = newCanvas;
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
@@ -28,12 +28,12 @@ function Interface(newCanvas) {
         var polygons = this.scene.getPolygons();
         for (var i = 0; i < polygons.length; i++) {
             this.context.beginPath();
-            this.context.moveTo(polygons[i].vertexAt(0).getX(), polygons[i].vertexAt(0).getY());
-            for (var j = 1; j < polygons[i].countVertices() - 1; j++) {
-                var vertex = polygons[i].vertexAt(j);
+            this.context.moveTo(polygons[ i ].vertexAt(0).getX(), polygons[ i ].vertexAt(0).getY());
+            for (var j = 1; j < polygons[ i ].countVertices() - 1; j++) {
+                var vertex = polygons[ i ].vertexAt(j);
                 this.context.lineTo(vertex.getX(), vertex.getY());
             }
-            this.context.lineTo(polygons[i].vertexAt(0).getX(), polygons[i].vertexAt(0).getY());
+            this.context.lineTo(polygons[ i ].vertexAt(0).getX(), polygons[ i ].vertexAt(0).getY());
             this.context.stroke();
         }
         this.drawTemporaryPolygon();
@@ -42,9 +42,9 @@ function Interface(newCanvas) {
     this.drawTemporaryPolygon = function () {
         this.context.beginPath();
         if (this.freeHandDots.length > 1) {
-            this.context.moveTo(this.freeHandDots[0][0], this.freeHandDots[0][1]);
-            for (var n = 1; n < this.freeHandDots.length - 1; n++) {
-                this.context.lineTo(this.freeHandDots[n][0], this.freeHandDots[n][1]);
+            this.context.moveTo(this.freeHandDots[ 0 ].x, this.freeHandDots[ 0 ].y);
+            for (var n = 1; n < this.freeHandDots.length; n++) {
+                this.context.lineTo(this.freeHandDots[ n ].x, this.freeHandDots[ n ].y);
             }
             this.context.stroke();
         }
@@ -89,8 +89,8 @@ function Interface(newCanvas) {
         this.resetScene();
         var tempVertices = [];
         for (var i = 0; i < opened.length; i++) {
-            for (var j = 0; j < opened[i].length; j++) {
-                tempVertices.push(new Vertex(opened[i][j][0], opened[i][j][1]));
+            for (var j = 0; j < opened[ i ].length; j++) {
+                tempVertices.push(new Vertex(opened[ i ][ j ][ 0 ], opened[ i ][ j ][ 1 ]));
             }
             this.scene.addPolygon(new Polygon(tempVertices));
             tempVertices = [];
@@ -103,12 +103,16 @@ function Interface(newCanvas) {
         var dump = [];
         for (var i = 0; i < polygons.length; i++) {
             temp = [];
-            for (var j = 0; j < polygons[i].countVertices(); j++) {
-                temp.push([polygons[i].vertexAt(j).getX(), polygons[i].vertexAt(j).getY()]);
+            for (var j = 0; j < polygons[ i ].countVertices(); j++) {
+                temp.push([ polygons[ i ].vertexAt(j).getX(), polygons[ i ].vertexAt(j).getY() ]);
             }
             dump.push(temp);
         }
         return dump;
+    };
+
+    this.distanceBetweenTwoPoints = function (first, second) {
+        return Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2));
     };
 
     this.clearFreeHandDots = function () {
@@ -117,10 +121,32 @@ function Interface(newCanvas) {
     };
 
     this.pushFreeHandDot = function (x, y) {
-      this.freeHandDots.push([x, y]);
+        this.freeHandDots.push({
+            x: this.getRelativeX(x),
+            y: this.getRelativeY(y)
+        });
+        this.redraw();
+        var mustContinue = !this.mustEndFreeHand();
+        if (!mustContinue) {
+            this.convertTemporaryToPolygon();
+        }
+        return mustContinue;
     };
 
-    this.freeHand = function () {
+    this.mustEndFreeHand = function () {
+        if (this.freeHandDots.length < 3) {
+            return false;
+        }
+        return this.distanceBetweenTwoPoints(this.freeHandDots[ 0 ], this.freeHandDots[ this.freeHandDots.length -
+          1 ]) < 50;
+    };
 
-    }
+    this.convertTemporaryToPolygon = function () {
+        var tempVertices = [];
+        for (var i = 0; i < this.freeHandDots.length; i++) {
+            tempVertices.push(new Vertex(this.freeHandDots[ i ].x, this.freeHandDots[ i ].y));
+        }
+        this.scene.addPolygon(new Polygon(tempVertices));
+        this.redraw();
+    };
 }
