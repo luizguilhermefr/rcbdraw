@@ -159,6 +159,7 @@ function Interface (newCanvas) {
 
     this.selectionClick = function (x, y) {
         var polygons = this.scene.getPolygons();
+        var distances = [];
         for (var i = 0; i < polygons.length; i++) {
             for (var j = 0; j < polygons[ i ].countVertices() - 1; j++) {
                 var from = polygons[ i ].vertexAt(j);
@@ -173,8 +174,17 @@ function Interface (newCanvas) {
                     x: this.getRelativeX(x),
                     y: this.getRelativeY(y)
                 };
-                console.log('distance [' + i + '][' + j + '] = ' + this.distanceBetweenPointAndEdge(point, edge));
+                distances.push({
+                    poly: i,
+                    distance: this.distanceBetweenPointAndEdge(point, edge)
+                });
             }
+        }
+        distances.sort(function(a, b){
+           return (a.distance > b.distance) ? 1 : ((b.distance > a.distance) ? -1 : 0);
+        });
+        if (distances.length > 0) {
+            console.log('menor distancia eh do poligono '+ distances[0].poly);
         }
 
         return false;
