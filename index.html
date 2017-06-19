@@ -7,10 +7,11 @@
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <script type="text/javascript" src="libs/jquery/jquery-3.2.1.min.js"></script>
     <script type="text/javascript" src="libs/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/Colors.js"></script>
     <script type="text/javascript" src="js/Vertex.js"></script>
     <script type="text/javascript" src="js/Polygon.js"></script>
     <script type="text/javascript" src="js/Scene.js"></script>
-    <script type="text/javascript" src="js/Interface.js"></script>
+    <script type="text/javascript" src="js/Interface.js"></script>    
 </head>
 <body>
 <nav class="navbar navbar-default">
@@ -241,7 +242,7 @@
     });
 
     $('#delete').click(function () {
-       alert('not implemented yet.')
+       drawInterface.deletePolygon();
     });
 
     $('#freehand').click(function () {

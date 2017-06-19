@@ -6,6 +6,7 @@ function Interface (newCanvas) {
     this.context.strokeStyle = 'black';
     this.scene = new Scene();
     this.freeHandDots = [];
+    this.selectedPolygon = null;
 
     this.getRelativeX = function (x) {
         return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
@@ -27,6 +28,7 @@ function Interface (newCanvas) {
         this.clearAll();
         var polygons = this.scene.getPolygons();
         for (var i = 0; i < polygons.length; i++) {
+            this.context.strokeStyle = polygons[i].color;
             this.context.beginPath();
             this.context.moveTo(polygons[ i ].vertexAt(0).getX(), polygons[ i ].vertexAt(0).getY());
             for (var j = 1; j < polygons[ i ].countVertices() - 1; j++) {
@@ -37,9 +39,11 @@ function Interface (newCanvas) {
             this.context.stroke();
         }
         this.drawTemporaryPolygon();
+        this.drawSelectedPolygon();
     };
 
     this.drawTemporaryPolygon = function () {
+        this.context.strokeStyle = Colors.TEMPORARY;
         this.context.beginPath();
         if (this.freeHandDots.length > 1) {
             this.context.moveTo(this.freeHandDots[ 0 ].x, this.freeHandDots[ 0 ].y);
@@ -48,6 +52,28 @@ function Interface (newCanvas) {
             }
             this.context.stroke();
         }
+    };
+
+    this.drawSelectedPolygon = function () {
+        if(this.selectedPolygon !== null) {
+            this.context.strokeStyle = Colors.SELECTED;
+            this.context.beginPath();
+            this.context.moveTo(this.selectedPolygon.polygon.vertexAt(0).getX(), this.selectedPolygon.polygon.vertexAt(0).getY());
+            for (var j = 1; j < this.selectedPolygon.polygon.countVertices() - 1; j++) {
+                var vertex = this.selectedPolygon.polygon.vertexAt(j);
+                this.context.lineTo(vertex.getX(), vertex.getY());
+            }
+            this.context.lineTo(this.selectedPolygon.polygon.vertexAt(0).getX(), this.selectedPolygon.polygon.vertexAt(0).getY());
+            this.context.stroke();
+        }
+    };
+
+    this.deletePolygon = function() {
+        this.scene.removePolygon(this.selectedPolygon.index);
+        this.selectedPolygon = null;
+        this.redraw();
+
+        return false;
     };
 
     this.newRegularPolygon = function (sides, size, x, y) {
@@ -145,7 +171,7 @@ function Interface (newCanvas) {
             return false;
         }
         return this.distanceBetweenTwoPoints(this.freeHandDots[ 0 ], this.freeHandDots[ this.freeHandDots.length -
-          1 ]) < 50;
+          1 ]) < 20;
     };
 
     this.convertTemporaryToPolygon = function () {
@@ -159,7 +185,10 @@ function Interface (newCanvas) {
 
     this.selectionClick = function (x, y) {
         var polygons = this.scene.getPolygons();
-        var distances = [];
+        var lowestDistance = {
+            poly: -1,
+            distance: Number.POSITIVE_INFINITY
+        };
         for (var i = 0; i < polygons.length; i++) {
             for (var j = 0; j < polygons[ i ].countVertices() - 1; j++) {
                 var from = polygons[ i ].vertexAt(j);
@@ -174,19 +203,26 @@ function Interface (newCanvas) {
                     x: this.getRelativeX(x),
                     y: this.getRelativeY(y)
                 };
-                distances.push({
-                    poly: i,
-                    distance: this.distanceBetweenPointAndEdge(point, edge)
-                });
+                var currentDistance = this.distanceBetweenPointAndEdge(point, edge);
+                if(currentDistance < lowestDistance.distance) {                    
+                    lowestDistance = {
+                        poly: i,
+                        distance: currentDistance
+                    };                    
+                }
             }
-        }
-        distances.sort(function(a, b){
-           return (a.distance > b.distance) ? 1 : ((b.distance > a.distance) ? -1 : 0);
-        });
-        if (distances.length > 0) {
-            console.log('menor distancia eh do poligono '+ distances[0].poly);
-        }
-
-        return false;
+        }        
+        if(lowestDistance.distance < 10) {
+            this.selectedPolygon = {
+               index: lowestDistance.poly,  
+               polygon: this.scene.getPolygons()[lowestDistance.poly]            
+            }
+            this.redraw();
+            return false;
+        }else {
+            this.selectedPolygon = null;            
+            this.redraw();
+            return true;
+        }        
     };
 }

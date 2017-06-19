@@ -7,8 +7,8 @@ function Scene () {
 
     this.removePolygon = function (id) {
         for (var i = 0; i < this.polygons.length; i++) {
-            if (this.polygons[ i ].id === id) {
-                this.polygons.splice(i, 1);
+            if ( i === id) { 
+                this.polygons.splice(id, 1);
                 return true;
             }
         }

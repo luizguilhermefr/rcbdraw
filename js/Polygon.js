@@ -1,6 +1,7 @@
-function Polygon (vertices) {
+function Polygon (vertices, color = Colors.DEFAULT) {
     this.vertices = vertices;
-
+    this.color = color;
+    
     this.countEdges = function () {
         return this.vertices.length;
     };
