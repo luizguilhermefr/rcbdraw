@@ -190,9 +190,9 @@ function Interface (newCanvas) {
             distance: Number.POSITIVE_INFINITY
         };
         for (var i = 0; i < polygons.length; i++) {
-            for (var j = 0; j < polygons[ i ].countVertices() - 1; j++) {
-                var from = polygons[ i ].vertexAt(j);
-                var to = polygons[ i ].vertexAt(j + 1);
+            for (var j = 0; j < polygons[i].countVertices() - 1; j++) {
+                var from = polygons[i].vertexAt(j);
+                var to = polygons[i].vertexAt(j + 1);
                 var edge = {
                     x1: from.x,
                     y1: from.y,
@@ -204,25 +204,25 @@ function Interface (newCanvas) {
                     y: this.getRelativeY(y)
                 };
                 var currentDistance = this.distanceBetweenPointAndEdge(point, edge);
-                if(currentDistance < lowestDistance.distance) {                    
+                if (currentDistance < lowestDistance.distance) {
                     lowestDistance = {
                         poly: i,
                         distance: currentDistance
-                    };                    
+                    };
                 }
             }
-        }        
-        if(lowestDistance.distance < 10) {
+        }
+        if (lowestDistance.distance < 10) {
             this.selectedPolygon = {
-               index: lowestDistance.poly,  
-               polygon: this.scene.getPolygons()[lowestDistance.poly]            
+                index: lowestDistance.poly,
+                polygon: this.scene.getPolygons()[lowestDistance.poly]
             }
             this.redraw();
             return false;
-        }else {
-            this.selectedPolygon = null;            
+        } else {
+            this.selectedPolygon = null;
             this.redraw();
             return true;
-        }        
-    };
+        }
+    }
 }
