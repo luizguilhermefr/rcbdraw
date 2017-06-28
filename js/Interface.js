@@ -121,6 +121,12 @@ function Interface(newCanvas) {
     };
 
     this.freeHand = function () {
+        var tempVertices = [];
 
-    }
+        var x = this.getRelativeX(x);
+        var y = this.getRelativeY(y);
+        tempVertices.push(new Vertex(x, y));
+
+
+    };
 }
