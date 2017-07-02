@@ -3,7 +3,7 @@ function Interface (newCanvas) {
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
     this.context.lineWidth = 2;
-    this.context.strokeStyle = 'black';
+    this.context.strokeStyle = Colors.DEFAULT;
     this.scene = new Scene();
     this.freeHandDots = [];
     this.selectedPolygon = null;
@@ -184,11 +184,6 @@ function Interface (newCanvas) {
         this.redraw();
     };
 
-    this.clearTemporaryPolygon = function() {
-        this.freeHandDots = [];
-        this.redraw();
-    };
-
     this.selectionClick = function (x, y) {
         var polygons = this.scene.getPolygons();
         var lowestDistance = {
@@ -224,11 +219,9 @@ function Interface (newCanvas) {
                 polygon: this.scene.getPolygons()[lowestDistance.poly]
             };
             this.redraw();
-            return true;
         } else {
             this.selectedPolygon = null;
             this.redraw();
-            return false;
         }
     }
 }

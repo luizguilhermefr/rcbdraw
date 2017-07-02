@@ -11,7 +11,7 @@
     <script type="text/javascript" src="js/Vertex.js"></script>
     <script type="text/javascript" src="js/Polygon.js"></script>
     <script type="text/javascript" src="js/Scene.js"></script>
-    <script type="text/javascript" src="js/Interface.js"></script>    
+    <script type="text/javascript" src="js/Interface.js"></script>
 </head>
 <body>
 <nav class="navbar navbar-default" id="main-menu">
@@ -39,7 +39,7 @@
                        aria-expanded="false">Ferramentas<span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#" id="selection">Selecionar</a></li>
-                        <li><a href="#" id = "delete">Excluir</a></li>
+                        <li><a href="#" id="delete">Excluir</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#" id="freehand">Mão livre</a></li>
                         <li><a href="#" data-toggle="modal" data-target="#regular-polygon">Polígono Regular</a></li>
@@ -157,16 +157,14 @@
     var selection;
     var welcome = 'Bem-vindo ao RCBDraw!';
 
-    function switchSelection(){
+    function switchSelection () {
         selection = !selection;
         if (selection) {
             panel.css('cursor', 'pointer');
             helper.text('Selecione um objeto.');
             panel.click(function (e) {
-                var selected = drawInterface.selectionClick(e.clientX, e.clientY);
-                if (selected) {
-                    switchSelection();
-                }
+                drawInterface.selectionClick(e.clientX, e.clientY);
+                switchSelection();
             });
         } else {
             panel.unbind();
@@ -175,7 +173,7 @@
         }
     }
 
-    function switchFreeHand() {
+    function switchFreeHand () {
         freeHand = !freeHand;
         if (freeHand) {
             panel.css('cursor', 'pointer');
@@ -195,10 +193,10 @@
     }
 
     $('#main-menu').click(function () {
-       if (freeHand) {
-           drawInterface.clearFreeHandDots();
-           switchFreeHand();
-       }
+        if (freeHand) {
+            drawInterface.clearFreeHandDots();
+            switchFreeHand();
+        }
     });
 
     $('#new-file').click(function () {
@@ -211,7 +209,7 @@
             return;
         }
         var json = JSON.stringify(drawInterface.generateSave());
-        var blob = new Blob([json], {type: 'application/json'});
+        var blob = new Blob([ json ], { type: 'application/json' });
         var url = URL.createObjectURL(blob);
         var a = document.getElementById('save-file-ok');
         a.download = 'rcb.json';
@@ -232,7 +230,7 @@
             alert('Por favor, atualize seu browser!');
             return;
         }
-        if (!file[0]) {
+        if (!file[ 0 ]) {
             alert('Nenhum arquivo selecionado.');
             return;
         }
@@ -241,7 +239,7 @@
             var contents = e.target.result;
             drawInterface.openFile(JSON.parse(contents));
         };
-        reader.readAsText(file[0]);
+        reader.readAsText(file[ 0 ]);
         $('#open-file-prompt').modal('hide');
     });
 
@@ -250,7 +248,7 @@
     });
 
     $('#delete').click(function () {
-       drawInterface.deletePolygon();
+        drawInterface.deletePolygon();
     });
 
     $('#freehand').click(function (e) {
@@ -292,7 +290,7 @@
         }
     });
 
-    function initialize() {
+    function initialize () {
         dropdown = $('.dropdown-toggle');
         dropdown.dropdown();
         drawInterface = new Interface(document.getElementById('drawpanel'));
