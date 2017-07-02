@@ -127,10 +127,11 @@ function Interface (newCanvas) {
     this.generateSave = function () {
         var polygons = this.scene.getPolygons();
         var dump = [];
+        var temp;
         for (var i = 0; i < polygons.length; i++) {
             temp = [];
-            for (var j = 0; j < polygons[ i ].countVertices(); j++) {
-                temp.push([ polygons[ i ].vertexAt(j).getX(), polygons[ i ].vertexAt(j).getY() ]);
+            for (var j = 0; j < polygons[i].countVertices(); j++) {
+                temp.push([polygons[i].vertexAt(j).getX(), polygons[i].vertexAt(j).getY()]);
             }
             dump.push(temp);
         }
@@ -183,6 +184,11 @@ function Interface (newCanvas) {
         this.redraw();
     };
 
+    this.clearTemporaryPolygon = function() {
+        this.freeHandDots = [];
+        this.redraw();
+    };
+
     this.selectionClick = function (x, y) {
         var polygons = this.scene.getPolygons();
         var lowestDistance = {
@@ -216,13 +222,13 @@ function Interface (newCanvas) {
             this.selectedPolygon = {
                 index: lowestDistance.poly,
                 polygon: this.scene.getPolygons()[lowestDistance.poly]
-            }
+            };
             this.redraw();
-            return false;
+            return true;
         } else {
             this.selectedPolygon = null;
             this.redraw();
-            return true;
+            return false;
         }
     }
 }

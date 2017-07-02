@@ -14,7 +14,7 @@
     <script type="text/javascript" src="js/Interface.js"></script>    
 </head>
 <body>
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default" id="main-menu">
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">RCBDraw</a>
@@ -149,6 +149,7 @@
     Procure atualizá-lo.
 </canvas>
 <script type="text/javascript">
+    var dropdown;
     var drawInterface;
     var panel;
     var helper;
@@ -192,6 +193,13 @@
             drawInterface.clearFreeHandDots();
         }
     }
+
+    $('#main-menu').click(function () {
+       if (freeHand) {
+           drawInterface.clearFreeHandDots();
+           switchFreeHand();
+       }
+    });
 
     $('#new-file').click(function () {
         drawInterface.resetScene();
@@ -245,7 +253,8 @@
        drawInterface.deletePolygon();
     });
 
-    $('#freehand').click(function () {
+    $('#freehand').click(function (e) {
+        e.stopPropagation();
         switchFreeHand();
     });
 
@@ -284,6 +293,8 @@
     });
 
     function initialize() {
+        dropdown = $('.dropdown-toggle');
+        dropdown.dropdown();
         drawInterface = new Interface(document.getElementById('drawpanel'));
         panel = $('#drawpanel');
         helper = $('#helper');
@@ -293,7 +304,6 @@
     }
 
     $(document).ready(function () {
-        $('dropdown-toggle').dropdown();
         initialize();
     });
 </script>
