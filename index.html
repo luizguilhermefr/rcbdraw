@@ -176,6 +176,7 @@
     function switchFreeHand () {
         freeHand = !freeHand;
         if (freeHand) {
+            drawInterface.clearSelectedPolygon(true);
             panel.css('cursor', 'pointer');
             helper.text('Ligue os pontos para criar o polígono.');
             panel.click(function (e) {
@@ -283,6 +284,7 @@
             panel.css('cursor', 'pointer');
             panel.click(function (e) {
                 helper.text(welcome);
+                drawInterface.clearSelectedPolygon();
                 drawInterface.newRegularPolygon(sides, size, e.clientX, e.clientY);
                 panel.css('cursor', 'default');
                 panel.unbind();

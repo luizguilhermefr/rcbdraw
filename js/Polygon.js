@@ -1,7 +1,6 @@
 function Polygon (vertices, color = Colors.DEFAULT) {
     this.vertices = vertices;
     this.color = color;
-    this.boundaries = this.setBoundaries();
 
     this.setBoundaries = function () {
         v0 = this.vertexAt(0);
@@ -30,8 +29,6 @@ function Polygon (vertices, color = Colors.DEFAULT) {
         };
     };
 
-    this.
-
     this.getBoundaries = function () {
         return this.boundaries;
     };
@@ -43,4 +40,6 @@ function Polygon (vertices, color = Colors.DEFAULT) {
     this.vertexAt = function (index) {
         return this.vertices[ index ];
     };
+
+    this.boundaries = this.setBoundaries();
 }

@@ -28,7 +28,7 @@ function Interface (newCanvas) {
         this.clearAll();
         var polygons = this.scene.getPolygons();
         for (var i = 0; i < polygons.length; i++) {
-            this.context.strokeStyle = polygons[i].color;
+            this.context.strokeStyle = polygons[ i ].color;
             this.context.beginPath();
             this.context.moveTo(polygons[ i ].vertexAt(0).getX(), polygons[ i ].vertexAt(0).getY());
             for (var j = 1; j < polygons[ i ].countVertices() - 1; j++) {
@@ -55,7 +55,7 @@ function Interface (newCanvas) {
     };
 
     this.drawSelectedPolygon = function () {
-        if(this.selectedPolygon !== null) {
+        if (this.selectedPolygon !== null) {
             this.context.strokeStyle = Colors.SELECTED;
             this.context.beginPath();
             this.context.moveTo(this.selectedPolygon.polygon.vertexAt(0).getX(), this.selectedPolygon.polygon.vertexAt(0).getY());
@@ -68,9 +68,16 @@ function Interface (newCanvas) {
         }
     };
 
-    this.deletePolygon = function() {
-        this.scene.removePolygon(this.selectedPolygon.index);
+    this.clearSelectedPolygon = function (redraw = false) {
         this.selectedPolygon = null;
+        if (redraw) {
+            this.redraw();
+        }
+    };
+
+    this.deletePolygon = function () {
+        this.scene.removePolygon(this.selectedPolygon.index);
+        this.clearSelectedPolygon();
         this.redraw();
 
         return false;
@@ -130,8 +137,8 @@ function Interface (newCanvas) {
         var temp;
         for (var i = 0; i < polygons.length; i++) {
             temp = [];
-            for (var j = 0; j < polygons[i].countVertices(); j++) {
-                temp.push([polygons[i].vertexAt(j).getX(), polygons[i].vertexAt(j).getY()]);
+            for (var j = 0; j < polygons[ i ].countVertices(); j++) {
+                temp.push([ polygons[ i ].vertexAt(j).getX(), polygons[ i ].vertexAt(j).getY() ]);
             }
             dump.push(temp);
         }
@@ -172,7 +179,7 @@ function Interface (newCanvas) {
             return false;
         }
         return this.distanceBetweenTwoPoints(this.freeHandDots[ 0 ], this.freeHandDots[ this.freeHandDots.length -
-          1 ]) < 20;
+            1 ]) < 20;
     };
 
     this.convertTemporaryToPolygon = function () {
@@ -184,44 +191,62 @@ function Interface (newCanvas) {
         this.redraw();
     };
 
+    this.isInsideBoundaryTolerance = function (point, boundary) {
+        var tolerance = 20;
+        if (point.x > boundary.maxX + tolerance) {
+            return false;
+        }
+        if (point.x < boundary.minX - tolerance) {
+            return false;
+        }
+        if (point.y > boundary.maxY + tolerance) {
+            return false;
+        }
+        if (point.y < boundary.minY - tolerance) {
+            return false;
+        }
+        return true;
+    };
+
     this.selectionClick = function (x, y) {
         var polygons = this.scene.getPolygons();
         var lowestDistance = {
             poly: -1,
             distance: Number.POSITIVE_INFINITY
         };
+        var point = {
+            x: this.getRelativeX(x),
+            y: this.getRelativeY(y)
+        };
         for (var i = 0; i < polygons.length; i++) {
-            for (var j = 0; j < polygons[i].countVertices() - 1; j++) {
-                var from = polygons[i].vertexAt(j);
-                var to = polygons[i].vertexAt(j + 1);
-                var edge = {
-                    x1: from.x,
-                    y1: from.y,
-                    x2: to.x,
-                    y2: to.y
-                };
-                var point = {
-                    x: this.getRelativeX(x),
-                    y: this.getRelativeY(y)
-                };
-                var currentDistance = this.distanceBetweenPointAndEdge(point, edge);
-                if (currentDistance < lowestDistance.distance) {
-                    lowestDistance = {
-                        poly: i,
-                        distance: currentDistance
+            if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries())) {
+                for (var j = 0; j < polygons[ i ].countVertices() - 1; j++) {
+                    var from = polygons[ i ].vertexAt(j);
+                    var to = polygons[ i ].vertexAt(j + 1);
+                    var edge = {
+                        x1: from.getX(),
+                        y1: from.getY(),
+                        x2: to.getX(),
+                        y2: to.getY()
                     };
+                    var currentDistance = this.distanceBetweenPointAndEdge(point, edge);
+                    if (currentDistance < lowestDistance.distance) {
+                        lowestDistance = {
+                            poly: i,
+                            distance: currentDistance
+                        };
+                    }
                 }
             }
         }
         if (lowestDistance.distance < 10) {
             this.selectedPolygon = {
                 index: lowestDistance.poly,
-                polygon: this.scene.getPolygons()[lowestDistance.poly]
+                polygon: polygons[ lowestDistance.poly ]
             };
-            this.redraw();
         } else {
-            this.selectedPolygon = null;
-            this.redraw();
+            this.clearSelectedPolygon();
         }
-    }
+        this.redraw();
+    };
 }
