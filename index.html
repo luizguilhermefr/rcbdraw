@@ -255,6 +255,7 @@
     $('#freehand').click(function (e) {
         e.stopPropagation();
         switchFreeHand();
+        $('[data-toggle="dropdown"]').parent().removeClass('open');
     });
 
     $(document).keypress(function (e) {
