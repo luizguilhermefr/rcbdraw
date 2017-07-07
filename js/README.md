@@ -18,6 +18,6 @@ Classe Polígono. Possui as funções básicas pertinentes à criação e manipu
 
 Classe Vértice. Possui as funções básicas pertinentes à representação de vértices em memória, bem como métodos pertinentes. É manipulada pela classe `Polygon` mãe.
 
-5. Edge.js
+5. Colors.js
 
-Classe Aresta. Nesta, são guardados os atributos e métodos para representação das arestas. É manipulada pela classe `Polygon` mãe.
+Arquivo de cores. Centraliza as definições RGB utilizadas no resto do projeto.
