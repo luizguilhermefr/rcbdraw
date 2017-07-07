@@ -109,6 +109,10 @@ function Interface (newCanvas) {
         this.redraw();
     };
 
+    this.shouldAskOnReset = function () {
+      return this.scene.isDirty();
+    };
+
     this.resetScene = function () {
         this.scene = new Scene();
         this.redraw();
@@ -128,6 +132,7 @@ function Interface (newCanvas) {
             this.scene.addPolygon(new Polygon(tempVertices));
             tempVertices = [];
         }
+        this.scene.resetDirt();
         this.redraw();
     };
 
@@ -142,6 +147,7 @@ function Interface (newCanvas) {
             }
             dump.push(temp);
         }
+        this.scene.resetDirt();
         return dump;
     };
 
