@@ -43,10 +43,10 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">Ferramentas<span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#" id="selection">Selecionar</a></li>
-                        <li><a href="#" id="delete">Excluir</a></li>
+                        <li><a href="#" class="selection">Selecionar</a></li>
+                        <li><a href="#" class="delete">Excluir</a></li>
                         <li role="separator" class="divider"></li>
-                        <li><a href="#" id="freehand">Mão livre</a></li>
+                        <li><a href="#" class="freehand">Mão livre</a></li>
                         <li><a href="#" data-toggle="modal" data-target="#regular-polygon">Polígono Regular</a></li>
                     </ul>
                 </li>
@@ -152,26 +152,48 @@
     Seu navegador não suporta o Canvas do HTML5. <br>
     Procure atualizá-lo.
 </canvas>
-<div class="paleta-ferramentas">
-    <div class="col-md-12">
-        <div class="col-md-2">
-            <i class="glyphicon glyphicon-hand-up input-lg margin-left-negative"></i>
-        </div>
-        <div class="col-md-2">
-            <i class="glyphicon glyphicon-trash input-lg margin-left-negative"></i>
-        </div>
-        <div class="col-md-2">
-            <span style="font-size: x-large">&#9651;</span>
-        </div>
-        <div class="col-md-2">
-            <span style="font-size: x-large">&#10063;</span>
-        </div>
-        <div class="col-md-2">
-            <span style="font-size: x-large">&#9711;</span>
-        </div>
-        <div class="col-md-2">
-            <span style="font-size: x-large"> &#9736;</span>
-        </div>
+
+<div class="col-md-12 paleta-ferramentas">
+    <div class="col-md-1" data-toggle="tooltip" title="Selecionar">
+        <button type="button" class="btn btn-default btn-circle btn-lg selection" href="#" >
+            <h4 class="icon icon-mouse"></h4>
+        </button>
+    </div>
+    <div class="col-md-1" data-toggle="tooltip" title="Deletar">
+        <button type="button" class="btn btn-default btn-circle btn-lg delete" href="#">
+            <h4 class="icon icon-delete"></h4>
+        </button>
+    </div>
+    <div class="col-md-1" data-toggle="tooltip" title="Triângulo">
+        <button type="button" class="btn btn-default btn-circle btn-lg triangle" href="#">
+            <h4 class="icon icon-triangle"></h4>
+        </button>
+    </div>
+    <div class="col-md-1" data-toggle="tooltip" title="Quadrado">
+        <button type="button" class="btn btn-default btn-circle btn-lg square" href="#">
+            <h4 class="icon icon-square"></h4>
+        </button>
+    </div>
+    <div class="col-md-1" data-toggle="tooltip" title="Pentágono">
+        <button type="button" class="btn btn-default btn-circle btn-lg pentagon" href="#">
+            <h4 class="icon icon-pentagon"></h4>
+        </button>
+    </div>
+    <div class="col-md-1" data-toggle="tooltip" title="Hexágono">
+        <button type="button" class="btn btn-default btn-circle btn-lg hexagon" href="#">
+            <h4 class="icon icon-hexagon"></h4>
+        </button>
+    </div>
+    <div class="col-md-1" data-toggle="tooltip" title="Polígono de N lados">
+        <button type="button" class="btn btn-default btn-circle btn-lg" href="#" data-toggle="modal"
+                data-target="#regular-polygon">
+            <h4 class="icon icon-regular"></h4>
+        </button>
+    </div>
+    <div class="col-md-1" data-toggle="tooltip" title="Mão Livre">
+        <button type="button" class="btn btn-default btn-circle btn-lg freehand" href="#">
+            <h4 class="icon icon-freehand"></h4>
+        </button>
     </div>
 </div>
 <script type="text/javascript">
@@ -183,7 +205,7 @@
     var selection;
     var welcome = 'Bem-vindo ao RCBDraw!';
 
-    function switchSelection () {
+    function switchSelection() {
         selection = !selection;
         if (selection) {
             panel.css('cursor', 'pointer');
@@ -199,7 +221,7 @@
         }
     }
 
-    function switchFreeHand () {
+    function switchFreeHand() {
         freeHand = !freeHand;
         if (freeHand) {
             drawInterface.clearSelectedPolygon(true);
@@ -242,7 +264,7 @@
             return;
         }
         var json = JSON.stringify(drawInterface.generateSave());
-        var blob = new Blob([ json ], { type: 'application/json' });
+        var blob = new Blob([json], {type: 'application/json'});
         var url = URL.createObjectURL(blob);
         var a = document.getElementById('save-file-ok');
         a.download = 'rcb.json';
@@ -263,7 +285,7 @@
             alert('Por favor, atualize seu browser!');
             return;
         }
-        if (!file[ 0 ]) {
+        if (!file[0]) {
             alert('Nenhum arquivo selecionado.');
             return;
         }
@@ -272,19 +294,19 @@
             var contents = e.target.result;
             drawInterface.openFile(JSON.parse(contents));
         };
-        reader.readAsText(file[ 0 ]);
+        reader.readAsText(file[0]);
         $('#open-file-prompt').modal('hide');
     });
 
-    $('#selection').click(function () {
+    $('.selection').click(function () {
         switchSelection();
     });
 
-    $('#delete').click(function () {
+    $('.delete').click(function () {
         drawInterface.deletePolygon();
     });
 
-    $('#freehand').click(function (e) {
+    $('.freehand').click(function (e) {
         e.stopPropagation();
         switchFreeHand();
         $('[data-toggle="dropdown"]').parent().removeClass('open');
@@ -298,35 +320,56 @@
         }
     });
 
+    $('.triangle').click(function (sidesNumber) {
+        definePolygon(3, 50);
+    });
+
+    $('.square').click(function (sidesNumber) {
+        definePolygon(4, 50);
+    });
+
+    $('.pentagon').click(function (sidesNumber) {
+        definePolygon(5, 50);
+    });
+
+    $('.hexagon').click(function (sidesNumber) {
+        definePolygon(6, 50);
+    });
+
+    function definePolygon(sides, size) {
+        helper.text('Posicione o polígono.');
+        panel.css('cursor', 'pointer');
+        panel.click(function (e) {
+            helper.text(welcome);
+            drawInterface.clearSelectedPolygon();
+            drawInterface.newRegularPolygon(sides, size, e.clientX, e.clientY);
+            panel.css('cursor', 'default');
+            panel.unbind();
+        });
+    }
+
     $('#regular-polygon-ok').click(function () {
         var sidesNumber = $('#regular-polygon-sides');
         var sizeNumber = $('#regular-polygon-size');
         sides = sidesNumber.val();
         size = sizeNumber.val();
-        if (sides < 3) {
-            console.error('sides < 3');
+        if (sides < 3 || sides > 20) {
+            alert('Por favor, insira entre três e vinte lados.');
             sidesNumber.val('');
         } else if (size < 50) {
-            console.error('size < 50');
+            alert('Por favor, insira um tamanho de pelo menos 50.');
             sizeNumber.val(50);
         } else {
-            helper.text('Posicione o polígono.');
             $('#regular-polygon').modal('hide');
             sidesNumber.val('');
             sizeNumber.val(50);
-            panel.css('cursor', 'pointer');
-            panel.click(function (e) {
-                helper.text(welcome);
-                drawInterface.clearSelectedPolygon();
-                drawInterface.newRegularPolygon(sides, size, e.clientX, e.clientY);
-                panel.css('cursor', 'default');
-                panel.unbind();
-            });
+            definePolygon(sides, size);
         }
     });
 
-    function initialize () {
+    function initialize() {
         dropdown = $('.dropdown-toggle');
+        $('[data-toggle="tooltip"]').tooltip();
         dropdown.dropdown();
         drawInterface = new Interface(document.getElementById('drawpanel'));
         panel = $('#drawpanel');
