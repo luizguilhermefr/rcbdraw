@@ -6,3 +6,8 @@ canvas#drawpanel {
     background-color: #f3f3f3;
 }
 
+.paleta-ferramentas{
+    background-color: #fcf8e3;
+    position: fixed;
+    bottom: 0;
+}
