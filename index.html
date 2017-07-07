@@ -153,7 +153,7 @@
     Procure atualizá-lo.
 </canvas>
 
-<div class="col-md-12 paleta-ferramentas">
+<div class="col-md-6 paleta-ferramentas">
     <div class="col-md-1" data-toggle="tooltip" title="Selecionar">
         <button type="button" class="btn btn-default btn-circle btn-lg selection" href="#" >
             <h4 class="icon icon-mouse"></h4>
@@ -320,19 +320,19 @@
         }
     });
 
-    $('.triangle').click(function (sidesNumber) {
+    $('.triangle').click(function () {
         definePolygon(3, 50);
     });
 
-    $('.square').click(function (sidesNumber) {
+    $('.square').click(function () {
         definePolygon(4, 50);
     });
 
-    $('.pentagon').click(function (sidesNumber) {
+    $('.pentagon').click(function () {
         definePolygon(5, 50);
     });
 
-    $('.hexagon').click(function (sidesNumber) {
+    $('.hexagon').click(function () {
         definePolygon(6, 50);
     });
 
@@ -364,6 +364,13 @@
             sidesNumber.val('');
             sizeNumber.val(50);
             definePolygon(sides, size);
+        }
+    });
+
+    $('.paleta-ferramentas').click(function (){
+        if (freeHand) {
+            drawInterface.clearFreeHandDots();
+            switchFreeHand();
         }
     });
 

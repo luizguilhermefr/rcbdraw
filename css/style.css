@@ -11,13 +11,10 @@ canvas#drawpanel {
 }
 
 .paleta-ferramentas{
-    background-color: #f3f3f3;
     position: fixed;
     bottom: 5px;
-    display: table;
     margin: 0 auto;
-    width: 70%;
-
+    width: 60%;
 }
 
 .btn-circle {
