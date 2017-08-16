@@ -6,11 +6,11 @@ canvas#drawpanel {
     background-color: #f3f3f3;
 }
 
-.paleta-ferramentas-center{
+.paleta-ferramentas-center {
     width: 100%;
 }
 
-.paleta-ferramentas{
+.paleta-ferramentas {
     position: fixed;
     bottom: 5px;
     margin: 0 auto;
@@ -26,6 +26,7 @@ canvas#drawpanel {
     line-height: 1.428571429;
     border-radius: 15px;
 }
+
 .btn-circle.btn-lg {
     width: 50px;
     height: 50px;
@@ -34,6 +35,7 @@ canvas#drawpanel {
     line-height: 1.33;
     border-radius: 25px;
 }
+
 .btn-circle.btn-xl {
     width: 70px;
     height: 70px;
@@ -44,49 +46,51 @@ canvas#drawpanel {
 }
 
 .icon {
-    width:25px;
+    display: block;
+    float: left;
+    width: 25px;
     height: 25px;
     font-size: 0;
     text-align: center;
     margin: 0px auto;
 }
 
-.icon-mouse{
+.icon-mouse {
     background: url("../icons/select.png") center center/25px no-repeat;
     margin-left: -4px;
 }
 
-.icon-delete{
+.icon-delete {
     background: url("../icons/delete.png") center center/25px no-repeat;
     margin-left: -4px;
 }
 
-.icon-triangle{
+.icon-triangle {
     background: url("../icons/triangle.png") center center/25px no-repeat;
     margin-left: -4px;
 }
 
-.icon-square{
+.icon-square {
     background: url("../icons/square.png") center center/25px no-repeat;
     margin-left: -4px;
 }
 
-.icon-pentagon{
+.icon-pentagon {
     background: url("../icons/pentagon.png") center center/25px no-repeat;
     margin-left: -4px;
 }
 
-.icon-hexagon{
+.icon-hexagon {
     background: url("../icons/hexagon.png") center center/25px no-repeat;
     margin-left: -4px;
 }
 
-.icon-regular{
+.icon-regular {
     background: url("../icons/regular.png") center center/25px no-repeat;
     margin-left: -4px;
 }
 
-.icon-freehand{
+.icon-freehand {
     background: url("../icons/freehand.png") center center/25px no-repeat;
     margin-left: -4px;
 }
