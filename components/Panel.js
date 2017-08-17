@@ -1,10 +1,13 @@
 Vue.component('panel', {
 
     template: `
-        <canvas v-bind:style="{cursor: cursor}" id="drawpanel" width="1366" height="1024" class="col-md-12" v-on:click="onClick">
-            Seu navegador não suporta o Canvas do HTML5. <br>
-            Procure atualizá-lo.
-        </canvas>
+        <div>
+            <canvas v-bind:style="{cursor: cursor}" id="drawpanel" width="1366" height="1024" class="col-md-12" v-on:click="onClick">
+                Seu navegador não suporta o Canvas do HTML5. <br>
+                Procure atualizá-lo.
+            </canvas>
+            <div id="mouse" v-if="mustShowDotAnimation()"></div>
+         </div>
         `,
 
     data: function () {
@@ -69,6 +72,11 @@ Vue.component('panel', {
             if (!success) {
                 alert('Nenhum polígono selecionado!');
             }
+        },
+        mustShowDotAnimation(){
+            if(this.mode === 4)
+                return true;
+            return false;
         },
         reset () {
             drawInterface.clearFreeHandDots();
