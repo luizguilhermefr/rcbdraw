@@ -65,7 +65,10 @@ Vue.component('panel', {
             }
         },
         translateClick(x, y){
-            drawInterface.translateClick(x, y);
+            let success = drawInterface.translateClick(x, y);
+            if (!success) {
+                alert('Nenhum polígono selecionado!');
+            }
         },
         reset () {
             drawInterface.clearFreeHandDots();

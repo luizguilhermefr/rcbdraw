@@ -2,7 +2,7 @@ Vue.component('toolbar', {
 
     template: `
     <div class="col-md-6 paleta-ferramentas">
-        <b-tooltip v-for="item in items" :content="item.title">
+        <b-tooltip v-for="item in items" :content="item.title" :key="item.id">
             <button type="button" class="btn btn-default btn-circle btn-lg selection" v-on:click="item.action">
                 <h1 class="icon" v-bind:class="item.styleClass"></h1>
             </button>

@@ -42,6 +42,7 @@ function Polygon(vertices, color = Colors.DEFAULT) {
     };
 
     this.boundaries = this.setBoundaries();
+
     this.getArea = function () {
         let area = 0;
         for (let i = 0; i < this.vertices.length - 1; i++) {
@@ -58,7 +59,8 @@ function Polygon(vertices, color = Colors.DEFAULT) {
             y: 0
         };
         for (let i = 0; i < this.vertices.length - 1; i++) {
-            let temp = (this.vertices[i].getX() * this.vertices[i + 1].getY()) - (this.vertices[i + 1].getX() * this.vertices[i].getY());
+            let temp = (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getY()) -
+                (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getY());
             center.x += (this.vertices[i].getX() + this.vertices[i + 1].getX()) * temp;
             center.y += (this.vertices[i].getY() + this.vertices[i + 1].getY()) * temp;
         }
@@ -69,10 +71,12 @@ function Polygon(vertices, color = Colors.DEFAULT) {
     };
 
     this.translate = function (vertex) {
-        let dif = this.getCenter();
-        this.vertices.forEach(function (vertex) {
-            vertex.setX(vertex.getX() + dif.getX());
-            vertex.setY(vertex.getY() + dif.getY());
+        let currentCenter = this.getCenter();
+        distX = currentCenter.getX() - vertex.getX();
+        distY = currentCenter.getY() - vertex.getY();
+        this.vertices.forEach(function (v) {
+            v.setX(v.getX() - distX);
+            v.setY(v.getY() - distY);
         });
         this.boundaries = this.setBoundaries();
     };
