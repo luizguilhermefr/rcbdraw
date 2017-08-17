@@ -133,6 +133,7 @@ Vue.component('rcb-navbar', {
                             id: 4,
                             title: 'Cisalhar',
                             enabled: true,
+                            modal: 'shear-modal',
                             action () {
                                 return null;
                             }
