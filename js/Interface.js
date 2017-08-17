@@ -26,13 +26,13 @@ function Interface (newCanvas) {
 
     this.redraw = function () {
         this.clearAll();
-        var polygons = this.scene.getPolygons();
-        for (var i = 0; i < polygons.length; i++) {
-            this.context.strokeStyle = polygons[ i ].color;
+        let polygons = this.scene.getPolygons();
+        for (let i = 0; i < polygons.length; i++) {
+            this.context.strokeStyle = polygons[ i ].strokeColor;
             this.context.beginPath();
             this.context.moveTo(polygons[ i ].vertexAt(0).getX(), polygons[ i ].vertexAt(0).getY());
-            for (var j = 1; j < polygons[ i ].countVertices() - 1; j++) {
-                var vertex = polygons[ i ].vertexAt(j);
+            for (let j = 1; j < polygons[ i ].countVertices() - 1; j++) {
+                let vertex = polygons[ i ].vertexAt(j);
                 this.context.lineTo(vertex.getX(), vertex.getY());
             }
             this.context.lineTo(polygons[ i ].vertexAt(0).getX(), polygons[ i ].vertexAt(0).getY());
@@ -83,12 +83,12 @@ function Interface (newCanvas) {
         return false;
     };
 
-    this.newRegularPolygon = function (sides, size, x, y) {
-        var dotX;
-        var dotY;
-        var temp;
-        var tempVertices = [];
-        var teta = ((2 * Math.PI) / sides);
+    this.newRegularPolygon = function (sides, size, stroke, x, y) {
+        let dotX;
+        let dotY;
+        let temp;
+        let tempVertices = [];
+        let teta = ((2 * Math.PI) / sides);
         dotX = 0;
         dotY = size;
         if (sides % 2 === 0) {
@@ -105,7 +105,7 @@ function Interface (newCanvas) {
             dotY = this.getNewDotY(temp, dotY, teta);
             tempVertices.push(new Vertex(dotX + x, (dotY * (-1)) + y));
         }
-        this.scene.addPolygon(new Polygon(tempVertices));
+        this.scene.addPolygon(new Polygon(tempVertices, stroke));
         this.redraw();
     };
 
@@ -215,12 +215,12 @@ function Interface (newCanvas) {
     };
 
     this.translateClick = function (x, y) {
-        if (this.selectedPolygon === null) {
-            return false;
-        }
         this.scene.getPolygonAt(this.selectedPolygon.index).translate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
         this.redraw();
-        return true;
+    };
+
+    this.isSomethingSelected = function () {
+        return !(this.selectedPolygon === null);
     };
 
     this.selectionClick = function (x, y) {

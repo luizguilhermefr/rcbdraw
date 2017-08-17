@@ -50,9 +50,9 @@
         }
     }, false);
 
-    function definePolygon (sides, size) {
+    function definePolygon (sides, size, stroke) {
         toggleReset();
-        vue.$refs.panel.expectPolygon(sides, size);
+        vue.$refs.panel.expectPolygon(sides, size, stroke);
     }
 
     function expectSelection () {
@@ -74,6 +74,10 @@
     }
 
     function expectTranslate() {
+        if (!drawInterface.isSomethingSelected()) {
+            alert('Nenhum objeto selecionado.');
+            return;
+        }
         toggleReset();
         vue.$refs.panel.expectTranslate();
     }

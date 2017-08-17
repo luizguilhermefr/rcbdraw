@@ -10,6 +10,14 @@ Vue.component('regular-polygon-modal', {
                     <label>Tamanho</label>
                     <input v-model="size" id="regular-polygon-size" min="50" type="number" class="form-control"
                            placeholder="Tamanho (px)">
+                    <label>Borda</label>
+                    <br>
+                    <input type="color" value="#000000" v-model="stroke">
+                    <input class="custom-checkbox form-control-lg" type="checkbox" v-model="mustStroke"/>
+                    <br>
+                    <label>Preenchimento</label>
+                    <br>
+                    <input type="color">
                 </div>
                 <b-alert variant="warning" :show="!canInsert()">
                     Insira entre três e vinte lados e um tamanho de pelo menos 50px.
@@ -21,7 +29,9 @@ Vue.component('regular-polygon-modal', {
     data: function () {
         return {
             sides: '',
-            size: 50
+            size: 50,
+            stroke: Colors.DEFAULT,
+            mustStroke: true
         };
     },
 
@@ -30,9 +40,11 @@ Vue.component('regular-polygon-modal', {
             return this.sides >= 3 && this.sides <= 20 && this.size >= 50;
         },
         submit () {
-            definePolygon(this.sides, this.size);
+            definePolygon(this.sides, this.size, this.stroke);
             this.sides = '';
             this.size = 50;
+            this.stroke = Colors.DEFAULT;
+            this.mustStroke = true;
         }
     }
 });

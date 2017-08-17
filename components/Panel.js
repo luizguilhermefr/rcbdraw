@@ -12,13 +12,15 @@ Vue.component('panel', {
             mode: 0, // 0: nada, 1: esperando posicionamento de polígono, 2: seleção, 3: mão livre
             size: 0,
             sides: 0,
+            stroke: Colors.DEFAULT,
             cursor: 'default'
         };
     },
     methods: {
-        expectPolygon (sides, size) {
+        expectPolygon (sides, size, stroke) {
             this.size = size;
             this.sides = sides;
+            this.stroke = stroke;
             this.mode = 1;
             this.cursor = 'copy';
         },
@@ -51,7 +53,7 @@ Vue.component('panel', {
             }
         },
         putPoly (x, y) {
-            drawInterface.newRegularPolygon(this.sides, this.size, x, y);
+            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, x, y);
             this.reset();
         },
         selectionClick (x, y) {
@@ -65,10 +67,7 @@ Vue.component('panel', {
             }
         },
         translateClick(x, y){
-            let success = drawInterface.translateClick(x, y);
-            if (!success) {
-                alert('Nenhum polígono selecionado!');
-            }
+            drawInterface.translateClick(x, y);
         },
         reset () {
             drawInterface.clearFreeHandDots();
