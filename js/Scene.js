@@ -23,6 +23,10 @@ function Scene () {
         return this.polygons;
     };
 
+    this.getPolygonAt = function (id) {
+        return this.polygons[id];
+    };
+
     this.isDirty = function () {
         return this.dirty;
     };

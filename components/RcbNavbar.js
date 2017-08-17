@@ -113,18 +113,17 @@ Vue.component('rcb-navbar', {
                                 return null;
                             }
                         },
-
                         {
                             id: 2,
-                            title: 'Mover',
+                            title: 'Transladar',
                             enabled: true,
                             action () {
-                                return null;
+                                expectTranslate();
                             }
                         },
                         {
                             id: 3,
-                            title: 'Redimensionar',
+                            title: 'Escalar',
                             enabled: true,
                             action () {
                                 return null;
@@ -132,6 +131,14 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 4,
+                            title: 'Cisalhar',
+                            enabled: true,
+                            action () {
+                                return null;
+                            }
+                        },
+                        {
+                            id: 5,
                             title: 'Propriedades do objeto...',
                             enabled: true,
                             action () {

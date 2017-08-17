@@ -30,6 +30,10 @@ Vue.component('panel', {
             this.mode = 3;
             this.cursor = 'crosshair'
         },
+        expectTranslate(){
+            this.mode = 4;
+            this.cursor = 'move';
+        },
         onClick (e) {
             switch (this.mode) {
                 case 1:
@@ -40,6 +44,9 @@ Vue.component('panel', {
                     break;
                 case 3:
                     this.freehandClick(e.clientX, e.clientY);
+                    break;
+                case 4:
+                    this.translateClick(e.clientX, e.clientY);
                     break;
             }
         },
@@ -56,6 +63,9 @@ Vue.component('panel', {
                 drawInterface.clearFreeHandDots();
                 this.reset();
             }
+        },
+        translateClick(x, y){
+            drawInterface.translateClick(x, y);
         },
         reset () {
             drawInterface.clearFreeHandDots();

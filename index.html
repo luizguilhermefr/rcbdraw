@@ -72,6 +72,12 @@
     function openRegularPolygonModal() {
         vue.$emit('show::modal','regular-polygon-modal');
     }
+
+    function expectTranslate() {
+        toggleReset();
+        vue.$refs.panel.expectTranslate();
+    }
+
 </script>
 </body>
 </html>
