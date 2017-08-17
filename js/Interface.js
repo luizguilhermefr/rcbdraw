@@ -47,7 +47,7 @@ function Interface (newCanvas) {
         this.context.beginPath();
         if (this.freeHandDots.length > 1) {
             this.context.moveTo(this.freeHandDots[ 0 ].x, this.freeHandDots[ 0 ].y);
-            for (var n = 1; n < this.freeHandDots.length; n++) {
+            for (let n = 1; n < this.freeHandDots.length; n++) {
                 this.context.lineTo(this.freeHandDots[ n ].x, this.freeHandDots[ n ].y);
             }
             this.context.stroke();

@@ -1,10 +1,13 @@
 Vue.component('panel', {
 
     template: `
-        <canvas v-bind:style="{cursor: cursor}" id="drawpanel" class="col-md-12 canvas" v-on:click="onClick">
-            Seu navegador não suporta o Canvas do HTML5. <br>
-            Procure atualizá-lo.
-        </canvas>
+        <div>
+            <canvas v-bind:style="{cursor: cursor}" id="drawpanel" width="1366" height="1024" class="canvas col-md-12" v-on:click="onClick" @mousedown="mouseDown" @mouseup="mouseUp" @mousemove="mouseMove">
+                Seu navegador não suporta o Canvas do HTML5. <br>
+                Procure atualizá-lo.
+            </canvas>
+            <div id="mouse"></div>
+         </div>
         `,
 
     data: function () {
@@ -13,7 +16,8 @@ Vue.component('panel', {
             size: 0,
             sides: 0,
             stroke: Colors.DEFAULT,
-            cursor: 'default'
+            cursor: 'default',
+            dragging: false
         };
     },
     methods: {
@@ -47,9 +51,24 @@ Vue.component('panel', {
                 case 3:
                     this.freehandClick(e.clientX, e.clientY);
                     break;
+            }
+        },
+        mouseDown () {
+            switch (this.mode) {
                 case 4:
-                    this.translateClick(e.clientX, e.clientY);
+                    this.dragging = true;
                     break;
+            }
+        },
+        mouseMove (e) {
+            if (this.dragging) {
+                drawInterface.translateClick(e.clientX, e.clientY);
+            }
+        },
+        mouseUp (e) {
+            if (this.dragging) {
+                drawInterface.translateClick(e.clientX, e.clientY);
+                this.dragging = false;
             }
         },
         putPoly (x, y) {
@@ -66,15 +85,13 @@ Vue.component('panel', {
                 this.reset();
             }
         },
-        translateClick(x, y){
-            drawInterface.translateClick(x, y);
-        },
         reset () {
             drawInterface.clearFreeHandDots();
             this.mode = 0;
             this.size = 0;
             this.sides = 0;
             this.cursor = 'default';
+            this.dragging = false;
         }
     }
 });

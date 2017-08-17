@@ -5,8 +5,8 @@ html, body {
     border: 0;
     overflow: hidden;
     display: block;
+    background-color: #292b2c;
 }
-
 
 .navbar {
     margin-bottom: 0;
@@ -17,6 +17,14 @@ html, body {
     left: 0;
     top: 0;
     background-color: #f3f3f3;
+}
+
+div#mouse {
+    border-radius: 50%;
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    background-color: blue;
 }
 
 .paleta-ferramentas-center {
