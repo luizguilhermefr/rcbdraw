@@ -47,7 +47,7 @@
         drawInterface = new Interface(panel);
     };
 
-    window.addEventListener('keyup', function(event) {
+    window.addEventListener('keyup', function (event) {
         if (event.keyCode === 27) {
             toggleReset();
         } else if (event.keyCode === 46) {
@@ -55,17 +55,17 @@
         }
     }, false);
 
-    function definePolygon (sides, size, stroke) {
+    function definePolygon(sides, size, stroke, fill, mustStroke, mustFill) {
         toggleReset();
-        vue.$refs.panel.expectPolygon(sides, size, stroke);
+        vue.$refs.panel.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
     }
 
-    function expectSelection () {
+    function expectSelection() {
         toggleReset();
         vue.$refs.panel.expectSelection();
     }
 
-    function expectFreehand () {
+    function expectFreehand() {
         toggleReset();
         vue.$refs.panel.expectFreehand()
     }
@@ -75,7 +75,7 @@
     }
 
     function openRegularPolygonModal() {
-        vue.$emit('show::modal','regular-polygon-modal');
+        vue.$emit('show::modal', 'regular-polygon-modal');
     }
 
     function expectTranslate() {

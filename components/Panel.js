@@ -16,15 +16,21 @@ Vue.component('panel', {
             size: 0,
             sides: 0,
             stroke: Colors.DEFAULT,
+            fill: null,
+            mustStroke: true,
+            mustFill: false,
             cursor: 'default',
             dragging: false
         };
     },
     methods: {
-        expectPolygon (sides, size, stroke) {
+        expectPolygon (sides, size, stroke, fill, mustStroke, mustFill) {
             this.size = size;
             this.sides = sides;
             this.stroke = stroke;
+            this.fill = fill;
+            this.mustStroke = mustStroke;
+            this.mustFill = mustFill;
             this.mode = 1;
             this.cursor = 'copy';
         },
@@ -72,7 +78,7 @@ Vue.component('panel', {
             }
         },
         putPoly (x, y) {
-            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, x, y);
+            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y);
             this.reset();
         },
         selectionClick (x, y) {
@@ -92,6 +98,10 @@ Vue.component('panel', {
             this.sides = 0;
             this.cursor = 'default';
             this.dragging = false;
+            this.stroke = Colors.DEFAULT;
+            this.fill = null;
+            this.mustStroke = true;
+            this.mustFill = false;
         }
     }
 });

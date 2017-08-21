@@ -1,10 +1,12 @@
-function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null) {
+function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustStroke = true, mustFill = false) {
     this.vertices = vertices;
     this.strokeColor = strokeColor;
     this.fillColor = fillColor;
+    this.mustStroke = mustStroke;
+    this.mustFill = mustFill;
 
     this.setBoundaries = function () {
-        v0 = this.vertexAt(0);
+        let v0 = this.vertexAt(0);
         let maxX = v0.getX(), maxY = v0.getY(), minX = v0.getX(), minY = v0.getY();
         for (let i = 1; i < this.vertices.length; i++) {
             let v = this.vertexAt(i);
