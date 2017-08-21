@@ -25,21 +25,33 @@ function Interface(newCanvas) {
     };
 
     this.fillPoly = function (polygon) {
-
+        for (let i = 0; i < polygon.length; i++){
+            drawPixel();
+        }
     };
+
+    this.strokePoly = function (polygon) {
+        this.context.strokeStyle = polygon.strokeColor;
+        this.context.beginPath();
+        this.context.moveTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
+        for (let j = 1; j < polygon.countVertices() - 1; j++) {
+            let vertex = polygon.vertexAt(j);
+            this.context.lineTo(vertex.getX(), vertex.getY());
+        }
+        this.context.lineTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
+        this.context.stroke();
+    };
+
     this.redraw = function () {
         this.clearAll();
         let polygons = this.scene.getPolygons();
         for (let i = 0; i < polygons.length; i++) {
-            this.context.strokeStyle = polygons[i].strokeColor;
-            this.context.beginPath();
-            this.context.moveTo(polygons[i].vertexAt(0).getX(), polygons[i].vertexAt(0).getY());
-            for (let j = 1; j < polygons[i].countVertices() - 1; j++) {
-                let vertex = polygons[i].vertexAt(j);
-                this.context.lineTo(vertex.getX(), vertex.getY());
+            if (polygons[i].mustStroke) {
+                this.strokePoly(polygons[i]);
             }
-            this.context.lineTo(polygons[i].vertexAt(0).getX(), polygons[i].vertexAt(0).getY());
-            this.context.stroke();
+            if (polygons[i].mustFill) {
+                this.fillPoly(polygons[i]);
+            }
         }
         this.drawTemporaryPolygon();
         this.drawSelectedPolygon();
