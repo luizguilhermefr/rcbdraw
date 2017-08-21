@@ -25,8 +25,10 @@ function Interface(newCanvas) {
     };
 
     this.fillPoly = function (polygon) {
-        for (let i = 0; i < polygon.length; i++){
-            drawPixel();
+        for (let i = 0; i < 300; i++) {
+            for (let j = 0; j < 300; j++) {
+                drawPixel(polygon.x, polygon.y, polygon.color);
+            }
         }
     };
 
