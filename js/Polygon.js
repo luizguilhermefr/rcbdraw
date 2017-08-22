@@ -62,8 +62,8 @@ function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustS
             y: 0
         };
         for (let i = 0; i < this.vertices.length - 1; i++) {
-            let temp = (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getY()) -
-                (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getY());
+            let temp = (this.vertices[i].getX() * this.vertices[i + 1].getY()) -
+                (this.vertices[i + 1].getX() * this.vertices[i].getY());
             center.x += (this.vertices[i].getX() + this.vertices[i + 1].getX()) * temp;
             center.y += (this.vertices[i].getY() + this.vertices[i + 1].getY()) * temp;
         }
@@ -75,12 +75,26 @@ function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustS
 
     this.translate = function (vertex) {
         let currentCenter = this.getCenter();
-        distX = currentCenter.getX() - vertex.getX();
-        distY = currentCenter.getY() - vertex.getY();
+        let distX = currentCenter.getX() - vertex.getX();
+        let distY = currentCenter.getY() - vertex.getY();
         this.vertices.forEach(function (v) {
             v.setX(v.getX() - distX);
             v.setY(v.getY() - distY);
         });
         this.boundaries = this.setBoundaries();
+    };
+
+    this.inside = function (x, y) {
+
+        let isInside = false;
+        for (let i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
+            let xi = this.vertices[i].getX(), yi = this.vertices[i].getY();
+            let xj = this.vertices[j].getX(), yj = this.vertices[j].getY();
+
+            let intersect = ((yi > y) !== (yj > y))
+                && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+            if (intersect) isInside = !isInside;
+        }
+        return isInside;
     };
 }

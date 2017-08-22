@@ -25,9 +25,31 @@ function Interface(newCanvas) {
     };
 
     this.fillPoly = function (polygon) {
-        for (let i = 0; i < 300; i++) {
-            for (let j = 0; j < 300; j++) {
-                drawPixel(polygon.x, polygon.y, polygon.color);
+        let poly ={
+            current: false,
+            X: 0,
+            Y: 0
+        };
+        this.context.strokeStyle = polygon.fillColor;
+        this.context.beginPath();
+
+        for (let i = polygon.getBoundaries().minY-1; i <= polygon.getBoundaries().maxY+1; i++) {
+            poly.current = false;
+            for (let j = polygon.getBoundaries().minX-1; j <= polygon.getBoundaries().maxX+1; j++) {
+                if (polygon.inside(j, i)) {
+                    if(!poly.current) {
+                        poly.current = true;
+                        poly.X = j;
+                        poly.Y = i;
+                    }
+                }else{
+                    if(poly.current){
+                        this.context.moveTo(poly.X, poly.Y);
+                        this.context.lineTo(j-1, i);
+                        this.context.stroke();
+                        poly.current = false;
+                    }
+                }
             }
         }
     };
@@ -48,11 +70,11 @@ function Interface(newCanvas) {
         this.clearAll();
         let polygons = this.scene.getPolygons();
         for (let i = 0; i < polygons.length; i++) {
-            if (polygons[i].mustStroke) {
-                this.strokePoly(polygons[i]);
-            }
             if (polygons[i].mustFill) {
                 this.fillPoly(polygons[i]);
+            }
+            if (polygons[i].mustStroke) {
+                this.strokePoly(polygons[i]);
             }
         }
         this.drawTemporaryPolygon();
