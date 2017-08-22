@@ -85,7 +85,6 @@ function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustS
     };
 
     this.inside = function (x, y) {
-
         let isInside = false;
         for (let i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
             let xi = this.vertices[i].getX(), yi = this.vertices[i].getY();

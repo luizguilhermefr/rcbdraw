@@ -25,7 +25,8 @@ function Interface(newCanvas) {
     };
 
     this.fillPoly = function (polygon) {
-        let poly ={
+        this.context.lineWidth = 1;
+        let poly = {
             current: false,
             X: 0,
             Y: 0
@@ -33,19 +34,19 @@ function Interface(newCanvas) {
         this.context.strokeStyle = polygon.fillColor;
         this.context.beginPath();
 
-        for (let i = polygon.getBoundaries().minY-1; i <= polygon.getBoundaries().maxY+1; i++) {
+        for (let i = polygon.getBoundaries().minY - 1; i <= polygon.getBoundaries().maxY + 1; i++) {
             poly.current = false;
-            for (let j = polygon.getBoundaries().minX-1; j <= polygon.getBoundaries().maxX+1; j++) {
+            for (let j = polygon.getBoundaries().minX - 1; j <= polygon.getBoundaries().maxX + 1; j++) {
                 if (polygon.inside(j, i)) {
-                    if(!poly.current) {
+                    if (!poly.current) {
                         poly.current = true;
                         poly.X = j;
                         poly.Y = i;
                     }
-                }else{
-                    if(poly.current){
+                } else {
+                    if (poly.current) {
                         this.context.moveTo(poly.X, poly.Y);
-                        this.context.lineTo(j-1, i);
+                        this.context.lineTo(j - 1, i);
                         this.context.stroke();
                         poly.current = false;
                     }
@@ -55,6 +56,7 @@ function Interface(newCanvas) {
     };
 
     this.strokePoly = function (polygon) {
+        this.context.lineWidth = 2;
         this.context.strokeStyle = polygon.strokeColor;
         this.context.beginPath();
         this.context.moveTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
@@ -95,15 +97,18 @@ function Interface(newCanvas) {
 
     this.drawSelectedPolygon = function () {
         if (this.selectedPolygon !== null) {
-            this.context.strokeStyle = Colors.SELECTED;
+            this.context.strokeStyle = Colors.DEFAULT;
+            this.context.lineWidth = 1;
+            this.context.setLineDash([5, 3]);
             this.context.beginPath();
-            this.context.moveTo(this.selectedPolygon.polygon.vertexAt(0).getX(), this.selectedPolygon.polygon.vertexAt(0).getY());
-            for (let j = 1; j < this.selectedPolygon.polygon.countVertices() - 1; j++) {
-                let vertex = this.selectedPolygon.polygon.vertexAt(j);
-                this.context.lineTo(vertex.getX(), vertex.getY());
-            }
-            this.context.lineTo(this.selectedPolygon.polygon.vertexAt(0).getX(), this.selectedPolygon.polygon.vertexAt(0).getY());
+            let boundaries = this.selectedPolygon.polygon.getBoundaries();
+            this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
+            this.context.lineTo(boundaries.minX - 5, boundaries.maxY + 5);
+            this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);
+            this.context.lineTo(boundaries.maxX + 5, boundaries.minY - 5);
+            this.context.lineTo(boundaries.minX - 5, boundaries.minY - 5);
             this.context.stroke();
+            this.context.setLineDash([]);
         }
     };
 
