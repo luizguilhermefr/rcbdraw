@@ -46,6 +46,10 @@ Vue.component('panel', {
             this.mode = 4;
             this.cursor = 'move';
         },
+        expectScale(){
+          this.mode = 5;
+          this.cursor = 'w-resize';
+        },
         onClick (e) {
             switch (this.mode) {
                 case 1:
@@ -60,20 +64,32 @@ Vue.component('panel', {
             }
         },
         mouseDown () {
-            switch (this.mode) {
-                case 4:
-                    this.dragging = true;
-                    break;
+            if (this.mode === 4 || this.mode == 5) {
+                this.dragging = true;
             }
         },
         mouseMove (e) {
             if (this.dragging) {
-                drawInterface.translateClick(e.clientX, e.clientY);
+                switch (this.mode) {
+                    case 4:
+                        drawInterface.translateClick(e.clientX, e.clientY);
+                        break;
+                    case 5:
+                        drawInterface.scaleClick(e.clientX, e.clientY);
+                        break;
+                }
             }
         },
         mouseUp (e) {
             if (this.dragging) {
-                drawInterface.translateClick(e.clientX, e.clientY);
+                switch (this.mode) {
+                    case 4:
+                        drawInterface.translateClick(e.clientX, e.clientY);
+                        break;
+                    case 5:
+                        drawInterface.scaleClick(e.clientX, e.clientY);
+                        break;
+                }
                 this.dragging = false;
             }
         },

@@ -263,6 +263,11 @@ function Interface(newCanvas) {
         this.redraw();
     };
 
+    this.scaleClick = function (x, y) {
+        this.scene.getPolygonAt(this.selectedPolygon.index).scale(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.redraw();
+    };
+
     this.isSomethingSelected = function () {
         return !(this.selectedPolygon === null);
     };

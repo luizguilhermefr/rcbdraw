@@ -99,6 +99,15 @@
         vue.$refs.panel.expectTranslate();
     }
 
+    function expectScale() {
+        if (!drawInterface.isSomethingSelected()) {
+            alert('Nenhum objeto selecionado.');
+            return;
+        }
+        toggleReset();
+        vue.$refs.panel.expectScale();
+    }
+
 </script>
 </body>
 </html>

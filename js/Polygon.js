@@ -118,6 +118,17 @@ function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustS
         this.boundaries = this.setBoundaries();
     };
 
+    this.scale = function (vertex) {
+        let currentCenter = this.getCenter();
+        let distX = currentCenter.getX() - vertex.getX();
+        let distY = currentCenter.getY() - vertex.getY();
+        this.vertices.forEach(function (v) {
+            v.setX(v.getX() - distX);
+            v.setY(v.getY() - distY);
+        });
+        this.boundaries = this.setBoundaries();
+    };
+
     this.inside = function (x, y) {
         let isInside = false;
         for (let i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {

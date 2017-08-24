@@ -126,7 +126,7 @@ Vue.component('rcb-navbar', {
                             title: 'Escalar',
                             enabled: true,
                             action () {
-                                return null;
+                                expectScale();
                             }
                         },
                         {
