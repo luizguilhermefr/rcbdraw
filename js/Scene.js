@@ -9,7 +9,7 @@ function Scene () {
     };
 
     this.removePolygon = function (id) {
-        for (var i = 0; i < this.polygons.length; i++) {
+        for (let i = 0; i < this.polygons.length; i++) {
             if (i === id) {
                 this.polygons.splice(id, 1);
                 this.dirty = true;

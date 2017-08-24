@@ -25,34 +25,25 @@ function Interface(newCanvas) {
     };
 
     this.fillPoly = function (polygon) {
-        this.context.lineWidth = 1;
-        let poly = {
-            current: false,
-            X: 0,
-            Y: 0
-        };
-        this.context.strokeStyle = polygon.fillColor;
-        this.context.beginPath();
+        let lines = [];
+        for (let i = 1; i < polygon.vertices.length; i++) {
+            lines.push(new Edge( polygon.vertices[i - 1], polygon.vertices[i]));
+        }
 
-        for (let i = polygon.getBoundaries().minY - 1; i <= polygon.getBoundaries().maxY + 1; i++) {
-            poly.current = false;
-            for (let j = polygon.getBoundaries().minX - 1; j <= polygon.getBoundaries().maxX + 1; j++) {
-                if (polygon.inside(j, i)) {
-                    if (!poly.current) {
-                        poly.current = true;
-                        poly.X = j;
-                        poly.Y = i;
-                    }
-                } else {
-                    if (poly.current) {
-                        this.context.moveTo(poly.X, poly.Y);
-                        this.context.lineTo(j - 1, i);
-                        this.context.stroke();
-                        poly.current = false;
-                    }
-                }
+        let minY = polygon.getBoundaries().minY;
+        let maxY = polygon.getBoundaries().maxY;
+
+        this.context.strokeStyle = polygon.fillColor;
+        this.context.lineWidth = 1;
+        this.context.beginPath();
+        for (let i = minY; i < maxY; i++) {
+            let meetPoint = polygon.getMeetPoint(i,lines);
+            for (let j = 1; j < meetPoint.length; j += 2) {
+                this.context.moveTo(meetPoint[j - 1], i);
+                this.context.lineTo(meetPoint[j], i);
             }
         }
+        this.context.stroke();
     };
 
     this.strokePoly = function (polygon) {
