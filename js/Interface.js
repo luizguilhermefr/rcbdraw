@@ -136,9 +136,15 @@ function Interface(newCanvas) {
         dotX = 0;
         dotY = size;
         if (sides % 2 === 0) {
+            let angle = 0;
+            if(sides === 4){
+               angle = (2 * Math.PI) / 8;
+            }else{
+                angle = (2 * Math.PI);
+            }
             temp = dotX;
-            dotX = this.getNewDotX(dotX, dotY, (2 * Math.PI) / 8);
-            dotY = this.getNewDotY(temp, dotY, (2 * Math.PI) / 8);
+            dotX = this.getNewDotX(dotX, dotY, angle);
+            dotY = this.getNewDotY(temp, dotY, angle);
         }
         x = this.getRelativeX(x);
         y = this.getRelativeY(y);
