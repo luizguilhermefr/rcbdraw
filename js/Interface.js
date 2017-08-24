@@ -135,9 +135,9 @@ function Interface(newCanvas) {
         let teta = ((2 * Math.PI) / sides);
         dotX = 0;
         dotY = size;
-        if (sides % 2 === 0) {
+        if (sides % 2 == 0) {
             let angle = 0;
-            if(sides === 4){
+            if(sides == 4){
                angle = (2 * Math.PI) / 8;
             }else{
                 angle = (2 * Math.PI);
