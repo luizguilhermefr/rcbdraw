@@ -14,6 +14,7 @@
     <open-modal></open-modal>
     <save-modal></save-modal>
     <regular-polygon-modal></regular-polygon-modal>
+    <properties-modal></properties-modal>
     <about-modal></about-modal>
     <panel ref="panel"></panel>
     <toolbar></toolbar>
@@ -24,6 +25,7 @@
 <script type="text/javascript" src="libs/vue/bootstrap-vue.js"></script>
 
 <script type="text/javascript" src="components/OpenModal.js"></script>
+<script type="text/javascript" src="components/PropertiesModal.js"></script>
 <script type="text/javascript" src="components/SaveModal.js"></script>
 <script type="text/javascript" src="components/RegularPolygonModal.js"></script>
 <script type="text/javascript" src="components/AboutModal.js"></script>
@@ -78,6 +80,14 @@
 
     function openRegularPolygonModal() {
         vue.$emit('show::modal', 'regular-polygon-modal');
+    }
+
+    function openPropertiesModal() {
+        if (!drawInterface.isSomethingSelected()) {
+            alert('Nenhum objeto selecionado.');
+            return;
+        }
+        vue.$emit('show::modal', 'properties-modal');
     }
 
     function expectTranslate() {

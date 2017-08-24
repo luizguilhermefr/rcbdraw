@@ -143,7 +143,7 @@ Vue.component('rcb-navbar', {
                             title: 'Propriedades do objeto...',
                             enabled: true,
                             action () {
-                                return null;
+                                openPropertiesModal();
                             }
                         }
                     ]

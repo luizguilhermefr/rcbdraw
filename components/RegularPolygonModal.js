@@ -46,9 +46,6 @@ Vue.component('regular-polygon-modal', {
             definePolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill);
             this.sides = '';
             this.size = 50;
-            this.stroke = Colors.DEFAULT;
-            this.mustStroke = true;
-            this.mustFill = false;
         }
     }
 });

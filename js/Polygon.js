@@ -1,9 +1,41 @@
-function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = true) {
+function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustStroke = true, mustFill = false) {
     this.vertices = vertices;
     this.strokeColor = strokeColor;
     this.fillColor = fillColor;
     this.mustStroke = mustStroke;
     this.mustFill = mustFill;
+
+    this.getStrokeColor = function () {
+        return this.strokeColor;
+    };
+
+    this.getFillColor = function () {
+        return this.fillColor;
+    };
+
+    this.shouldFill = function () {
+        return this.mustFill;
+    };
+
+    this.shouldStroke = function () {
+        return this.mustStroke;
+    };
+
+    this.setFillColor = function (color) {
+        this.fillColor = color;
+    };
+
+    this.setStrokeColor = function (color) {
+        this.strokeColor = color;
+    };
+
+    this.setMustStroke = function (must) {
+        this.mustStroke = must;
+    };
+
+    this.setMustFill = function (must) {
+        this.mustFill = must;
+    };
 
     this.setBoundaries = function () {
         // let v0 = this.vertexAt(0);
