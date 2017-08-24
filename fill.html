@@ -1,28 +1,29 @@
 <canvas id="myCanvas"></canvas>
 <script>
-var points = [
-    {x: 100, y: 50},
-    {x: 120, y: 100 },
-    {x: 160, y: 50 },
-    {x: 200, y: 100 },
-    {x: 300, y: 50},
-    {x: 350, y: 350},
-    {x: 300, y: 250},
-    {x: 50, y: 150},
-    {x: 100, y: 50}
-];
+    const points = [
+        {x: 421, y: 258},
+        {x: 430, y: 501},
+        {x: 559, y: 246},
+        {x: 619, y: 456},
+        {x: 465, y: 217},
+        {x: 421, y: 356},
+//        {x: 300, y: 250},
+//        {x: 50, y: 150},
+//        {x: 100, y: 50}
+    ];
 
 //init canvas
-var canvas = document.getElementById('myCanvas');
+const canvas = document.getElementById('myCanvas');
 canvas.width = window.innerWidth - 50;
 canvas.height = window.innerHeight - 50;
-var ctx = canvas.getContext('2d');
+const ctx = canvas.getContext('2d');
 //end init
 
 
 //generate line
-var lines = [];
-for (var i = 1; i < points.length; i++) {
+const lines = [];
+let i;
+    for (i = 1; i < points.length; i++) {
     lines.push(new Line(points[i - 1], points[i]));
 }
 
@@ -31,18 +32,18 @@ for (var i = 1; i < points.length; i++) {
 ctx.strokeStyle = "#00a";
 ctx.beginPath();
 ctx.moveTo(points[0].x, points[0].y);
-for (var j = 1; j < points.length; j++) {
-    p = points[j];
+for (let j = 1; j < points.length; j++) {
+    let p = points[j];
     ctx.lineTo(p.x, p.y);
 }
 ctx.closePath();
 ctx.stroke();
 
 // find min and max
-var minY = points[0].y;
-var maxY = points[0].y;
-for (var i = 0; i < points.length; i++) {
-    var temp = points[i].y;
+let minY = points[0].y;
+let maxY = points[0].y;
+for (i = 0; i < points.length; i++) {
+    let temp = points[i].y;
     if (temp < minY)
         minY = temp;
     else if (temp > maxY)
@@ -54,9 +55,9 @@ for (var i = 0; i < points.length; i++) {
 //draw fill line
 ctx.strokeStyle = "#0af";
 ctx.beginPath();
-for (var y = minY; y < maxY; y++) {
-    var meetPoint = getMeetPoint(y);
-    for (var i = 1; i < meetPoint.length; i += 2) {
+for (let y = minY; y < maxY; y++) {
+    const meetPoint = getMeetPoint(y);
+    for (i = 1; i < meetPoint.length; i += 2) {
         ctx.moveTo(meetPoint[i - 1], y);
         ctx.lineTo(meetPoint[i], y);
     }
@@ -66,19 +67,20 @@ ctx.stroke();
 
 
 function getMeetPoint(y) {
-    var meet = [];
-    for (var i = 0; i < lines.length; i++) {
-        var l = lines[i];
+    let i;
+    const meet = [];
+    for (i = 0; i < lines.length; i++) {
+        const l = lines[i];
         if (l.isValidY(y)) {
             meet.push(l.getX(y));
         }
     }
 
     //sort
-    for (var i = 0; i < meet.length; i++)
-        for (var j = i; j < meet.length; j++) {
+    for (i = 0; i < meet.length; i++)
+        for (let j = i; j < meet.length; j++) {
             if (meet[i]>meet[j]) {
-                var temp =meet[i];
+                const temp = meet[i];
                 meet[i]=meet[j];
                 meet[j]=temp;
             }

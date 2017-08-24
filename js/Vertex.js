@@ -1,6 +1,6 @@
 function Vertex (x, y) {
-    this.x = x;
-    this.y = y;
+    this.x = Math.round(x);
+    this.y = Math.round(y);
 
     this.getX = function () {
         return this.x;

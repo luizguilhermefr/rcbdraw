@@ -34,10 +34,11 @@ function Interface(newCanvas) {
         let maxY = polygon.getBoundaries().maxY;
 
         this.context.strokeStyle = polygon.fillColor;
-        this.context.lineWidth = 1;
+        this.context.lineWidth = 3;
         this.context.beginPath();
-        for (let i = minY; i < maxY; i++) {
+        for (let i = minY; i < maxY+1; i++) {
             let meetPoint = polygon.getMeetPoint(i,lines);
+            console.log(meetPoint.length);
             for (let j = 1; j < meetPoint.length; j += 2) {
                 this.context.moveTo(meetPoint[j - 1], i);
                 this.context.lineTo(meetPoint[j], i);
@@ -51,11 +52,12 @@ function Interface(newCanvas) {
         this.context.strokeStyle = polygon.strokeColor;
         this.context.beginPath();
         this.context.moveTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
-        for (let j = 1; j < polygon.countVertices() - 1; j++) {
+        for (let j = 1; j < polygon.countVertices(); j++) {
             let vertex = polygon.vertexAt(j);
             this.context.lineTo(vertex.getX(), vertex.getY());
         }
-        this.context.lineTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
+        // this.context.lineTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
+        this.context.closePath();
         this.context.stroke();
     };
 
@@ -231,9 +233,10 @@ function Interface(newCanvas) {
 
     this.convertTemporaryToPolygon = function () {
         let tempVertices = [];
-        for (let i = 0; i < this.freeHandDots.length; i++) {
+        for (let i = 0; i < this.freeHandDots.length - 1; i++) {
             tempVertices.push(new Vertex(this.freeHandDots[i].x, this.freeHandDots[i].y));
         }
+        tempVertices.push(new Vertex(this.freeHandDots[0].x, this.freeHandDots[0].y));
         this.scene.addPolygon(new Polygon(tempVertices));
         this.redraw();
     };
