@@ -1,4 +1,4 @@
-function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustStroke = true, mustFill = false) {
+function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustStroke = true, mustFill = false) {
     this.vertices = vertices;
     this.strokeColor = strokeColor;
     this.fillColor = fillColor;
@@ -38,8 +38,6 @@ function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustS
     };
 
     this.setBoundaries = function () {
-        // let v0 = this.vertexAt(0);
-        // let maxX = v0.getX(), maxY = v0.getY(), minX = v0.getX(), minY = v0.getY();
         let maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE, minX = Number.MAX_VALUE, minY = Number.MAX_VALUE;
         for (let i = 0; i < this.vertices.length; i++) {
             let v = this.vertexAt(i);
@@ -75,7 +73,7 @@ function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustS
     };
 
     this.vertexAt = function (index) {
-        return this.vertices[index];
+        return this.vertices[ index ];
     };
 
     this.boundaries = this.setBoundaries();
@@ -83,7 +81,8 @@ function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustS
     this.getArea = function () {
         let area = 0;
         for (let i = 0; i < this.vertices.length - 1; i++) {
-            area += (this.vertices[i].getX() * this.vertices[i + 1].getY()) - (this.vertices[i + 1].getX() * this.vertices[i].getY());
+            area += (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getY()) -
+                (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getY());
         }
         area /= 2;
         return area;
@@ -96,10 +95,10 @@ function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustS
             y: 0
         };
         for (let i = 0; i < this.vertices.length - 1; i++) {
-            let temp = (this.vertices[i].getX() * this.vertices[i + 1].getY()) -
-                (this.vertices[i + 1].getX() * this.vertices[i].getY());
-            center.x += (this.vertices[i].getX() + this.vertices[i + 1].getX()) * temp;
-            center.y += (this.vertices[i].getY() + this.vertices[i + 1].getY()) * temp;
+            let temp = (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getY()) -
+                (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getY());
+            center.x += (this.vertices[ i ].getX() + this.vertices[ i + 1 ].getX()) * temp;
+            center.y += (this.vertices[ i ].getY() + this.vertices[ i + 1 ].getY()) * temp;
         }
         center.x /= area;
         center.y /= area;
@@ -107,14 +106,16 @@ function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustS
         return new Vertex(center.x, center.y);
     };
 
+    this.translatePoint = function(vertex) {
+        this.vertices.forEach(function (v) {
+            v.setX(v.getX() - vertex.getX());
+            v.setY(v.getY() - vertex.getY());
+        });
+    };
+
     this.translate = function (vertex) {
         let currentCenter = this.getCenter();
-        let distX = currentCenter.getX() - vertex.getX();
-        let distY = currentCenter.getY() - vertex.getY();
-        this.vertices.forEach(function (v) {
-            v.setX(v.getX() - distX);
-            v.setY(v.getY() - distY);
-        });
+        this.translatePoint(new Vertex(currentCenter.getX() - vertex.getX(), currentCenter.getY() - vertex.getY()));
         this.boundaries = this.setBoundaries();
     };
 
@@ -129,37 +130,54 @@ function Polygon(vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustS
         this.boundaries = this.setBoundaries();
     };
 
+    this.shear = function (vertex) {
+        let referenceVertex = this.vertices[this.vertices.length - 1].clone();
+        this.translatePoint(referenceVertex);
+        let currentCenter = this.getCenter();
+        let distX = currentCenter.getX() - vertex.getX();
+        let distY = currentCenter.getY() - vertex.getY();
+        this.vertices.forEach(function (v) {
+            v.setX(v.getX() + distX / 1000 * v.getY());
+        });
+        referenceVertex.invert();
+        this.translatePoint(referenceVertex);
+        this.boundaries = this.setBoundaries();
+    };
+
     this.inside = function (x, y) {
         let isInside = false;
         for (let i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
-            let xi = this.vertices[i].getX(), yi = this.vertices[i].getY();
-            let xj = this.vertices[j].getX(), yj = this.vertices[j].getY();
+            let xi = this.vertices[ i ].getX(), yi = this.vertices[ i ].getY();
+            let xj = this.vertices[ j ].getX(), yj = this.vertices[ j ].getY();
 
             let intersect = ((yi > y) !== (yj > y))
                 && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-            if (intersect) isInside = !isInside;
+            if (intersect) {
+                isInside = !isInside;
+            }
         }
         return isInside;
     };
 
-    this.getMeetPoint = function(y, lines) {
+    this.getMeetPoint = function (y, lines) {
         let meet = [];
         for (let i = 0; i < lines.length; i++) {
-            let l = lines[i];
+            let l = lines[ i ];
             if (l.isValidY(y)) {
                 meet.push(l.getX(y));
             }
         }
 
         //sort
-        for (let i = 0; i < meet.length; i++)
+        for (let i = 0; i < meet.length; i++) {
             for (let j = i; j < meet.length; j++) {
-                if (meet[i]>meet[j]) {
-                    let temp =meet[i];
-                    meet[i]=meet[j];
-                    meet[j]=temp;
+                if (meet[ i ] > meet[ j ]) {
+                    let temp = meet[ i ];
+                    meet[ i ] = meet[ j ];
+                    meet[ j ] = temp;
                 }
             }
-        return  meet;
+        }
+        return meet;
     };
 }

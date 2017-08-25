@@ -71,7 +71,7 @@
 
     function expectFreehand() {
         toggleReset();
-        vue.$refs.panel.expectFreehand()
+        vue.$refs.panel.expectFreehand();
     }
 
     function toggleReset() {
@@ -106,6 +106,15 @@
         }
         toggleReset();
         vue.$refs.panel.expectScale();
+    }
+
+    function expectShear() {
+        if (!drawInterface.isSomethingSelected()) {
+            alert('Nenhum objeto selecionado.');
+            return;
+        }
+        toggleReset();
+        vue.$refs.panel.expectShear();
     }
 
 </script>

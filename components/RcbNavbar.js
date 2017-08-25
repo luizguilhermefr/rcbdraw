@@ -135,7 +135,7 @@ Vue.component('rcb-navbar', {
                             enabled: true,
                             modal: 'shear-modal',
                             action () {
-                                return null;
+                                expectShear();
                             }
                         },
                         {

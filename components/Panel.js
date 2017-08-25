@@ -40,15 +40,19 @@ Vue.component('panel', {
         },
         expectFreehand () {
             this.mode = 3;
-            this.cursor = 'crosshair'
+            this.cursor = 'crosshair';
         },
-        expectTranslate(){
+        expectTranslate () {
             this.mode = 4;
             this.cursor = 'move';
         },
-        expectScale(){
-          this.mode = 5;
-          this.cursor = 'w-resize';
+        expectScale () {
+            this.mode = 5;
+            this.cursor = 'w-resize';
+        },
+        expectShear () {
+            this.mode = 6;
+            this.cursor = 'col-resize';
         },
         onClick (e) {
             switch (this.mode) {
@@ -64,7 +68,7 @@ Vue.component('panel', {
             }
         },
         mouseDown () {
-            if (this.mode === 4 || this.mode == 5) {
+            if (this.mode >= 4 && this.mode <= 6) {
                 this.dragging = true;
             }
         },
@@ -77,6 +81,9 @@ Vue.component('panel', {
                     case 5:
                         drawInterface.scaleClick(e.clientX, e.clientY);
                         break;
+                    case 6:
+                        drawInterface.shearClick(e.clientX, e.clientY);
+                        break;
                 }
             }
         },
@@ -88,6 +95,9 @@ Vue.component('panel', {
                         break;
                     case 5:
                         drawInterface.scaleClick(e.clientX, e.clientY);
+                        break;
+                    case 6:
+                        drawInterface.shearClick(e.clientX, e.clientY);
                         break;
                 }
                 this.dragging = false;

@@ -280,6 +280,12 @@ function Interface (newCanvas) {
         this.redraw();
     };
 
+    this.shearClick = function (x, y) {
+        this.scene.getPolygonAt(this.selectedPolygon.index).shear(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.scene.makeDirty();
+        this.redraw();
+    };
+
     this.isSomethingSelected = function () {
         return !(this.selectedPolygon === null);
     };

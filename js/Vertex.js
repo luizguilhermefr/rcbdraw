@@ -22,4 +22,13 @@ function Vertex (x, y) {
         this.x = x;
         this.y = y;
     };
+
+    this.clone = function () {
+        return new Vertex(this.x, this.y);
+    };
+
+    this.invert = function () {
+        this.x *=  -1;
+        this.y *= -1;
+    };
 }
