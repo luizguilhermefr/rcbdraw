@@ -3,9 +3,12 @@ function Scene () {
 
     this.dirty = false;
 
+    this.makeDirty = function () {
+      this.dirty = true;
+    };
+
     this.addPolygon = function (polygon) {
         this.polygons.push(polygon);
-        this.dirty = true;
     };
 
     this.removePolygon = function (id) {

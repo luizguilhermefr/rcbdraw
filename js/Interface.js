@@ -1,4 +1,4 @@
-function Interface(newCanvas) {
+function Interface (newCanvas) {
     this.canvas = newCanvas;
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
@@ -27,7 +27,7 @@ function Interface(newCanvas) {
     this.fillPoly = function (polygon) {
         let lines = [];
         for (let i = 1; i < polygon.vertices.length; i++) {
-            lines.push(new Edge( polygon.vertices[i - 1], polygon.vertices[i]));
+            lines.push(new Edge(polygon.vertices[ i - 1 ], polygon.vertices[ i ]));
         }
 
         let minY = polygon.getBoundaries().minY;
@@ -36,12 +36,11 @@ function Interface(newCanvas) {
         this.context.strokeStyle = polygon.fillColor;
         this.context.lineWidth = 3;
         this.context.beginPath();
-        for (let i = minY; i < maxY+1; i++) {
-            let meetPoint = polygon.getMeetPoint(i,lines);
-            console.log(meetPoint.length);
+        for (let i = minY; i < maxY + 1; i++) {
+            let meetPoint = polygon.getMeetPoint(i, lines);
             for (let j = 1; j < meetPoint.length; j += 2) {
-                this.context.moveTo(meetPoint[j - 1], i);
-                this.context.lineTo(meetPoint[j], i);
+                this.context.moveTo(meetPoint[ j - 1 ], i);
+                this.context.lineTo(meetPoint[ j ], i);
             }
         }
         this.context.stroke();
@@ -65,11 +64,11 @@ function Interface(newCanvas) {
         this.clearAll();
         let polygons = this.scene.getPolygons();
         for (let i = 0; i < polygons.length; i++) {
-            if (polygons[i].mustFill) {
-                this.fillPoly(polygons[i]);
+            if (polygons[ i ].mustFill) {
+                this.fillPoly(polygons[ i ]);
             }
-            if (polygons[i].mustStroke) {
-                this.strokePoly(polygons[i]);
+            if (polygons[ i ].mustStroke) {
+                this.strokePoly(polygons[ i ]);
             }
         }
         this.drawTemporaryPolygon();
@@ -80,9 +79,9 @@ function Interface(newCanvas) {
         this.context.strokeStyle = Colors.TEMPORARY;
         this.context.beginPath();
         if (this.freeHandDots.length > 1) {
-            this.context.moveTo(this.freeHandDots[0].x, this.freeHandDots[0].y);
+            this.context.moveTo(this.freeHandDots[ 0 ].x, this.freeHandDots[ 0 ].y);
             for (let n = 1; n < this.freeHandDots.length; n++) {
-                this.context.lineTo(this.freeHandDots[n].x, this.freeHandDots[n].y);
+                this.context.lineTo(this.freeHandDots[ n ].x, this.freeHandDots[ n ].y);
             }
             this.context.stroke();
         }
@@ -92,7 +91,7 @@ function Interface(newCanvas) {
         if (this.selectedPolygon !== null) {
             this.context.strokeStyle = Colors.DEFAULT;
             this.context.lineWidth = 1;
-            this.context.setLineDash([5, 3]);
+            this.context.setLineDash([ 5, 3 ]);
             this.context.beginPath();
             let boundaries = this.selectedPolygon.polygon.getBoundaries();
             this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
@@ -130,9 +129,9 @@ function Interface(newCanvas) {
         dotY = size;
         if (sides % 2 == 0) {
             let angle = 0;
-            if(sides == 4){
-               angle = (2 * Math.PI) / 8;
-            }else{
+            if (sides == 4) {
+                angle = (2 * Math.PI) / 8;
+            } else {
                 angle = (2 * Math.PI);
             }
             temp = dotX;
@@ -149,6 +148,7 @@ function Interface(newCanvas) {
             tempVertices.push(new Vertex(dotX + x, (dotY * (-1)) + y));
         }
         this.scene.addPolygon(new Polygon(tempVertices, stroke, fill, mustStroke, mustFill));
+        this.scene.makeDirty();
         this.redraw();
     };
 
@@ -157,6 +157,7 @@ function Interface(newCanvas) {
     };
 
     this.resetScene = function () {
+        this.selectedPolygon = null;
         this.scene = new Scene();
         this.redraw();
     };
@@ -169,26 +170,34 @@ function Interface(newCanvas) {
         this.resetScene();
         let tempVertices = [];
         for (let i = 0; i < opened.length; i++) {
-            for (let j = 0; j < opened[i].length; j++) {
-                tempVertices.push(new Vertex(opened[i][j][0], opened[i][j][1]));
+            for (let j = 0; j < opened[ i ].vertices.length; j++) {
+                tempVertices.push(new Vertex(opened[ i ].vertices[ j ][ 0 ], opened[ i ].vertices[ j ][ 1 ]));
             }
-            this.scene.addPolygon(new Polygon(tempVertices));
+            this.scene.addPolygon(new Polygon(tempVertices, opened[ i ].stroke_color, opened[ i ].fill_color, opened[ i ].must_stroke, opened[ i ].must_fill));
             tempVertices = [];
         }
-        this.scene.resetDirt();
         this.redraw();
     };
 
     this.generateSave = function () {
         let polygons = this.scene.getPolygons();
         let dump = [];
-        let temp;
+        let current;
         for (let i = 0; i < polygons.length; i++) {
-            temp = [];
-            for (let j = 0; j < polygons[i].countVertices(); j++) {
-                temp.push([polygons[i].vertexAt(j).getX(), polygons[i].vertexAt(j).getY()]);
+            current = {
+                'fill_color': polygons[ i ].getFillColor(),
+                'must_fill': polygons[ i ].shouldFill(),
+                'stroke_color': polygons[ i ].getStrokeColor(),
+                'must_stroke': polygons[ i ].shouldStroke(),
+                'vertices': []
+            };
+            for (let j = 0; j < polygons[ i ].countVertices(); j++) {
+                current.vertices.push([
+                    polygons[ i ].vertexAt(j).getX(),
+                    polygons[ i ].vertexAt(j).getY()
+                ]);
             }
-            dump.push(temp);
+            dump.push(current);
         }
         this.scene.resetDirt();
         return dump;
@@ -227,17 +236,18 @@ function Interface(newCanvas) {
         if (this.freeHandDots.length < 3) {
             return false;
         }
-        return this.distanceBetweenTwoPoints(this.freeHandDots[0], this.freeHandDots[this.freeHandDots.length -
-            1]) < 20;
+        return this.distanceBetweenTwoPoints(this.freeHandDots[ 0 ], this.freeHandDots[ this.freeHandDots.length -
+        1 ]) < 20;
     };
 
     this.convertTemporaryToPolygon = function () {
         let tempVertices = [];
         for (let i = 0; i < this.freeHandDots.length - 1; i++) {
-            tempVertices.push(new Vertex(this.freeHandDots[i].x, this.freeHandDots[i].y));
+            tempVertices.push(new Vertex(this.freeHandDots[ i ].x, this.freeHandDots[ i ].y));
         }
-        tempVertices.push(new Vertex(this.freeHandDots[0].x, this.freeHandDots[0].y));
+        tempVertices.push(new Vertex(this.freeHandDots[ 0 ].x, this.freeHandDots[ 0 ].y));
         this.scene.addPolygon(new Polygon(tempVertices));
+        this.scene.makeDirty();
         this.redraw();
     };
 
@@ -260,11 +270,13 @@ function Interface(newCanvas) {
 
     this.translateClick = function (x, y) {
         this.scene.getPolygonAt(this.selectedPolygon.index).translate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.scene.makeDirty();
         this.redraw();
     };
 
     this.scaleClick = function (x, y) {
         this.scene.getPolygonAt(this.selectedPolygon.index).scale(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.scene.makeDirty();
         this.redraw();
     };
 
@@ -283,10 +295,10 @@ function Interface(newCanvas) {
             y: this.getRelativeY(y)
         };
         for (let i = 0; i < polygons.length; i++) {
-            if (this.isInsideBoundaryTolerance(point, polygons[i].getBoundaries())) {
-                for (let j = 0; j < polygons[i].countVertices() - 1; j++) {
-                    let from = polygons[i].vertexAt(j);
-                    let to = polygons[i].vertexAt(j + 1);
+            if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries())) {
+                for (let j = 0; j < polygons[ i ].countVertices() - 1; j++) {
+                    let from = polygons[ i ].vertexAt(j);
+                    let to = polygons[ i ].vertexAt(j + 1);
                     let edge = {
                         x1: from.getX(),
                         y1: from.getY(),
@@ -306,7 +318,7 @@ function Interface(newCanvas) {
         if (lowestDistance.distance < 10) {
             this.selectedPolygon = {
                 index: lowestDistance.poly,
-                polygon: polygons[lowestDistance.poly]
+                polygon: polygons[ lowestDistance.poly ]
             };
         } else {
             this.clearSelectedPolygon();
