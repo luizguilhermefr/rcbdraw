@@ -132,12 +132,12 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
 
     this.shear = function (vertex) {
         let referenceVertex = this.vertices[this.vertices.length - 1].clone();
-        this.translatePoint(referenceVertex);
         let currentCenter = this.getCenter();
         let distX = currentCenter.getX() - vertex.getX();
         let distY = currentCenter.getY() - vertex.getY();
+        this.translatePoint(referenceVertex);
         this.vertices.forEach(function (v) {
-            v.setX(v.getX() + distX / 1000 * v.getY());
+            v.setX(v.getX() + (distX / 1000) * v.getY());
         });
         referenceVertex.invert();
         this.translatePoint(referenceVertex);
