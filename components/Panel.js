@@ -50,9 +50,13 @@ Vue.component('panel', {
             this.mode = 5;
             this.cursor = 'w-resize';
         },
-        expectShear () {
-            this.mode = 6;
-            this.cursor = 'col-resize';
+        expectShear (direction) {
+            if (direction === 'x') {
+                this.mode = 6;
+            } else if (direction === 'y') {
+                this.mode = 7;
+            }
+            this.cursor = 'pointer';
         },
         onClick (e) {
             switch (this.mode) {
@@ -68,7 +72,7 @@ Vue.component('panel', {
             }
         },
         mouseDown () {
-            if (this.mode >= 4 && this.mode <= 6) {
+            if (this.mode >= 4 && this.mode <= 7) {
                 this.dragging = true;
             }
         },
@@ -82,7 +86,10 @@ Vue.component('panel', {
                         drawInterface.scaleClick(e.clientX, e.clientY);
                         break;
                     case 6:
-                        drawInterface.shearClick(e.clientX, e.clientY);
+                        drawInterface.shearHorizontalClick(e.clientX, e.clientY);
+                        break;
+                    case 7:
+                        drawInterface.shearVerticalClick(e.clientX, e.clientY);
                         break;
                 }
             }
@@ -97,7 +104,10 @@ Vue.component('panel', {
                         drawInterface.scaleClick(e.clientX, e.clientY);
                         break;
                     case 6:
-                        drawInterface.shearClick(e.clientX, e.clientY);
+                        drawInterface.shearHorizontalClick(e.clientX, e.clientY);
+                        break;
+                    case 7:
+                        drawInterface.shearVerticalClick(e.clientX, e.clientY);
                         break;
                 }
                 this.dragging = false;

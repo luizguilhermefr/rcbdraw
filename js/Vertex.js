@@ -31,4 +31,8 @@ function Vertex (x, y) {
         this.x *=  -1;
         this.y *= -1;
     };
+
+    this.distanceTo = function (vertex) {
+        return Math.sqrt(Math.pow(vertex.getX() - this.getX(), 2) + Math.pow(vertex.getY() - this.getY(), 2));
+    };
 }

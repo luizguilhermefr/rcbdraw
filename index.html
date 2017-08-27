@@ -46,6 +46,9 @@
             el: '#rcb'
         });
         let panel = document.getElementById('drawpanel');
+        panel.onmousedown = function () { // previne a seleção em duplo clique
+            return false;
+        };
         panel.width = window.innerWidth;
         panel.height = window.innerHeight;
         drawInterface = new Interface(panel);
@@ -59,30 +62,30 @@
         }
     }, false);
 
-    function definePolygon(sides, size, stroke, fill, mustStroke, mustFill) {
+    function definePolygon (sides, size, stroke, fill, mustStroke, mustFill) {
         toggleReset();
         vue.$refs.panel.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
     }
 
-    function expectSelection() {
+    function expectSelection () {
         toggleReset();
         vue.$refs.panel.expectSelection();
     }
 
-    function expectFreehand() {
+    function expectFreehand () {
         toggleReset();
         vue.$refs.panel.expectFreehand();
     }
 
-    function toggleReset() {
+    function toggleReset () {
         vue.$refs.panel.reset();
     }
 
-    function openRegularPolygonModal() {
+    function openRegularPolygonModal () {
         vue.$emit('show::modal', 'regular-polygon-modal');
     }
 
-    function openPropertiesModal() {
+    function openPropertiesModal () {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
             return;
@@ -90,7 +93,7 @@
         vue.$emit('show::modal', 'properties-modal');
     }
 
-    function expectTranslate() {
+    function expectTranslate () {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
             return;
@@ -99,7 +102,7 @@
         vue.$refs.panel.expectTranslate();
     }
 
-    function expectScale() {
+    function expectScale () {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
             return;
@@ -108,13 +111,13 @@
         vue.$refs.panel.expectScale();
     }
 
-    function expectShear() {
+    function expectShear (direction) {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
             return;
         }
         toggleReset();
-        vue.$refs.panel.expectShear();
+        vue.$refs.panel.expectShear(direction);
     }
 
 </script>

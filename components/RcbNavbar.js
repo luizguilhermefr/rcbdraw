@@ -131,15 +131,22 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 4,
-                            title: 'Cisalhar',
+                            title: 'Cisalhar Horizontalmente',
                             enabled: true,
-                            modal: 'shear-modal',
                             action () {
-                                expectShear();
+                                expectShear('x');
                             }
                         },
                         {
                             id: 5,
+                            title: 'Cisalhar Verticalmente',
+                            enabled: true,
+                            action () {
+                                expectShear('y');
+                            }
+                        },
+                        {
+                            id: 6,
                             title: 'Propriedades do objeto...',
                             enabled: true,
                             action () {

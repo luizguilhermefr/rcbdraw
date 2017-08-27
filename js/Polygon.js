@@ -106,7 +106,22 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
         return new Vertex(center.x, center.y);
     };
 
-    this.translatePoint = function(vertex) {
+    this.closestPoint = function (vertex) {
+        let closestPoint = {
+            distance: Number.POSITIVE_INFINITY,
+            vertex: null
+        };
+        this.vertices.forEach(function (v) {
+            let distance = v.distanceTo(vertex);
+            if (distance < closestPoint.distance) {
+                closestPoint.distance = distance;
+                closestPoint.vertex = v;
+            }
+        });
+        return closestPoint.vertex;
+    };
+
+    this.translatePoint = function (vertex) {
         this.vertices.forEach(function (v) {
             v.setX(v.getX() - vertex.getX());
             v.setY(v.getY() - vertex.getY());
@@ -130,14 +145,24 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
         this.boundaries = this.setBoundaries();
     };
 
-    this.shear = function (vertex) {
+    this.shearX = function (vertex) {
         let referenceVertex = this.vertices[this.vertices.length - 1].clone();
-        let currentCenter = this.getCenter();
-        let distX = currentCenter.getX() - vertex.getX();
-        let distY = currentCenter.getY() - vertex.getY();
+        let shearFactor = (vertex.getX() - referenceVertex.getX()) / referenceVertex.getY();
         this.translatePoint(referenceVertex);
         this.vertices.forEach(function (v) {
-            v.setX(v.getX() + (distX / 1000) * v.getY());
+            v.setX(v.getX() + shearFactor * v.getY());
+        });
+        referenceVertex.invert();
+        this.translatePoint(referenceVertex);
+        this.boundaries = this.setBoundaries();
+    };
+
+    this.shearY = function (vertex) {
+        let referenceVertex = this.vertices[this.vertices.length - 1].clone();
+        let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
+        this.translatePoint(referenceVertex);
+        this.vertices.forEach(function (v) {
+            v.setY(v.getY() + shearFactor * v.getX());
         });
         referenceVertex.invert();
         this.translatePoint(referenceVertex);

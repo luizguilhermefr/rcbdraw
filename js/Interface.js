@@ -280,8 +280,14 @@ function Interface (newCanvas) {
         this.redraw();
     };
 
-    this.shearClick = function (x, y) {
-        this.scene.getPolygonAt(this.selectedPolygon.index).shear(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+    this.shearHorizontalClick = function (x, y) {
+        this.scene.getPolygonAt(this.selectedPolygon.index).shearX(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.scene.makeDirty();
+        this.redraw();
+    };
+
+    this.shearVerticalClick = function (x, y) {
+        this.scene.getPolygonAt(this.selectedPolygon.index).shearY(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
         this.scene.makeDirty();
         this.redraw();
     };
