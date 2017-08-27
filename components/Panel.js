@@ -69,10 +69,16 @@ Vue.component('panel', {
                 case 3:
                     this.freehandClick(e.clientX, e.clientY);
                     break;
+                case 6:
+                    drawInterface.shearHorizontalClick(e.clientX, e.clientY);
+                    break;
+                case 7:
+                    drawInterface.shearVerticalClick(e.clientX, e.clientY);
+                    break;
             }
         },
         mouseDown () {
-            if (this.mode >= 4 && this.mode <= 7) {
+            if (this.mode >= 4 && this.mode <= 5) {
                 this.dragging = true;
             }
         },
@@ -85,12 +91,6 @@ Vue.component('panel', {
                     case 5:
                         drawInterface.scaleClick(e.clientX, e.clientY);
                         break;
-                    case 6:
-                        drawInterface.shearHorizontalClick(e.clientX, e.clientY);
-                        break;
-                    case 7:
-                        drawInterface.shearVerticalClick(e.clientX, e.clientY);
-                        break;
                 }
             }
         },
@@ -102,12 +102,6 @@ Vue.component('panel', {
                         break;
                     case 5:
                         drawInterface.scaleClick(e.clientX, e.clientY);
-                        break;
-                    case 6:
-                        drawInterface.shearHorizontalClick(e.clientX, e.clientY);
-                        break;
-                    case 7:
-                        drawInterface.shearVerticalClick(e.clientX, e.clientY);
                         break;
                 }
                 this.dragging = false;
