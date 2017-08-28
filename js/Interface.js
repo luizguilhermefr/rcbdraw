@@ -7,6 +7,7 @@ function Interface (newCanvas) {
     this.scene = new Scene();
     this.freeHandDots = [];
     this.selectedPolygon = null;
+    this.polygonTemporary = null;
 
     this.getRelativeX = function (x) {
         return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
@@ -274,14 +275,20 @@ function Interface (newCanvas) {
         this.redraw();
     };
 
-    this.scaleClick = function (x, y) {
-        this.scene.getPolygonAt(this.selectedPolygon.index).scale(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+    this.scaleClick = function (x, y, prevScaleFactor) {
+        let poly = this.scene.getPolygonAt(this.selectedPolygon.index);
+        prevScaleFactor = poly.scale(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), prevScaleFactor);
         this.scene.makeDirty();
         this.redraw();
+        return prevScaleFactor;
     };
 
     this.rotationClick = function (x, y) {
-        this.scene.getPolygonAt(this.selectedPolygon.index).makeRotation(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        if(!this.polygonTemporary) {
+            this.polygonTemporary = this.selectedPolygon.index;
+            console.log("ENTROU");
+        }
+        this.scene.getPolygonAt(this.polygonTemporary).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
         this.scene.makeDirty();
         this.redraw();
     };

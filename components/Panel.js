@@ -20,7 +20,11 @@ Vue.component('panel', {
             mustStroke: true,
             mustFill: false,
             cursor: 'default',
-            dragging: false
+            dragging: false,
+            prevScaleFactor : {
+                X: 0,
+                Y: 0
+            }
         };
     },
     methods: {
@@ -93,7 +97,7 @@ Vue.component('panel', {
                         drawInterface.translateClick(e.clientX, e.clientY);
                         break;
                     case 5:
-                        drawInterface.scaleClick(e.clientX, e.clientY);
+                        this.prevScaleFactor = drawInterface.scaleClick(e.clientX, e.clientY,this.prevScaleFactor);
                         break;
                     case 8:
                         drawInterface.rotationClick(e.clientX, e.clientY);
@@ -108,7 +112,7 @@ Vue.component('panel', {
                         drawInterface.translateClick(e.clientX, e.clientY);
                         break;
                     case 5:
-                        drawInterface.scaleClick(e.clientX, e.clientY);
+                        this.prevScaleFactor = drawInterface.scaleClick(e.clientX, e.clientY, this.prevScaleFactor);
                         break;
                 }
                 this.dragging = false;
@@ -116,7 +120,6 @@ Vue.component('panel', {
         },
         putPoly (x, y) {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y);
-            this.reset();
         },
         selectionClick (x, y) {
             drawInterface.selectionClick(x, y);
@@ -139,6 +142,7 @@ Vue.component('panel', {
             this.fill = null;
             this.mustStroke = true;
             this.mustFill = false;
+            this.prevScaleFactor = 0;
         }
     }
 });

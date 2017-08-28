@@ -27,6 +27,12 @@ div#mouse {
     background-color: blue;
 }
 
+.rightclick {
+    position: absolute;
+    width: 300px;
+    height: auto;
+}
+
 .paleta-ferramentas-center {
     width: 100%;
 }

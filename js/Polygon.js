@@ -134,24 +134,27 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
         this.boundaries = this.setBoundaries();
     };
 
-    this.makeRotation = function(vertex) {
+    this.rotate = function(vertex) {
         let newPointTemporary = new Vertex(this.getCenter().getX(), this.getCenter().getY() - 50);
         let oppositeCathets = vertex.distanceTo(newPointTemporary);
         let adjacentCathets = newPointTemporary.distanceTo(this.getCenter());
         let angleRotation = oppositeCathets/adjacentCathets;
 
+        let teta = Math.atan(angleRotation);
+
         if(vertex.getX() > this.getCenter().getX())
-            angleRotation *= -1;
+            teta *= -1;
+
         console.log("centro: "+this.getCenter().getX()+", "+this.getCenter().getY());
         console.log("novo: "+newPointTemporary.getX()+", "+newPointTemporary.getY());
-        console.log("angulo:  "+angleRotation*Math.PI/180);
+        console.log("angulo:  "+teta);
 
-        angleRotation *= Math.PI/180;
+        teta *= Math.PI/180;
         for(let i = 0; i < this.vertices.length; i++){
             //let teste = ;
            // console.log("vertices:  "+vertices[i].getX()+"   "+vertices[i].getY());
-            vertices[i].setX(this.getNewPointX(vertices[i].getX(),vertices[i].getY(),angleRotation));
-            vertices[i].setY(this.getNewPointY(vertices[i].getX(),vertices[i].getY(),angleRotation));
+            vertices[i].setX(this.getNewPointX(vertices[i].getX(),vertices[i].getY(),teta));
+            vertices[i].setY(this.getNewPointY(vertices[i].getX(),vertices[i].getY(),teta));
             //console.log("vertices:  "+vertices[i].getX()+"   "+vertices[i].getY());
         }
 
@@ -166,15 +169,31 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
         return (x * Math.sin(teta)) + (y * Math.cos(teta));
     };
 
-    this.scale = function (vertex) {
-        let currentCenter = this.getCenter();
-        let distX = currentCenter.getX() - vertex.getX();
-        let distY = currentCenter.getY() - vertex.getY();
+    this.scale = function (vertex,prevScaleFactor) {
+        let maybe = false;
+        let referenceCenter = this.getCenter();
+        let scaleFactor = {
+            X : Math.abs((vertex.getX() - referenceCenter.getX()) / 10000),
+            Y : Math.abs((vertex.getY() - referenceCenter.getY()) / 10000)
+        };
+        if((scaleFactor.X < prevScaleFactor.X || scaleFactor.Y < prevScaleFactor.Y ) && (scaleFactor.X >= 0 || scaleFactor.Y >= 0)) {
+            maybe = true;
+        }
+        this.translatePoint(referenceCenter);
+
         this.vertices.forEach(function (v) {
-            v.setX(v.getX() - distX);
-            v.setY(v.getY() - distY);
+            if(!maybe) {
+                v.setX(v.getX() + (v.getX() * scaleFactor.X));
+                v.setY(v.getY() + (v.getY() * scaleFactor.Y));
+            }else{
+                v.setX(v.getX() - (v.getX() * scaleFactor.X));
+                v.setY(v.getY() - (v.getY() * scaleFactor.Y));
+            }
         });
+        referenceCenter.invert();
+        this.translatePoint(referenceCenter);
         this.boundaries = this.setBoundaries();
+        return scaleFactor;
     };
 
     this.shearX = function (vertex) {
