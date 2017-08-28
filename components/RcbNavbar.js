@@ -152,6 +152,14 @@ Vue.component('rcb-navbar', {
                             action () {
                                 openPropertiesModal();
                             }
+                        },
+                        {
+                            id: 7,
+                            title: 'Duplicar',
+                            enabled: true,
+                            action () {
+                                duplicateSelected();
+                            }
                         }
                     ]
                 },

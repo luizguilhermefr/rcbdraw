@@ -69,6 +69,14 @@ Vue.component('element-right-click', {
                     action () {
                         openPropertiesModal();
                     }
+                },
+                {
+                    id: 8,
+                    title: 'Duplicar',
+                    enabled: true,
+                    action () {
+                        duplicateSelected();
+                    }
                 }
             ]
         };

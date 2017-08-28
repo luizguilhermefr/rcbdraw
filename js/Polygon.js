@@ -1,4 +1,4 @@
-function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, mustStroke = true, mustFill = false) {
+function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false) {
     this.vertices = vertices;
     this.strokeColor = strokeColor;
     this.fillColor = fillColor;
@@ -134,22 +134,23 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
         this.boundaries = this.setBoundaries();
     };
 
-    this.scale = function (vertex,prevScaleFactor) {
+    this.scale = function (vertex, prevScaleFactor) {
         let maybe = false;
         let referenceCenter = this.getCenter();
         let scaleFactor = {
-            X : Math.abs((vertex.getX() - referenceCenter.getX()) / 10000),
-            Y : Math.abs((vertex.getY() - referenceCenter.getY()) / 10000)
+            X: Math.abs((vertex.getX() - referenceCenter.getX()) / 10000),
+            Y: Math.abs((vertex.getY() - referenceCenter.getY()) / 10000)
         };
-        if((scaleFactor.X < prevScaleFactor.X || scaleFactor.Y < prevScaleFactor.Y ) && (scaleFactor.X >= 0 || scaleFactor.Y >= 0)) {
+        if ((scaleFactor.X < prevScaleFactor.X || scaleFactor.Y < prevScaleFactor.Y ) &&
+            (scaleFactor.X >= 0 || scaleFactor.Y >= 0)) {
             maybe = true;
         }
         this.translatePoint(referenceCenter);
         this.vertices.forEach(function (v) {
-            if(!maybe) {
+            if (!maybe) {
                 v.setX(v.getX() + (v.getX() * scaleFactor.X));
                 v.setY(v.getY() + (v.getY() * scaleFactor.Y));
-            }else{
+            } else {
                 v.setX(v.getX() - (v.getX() * scaleFactor.X));
                 v.setY(v.getY() - (v.getY() * scaleFactor.Y));
             }
@@ -161,7 +162,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
     };
 
     this.shearX = function (vertex) {
-        let referenceVertex = this.vertices[this.vertices.length - 1].clone();
+        let referenceVertex = this.vertices[ this.vertices.length - 1 ].clone();
         let shearFactor = (vertex.getX() - referenceVertex.getX()) / referenceVertex.getY();
         this.translatePoint(referenceVertex);
         this.vertices.forEach(function (v) {
@@ -173,7 +174,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
     };
 
     this.shearY = function (vertex) {
-        let referenceVertex = this.vertices[this.vertices.length - 1].clone();
+        let referenceVertex = this.vertices[ this.vertices.length - 1 ].clone();
         let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
         this.translatePoint(referenceVertex);
         this.vertices.forEach(function (v) {
@@ -219,5 +220,13 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
             }
         }
         return meet;
+    };
+
+    this.clone = function (displacement = 0) {
+        nextVertices = [];
+        this.vertices.forEach(function (v) {
+            nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement));
+        });
+        return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
     };
 }

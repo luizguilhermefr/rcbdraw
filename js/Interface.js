@@ -339,4 +339,9 @@ function Interface (newCanvas) {
         }
         this.redraw();
     };
+
+    this.duplicateSelected = function () {
+        this.scene.addPolygon(this.scene.getPolygonAt(this.selectedPolygon.index).clone(20));
+        this.redraw();
+    };
 }
