@@ -21,7 +21,10 @@ Vue.component('panel', {
             mustFill: false,
             cursor: 'default',
             dragging: false,
-            prevScaleFactor: 0
+            prevScaleFactor : {
+                X: 0,
+                Y: 0
+            }
         };
     },
     methods: {

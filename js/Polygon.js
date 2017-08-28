@@ -137,19 +137,21 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
     this.scale = function (vertex,prevScaleFactor) {
         let maybe = false;
         let referenceCenter = this.getCenter();
-        let scaleFactor = 0;
-        vertex.getX() > vertex.getY() ? scaleFactor = Math.abs((vertex.getX() - referenceCenter.getX()) / 10000) : scaleFactor = Math.abs((vertex.getY() - referenceCenter.getY()) / 10000);
-        if(scaleFactor < prevScaleFactor && scaleFactor >= 0) {
+        let scaleFactor = {
+            X : Math.abs((vertex.getX() - referenceCenter.getX()) / 10000),
+            Y : Math.abs((vertex.getY() - referenceCenter.getY()) / 10000)
+        };
+        if((scaleFactor.X < prevScaleFactor.X || scaleFactor.Y < prevScaleFactor.Y ) && (scaleFactor.X >= 0 || scaleFactor.Y >= 0)) {
             maybe = true;
         }
         this.translatePoint(referenceCenter);
         this.vertices.forEach(function (v) {
             if(!maybe) {
-                v.setX(v.getX() + (v.getX() * scaleFactor));
-                v.setY(v.getY() + (v.getY() * scaleFactor));
+                v.setX(v.getX() + (v.getX() * scaleFactor.X));
+                v.setY(v.getY() + (v.getY() * scaleFactor.Y));
             }else{
-                v.setX(v.getX() - (v.getX() * scaleFactor));
-                v.setY(v.getY() - (v.getY() * scaleFactor));
+                v.setX(v.getX() - (v.getX() * scaleFactor.X));
+                v.setY(v.getY() - (v.getY() * scaleFactor.Y));
             }
         });
         referenceCenter.invert();
