@@ -17,6 +17,7 @@
     <properties-modal></properties-modal>
     <about-modal></about-modal>
     <panel ref="panel"></panel>
+    <element-right-click ref="elementRightClick"></element-right-click>
     <toolbar></toolbar>
 </div>
 
@@ -32,6 +33,7 @@
 <script type="text/javascript" src="components/RcbNavbar.js"></script>
 <script type="text/javascript" src="components/Panel.js"></script>
 <script type="text/javascript" src="components/Toolbar.js"></script>
+<script type="text/javascript" src="components/ElementRightClick.js"></script>
 
 <script type="text/javascript" src="js/Colors.js"></script>
 <script type="text/javascript" src="js/Vertex.js"></script>
@@ -49,18 +51,24 @@
         panel.onmousedown = function () { // previne a seleção em duplo clique
             return false;
         };
+        panel.addEventListener('contextmenu', function(e) {
+            vue.$refs.elementRightClick.show(e.clientX, e.clientY);
+            e.preventDefault();
+        }, false);
+        panel.addEventListener('click', function() {
+            vue.$refs.elementRightClick.hide();
+        }, false);
+        window.addEventListener('keyup', function (event) {
+            if (event.keyCode === 27) {
+                toggleReset();
+            } else if (event.keyCode === 46) {
+                drawInterface.deletePolygon();
+            }
+        }, false);
         panel.width = window.innerWidth;
         panel.height = window.innerHeight;
         drawInterface = new Interface(panel);
     };
-
-    window.addEventListener('keyup', function (event) {
-        if (event.keyCode === 27) {
-            toggleReset();
-        } else if (event.keyCode === 46) {
-            drawInterface.deletePolygon();
-        }
-    }, false);
 
     function definePolygon (sides, size, stroke, fill, mustStroke, mustFill) {
         toggleReset();

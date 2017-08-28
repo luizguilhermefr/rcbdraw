@@ -113,7 +113,6 @@ Vue.component('panel', {
         },
         putPoly (x, y) {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y);
-            this.reset();
         },
         selectionClick (x, y) {
             drawInterface.selectionClick(x, y);
