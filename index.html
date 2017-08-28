@@ -54,6 +54,7 @@
             return false;
         };
         panel.addEventListener('contextmenu', function (e) {
+            toggleReset();
             vue.$refs.elementRightClick.hide();
             vue.$refs.panelRightClick.hide();
             drawInterface.selectionClick(e.clientX, e.clientY);
@@ -144,6 +145,14 @@
         }
         toggleReset();
         vue.$refs.panel.expectShear(direction);
+    }
+
+    function deletePolygon() {
+        if (!drawInterface.isSomethingSelected()) {
+            alert('Nenhum objeto selecionado.');
+            return;
+        }
+        drawInterface.deletePolygon();
     }
 
 </script>

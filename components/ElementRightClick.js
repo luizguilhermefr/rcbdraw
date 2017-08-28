@@ -16,14 +16,6 @@ Vue.component('element-right-click', {
             items: [
                 {
                     id: 1,
-                    title: 'Excluir',
-                    enabled: true,
-                    action () {
-                        drawInterface.deletePolygon();
-                    }
-                },
-                {
-                    id: 2,
                     title: 'Rotacionar',
                     enabled: true,
                     action () {
@@ -31,7 +23,7 @@ Vue.component('element-right-click', {
                     }
                 },
                 {
-                    id: 3,
+                    id: 2,
                     title: 'Transladar',
                     enabled: true,
                     action () {
@@ -39,7 +31,7 @@ Vue.component('element-right-click', {
                     }
                 },
                 {
-                    id: 4,
+                    id: 3,
                     title: 'Escalar',
                     enabled: true,
                     action () {
@@ -47,7 +39,7 @@ Vue.component('element-right-click', {
                     }
                 },
                 {
-                    id: 5,
+                    id: 4,
                     title: 'Cisalhar Horizontalmente',
                     enabled: true,
                     action () {
@@ -55,7 +47,7 @@ Vue.component('element-right-click', {
                     }
                 },
                 {
-                    id: 6,
+                    id: 5,
                     title: 'Cisalhar Verticalmente',
                     enabled: true,
                     action () {
@@ -63,7 +55,7 @@ Vue.component('element-right-click', {
                     }
                 },
                 {
-                    id: 7,
+                    id: 6,
                     title: 'Propriedades do objeto...',
                     enabled: true,
                     action () {
@@ -71,11 +63,19 @@ Vue.component('element-right-click', {
                     }
                 },
                 {
-                    id: 8,
+                    id: 7,
                     title: 'Duplicar',
                     enabled: true,
                     action () {
                         duplicateSelected();
+                    }
+                },
+                {
+                    id: 8,
+                    title: 'Excluir',
+                    enabled: true,
+                    action () {
+                        deletePolygon();
                     }
                 }
             ]
