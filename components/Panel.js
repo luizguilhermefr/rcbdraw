@@ -20,7 +20,8 @@ Vue.component('panel', {
             mustStroke: true,
             mustFill: false,
             cursor: 'default',
-            dragging: false
+            dragging: false,
+            prevScaleFactor: 0
         };
     },
     methods: {
@@ -89,7 +90,7 @@ Vue.component('panel', {
                         drawInterface.translateClick(e.clientX, e.clientY);
                         break;
                     case 5:
-                        drawInterface.scaleClick(e.clientX, e.clientY);
+                        this.prevScaleFactor = drawInterface.scaleClick(e.clientX, e.clientY,this.prevScaleFactor);
                         break;
                 }
             }
@@ -101,7 +102,7 @@ Vue.component('panel', {
                         drawInterface.translateClick(e.clientX, e.clientY);
                         break;
                     case 5:
-                        drawInterface.scaleClick(e.clientX, e.clientY);
+                        this.prevScaleFactor = drawInterface.scaleClick(e.clientX, e.clientY, this.prevScaleFactor);
                         break;
                 }
                 this.dragging = false;
@@ -132,6 +133,7 @@ Vue.component('panel', {
             this.fill = null;
             this.mustStroke = true;
             this.mustFill = false;
+            this.prevScaleFactor = 0;
         }
     }
 });

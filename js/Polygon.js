@@ -134,15 +134,28 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
         this.boundaries = this.setBoundaries();
     };
 
-    this.scale = function (vertex) {
-        let currentCenter = this.getCenter();
-        let distX = currentCenter.getX() - vertex.getX();
-        let distY = currentCenter.getY() - vertex.getY();
+    this.scale = function (vertex,prevScaleFactor) {
+        let maybe = false;
+        let referenceCenter = this.getCenter();
+        let scaleFactor = 0;
+        vertex.getX() > vertex.getY() ? scaleFactor = Math.abs((vertex.getX() - referenceCenter.getX()) / 10000) : scaleFactor = Math.abs((vertex.getY() - referenceCenter.getY()) / 10000);
+        if(scaleFactor < prevScaleFactor && scaleFactor >= 0) {
+            maybe = true;
+        }
+        this.translatePoint(referenceCenter);
         this.vertices.forEach(function (v) {
-            v.setX(v.getX() - distX);
-            v.setY(v.getY() - distY);
+            if(!maybe) {
+                v.setX(v.getX() + (v.getX() * scaleFactor));
+                v.setY(v.getY() + (v.getY() * scaleFactor));
+            }else{
+                v.setX(v.getX() - (v.getX() * scaleFactor));
+                v.setY(v.getY() - (v.getY() * scaleFactor));
+            }
         });
+        referenceCenter.invert();
+        this.translatePoint(referenceCenter);
         this.boundaries = this.setBoundaries();
+        return scaleFactor;
     };
 
     this.shearX = function (vertex) {

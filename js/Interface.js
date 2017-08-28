@@ -274,10 +274,12 @@ function Interface (newCanvas) {
         this.redraw();
     };
 
-    this.scaleClick = function (x, y) {
-        this.scene.getPolygonAt(this.selectedPolygon.index).scale(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+    this.scaleClick = function (x, y, prevScaleFactor) {
+        let poly = this.scene.getPolygonAt(this.selectedPolygon.index);
+        prevScaleFactor = poly.scale(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), prevScaleFactor);
         this.scene.makeDirty();
         this.redraw();
+        return prevScaleFactor;
     };
 
     this.shearHorizontalClick = function (x, y) {
