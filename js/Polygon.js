@@ -135,21 +135,25 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
     };
 
     this.makeRotation = function(vertex) {
-        let newPointTemporary = new Vertex(this.getCenter().x, this.getCenter().y + 50);
+        let newPointTemporary = new Vertex(this.getCenter().getX(), this.getCenter().getY() - 50);
         let oppositeCathets = vertex.distanceTo(newPointTemporary);
         let adjacentCathets = newPointTemporary.distanceTo(this.getCenter());
         let angleRotation = oppositeCathets/adjacentCathets;
 
-        if(vertex.x > this.getCenter().x)
+        if(vertex.getX() > this.getCenter().getX())
             angleRotation *= -1;
+        console.log("centro: "+this.getCenter().getX()+", "+this.getCenter().getY());
+        console.log("novo: "+newPointTemporary.getX()+", "+newPointTemporary.getY());
+        console.log("angulo:  "+angleRotation*Math.PI/180);
 
-        console.log(angleRotation);
-
-        this.vertices.forEach(function (v) {
+        angleRotation *= Math.PI/180;
+        for(let i = 0; i < this.vertices.length; i++){
             //let teste = ;
-            console.log(getNewPointX(v.getX(),v.getY(),angleRotation));
-            console.log(getNewPointY(v.getX(),v.getY(),angleRotation));
-        });
+           // console.log("vertices:  "+vertices[i].getX()+"   "+vertices[i].getY());
+            vertices[i].setX(this.getNewPointX(vertices[i].getX(),vertices[i].getY(),angleRotation));
+            vertices[i].setY(this.getNewPointY(vertices[i].getX(),vertices[i].getY(),angleRotation));
+            //console.log("vertices:  "+vertices[i].getX()+"   "+vertices[i].getY());
+        }
 
         this.boundaries = this.setBoundaries();
     };
