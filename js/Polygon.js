@@ -134,6 +134,34 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = null, must
         this.boundaries = this.setBoundaries();
     };
 
+    this.makeRotation = function(vertex) {
+        let newPointTemporary = new Vertex(this.getCenter().x, this.getCenter().y + 50);
+        let oppositeCathets = vertex.distanceTo(newPointTemporary);
+        let adjacentCathets = newPointTemporary.distanceTo(this.getCenter());
+        let angleRotation = oppositeCathets/adjacentCathets;
+
+        if(vertex.x > this.getCenter().x)
+            angleRotation *= -1;
+
+        console.log(angleRotation);
+
+        this.vertices.forEach(function (v) {
+            //let teste = ;
+            console.log(getNewPointX(v.getX(),v.getY(),angleRotation));
+            console.log(getNewPointY(v.getX(),v.getY(),angleRotation));
+        });
+
+        this.boundaries = this.setBoundaries();
+    };
+
+    this.getNewPointX = function (x, y, teta) {
+        return (x * Math.cos(teta)) - (y * Math.sin(teta));
+    };
+
+    this.getNewPointY = function (x, y, teta) {
+        return (x * Math.sin(teta)) + (y * Math.cos(teta));
+    };
+
     this.scale = function (vertex) {
         let currentCenter = this.getCenter();
         let distX = currentCenter.getX() - vertex.getX();

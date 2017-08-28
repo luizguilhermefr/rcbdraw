@@ -93,6 +93,15 @@
         vue.$emit('show::modal', 'properties-modal');
     }
 
+    function expectRotation () {
+        if (!drawInterface.isSomethingSelected()) {
+            alert('Nenhum objeto selecionado.');
+            return;
+        }
+        toggleReset();
+        vue.$refs.panel.expectRotation();
+    }
+
     function expectTranslate () {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');

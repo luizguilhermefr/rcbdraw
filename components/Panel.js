@@ -50,6 +50,10 @@ Vue.component('panel', {
             this.mode = 5;
             this.cursor = 'w-resize';
         },
+        expectRotation () {
+            this.mode = 8;
+            this.cursor = 'move'; //mudar
+        },
         expectShear (direction) {
             if (direction === 'x') {
                 this.mode = 6;
@@ -78,7 +82,7 @@ Vue.component('panel', {
             }
         },
         mouseDown () {
-            if (this.mode >= 4 && this.mode <= 5) {
+            if (this.mode >= 4 && this.mode <= 5 || this.mode == 8) {
                 this.dragging = true;
             }
         },
@@ -90,6 +94,9 @@ Vue.component('panel', {
                         break;
                     case 5:
                         drawInterface.scaleClick(e.clientX, e.clientY);
+                        break;
+                    case 8:
+                        drawInterface.rotationClick(e.clientX, e.clientY);
                         break;
                 }
             }

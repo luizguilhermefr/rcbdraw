@@ -280,6 +280,12 @@ function Interface (newCanvas) {
         this.redraw();
     };
 
+    this.rotationClick = function (x, y) {
+        this.scene.getPolygonAt(this.selectedPolygon.index).makeRotation(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.scene.makeDirty();
+        this.redraw();
+    };
+
     this.shearHorizontalClick = function (x, y) {
         this.scene.getPolygonAt(this.selectedPolygon.index).shearX(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
         this.scene.makeDirty();

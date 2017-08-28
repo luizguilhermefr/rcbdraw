@@ -110,7 +110,7 @@ Vue.component('rcb-navbar', {
                             title: 'Rotacionar',
                             enabled: true,
                             action () {
-                                return null;
+                                expectRotation();
                             }
                         },
                         {
