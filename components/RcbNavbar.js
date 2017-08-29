@@ -75,14 +75,6 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 2,
-                            title: 'Excluir',
-                            enabled: true,
-                            action () {
-                                drawInterface.deletePolygon();
-                            }
-                        },
-                        {
-                            id: 3,
                             title: 'Mão Livre',
                             enabled: true,
                             action () {
@@ -90,7 +82,7 @@ Vue.component('rcb-navbar', {
                             }
                         },
                         {
-                            id: 4,
+                            id: 3,
                             title: 'Polígono Regular',
                             modal: 'regular-polygon-modal',
                             enabled: true,
@@ -152,7 +144,23 @@ Vue.component('rcb-navbar', {
                             action () {
                                 openPropertiesModal();
                             }
-                        }
+                        },
+                        {
+                            id: 7,
+                            title: 'Duplicar',
+                            enabled: true,
+                            action () {
+                                duplicateSelected();
+                            }
+                        },
+                        {
+                            id: 8,
+                            title: 'Excluir',
+                            enabled: true,
+                            action () {
+                                deletePolygon();
+                            }
+                        },
                     ]
                 },
                 {

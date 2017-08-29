@@ -12,14 +12,14 @@ Vue.component('panel', {
 
     data: function () {
         return {
-            mode: 0, // 0: nada, 1: esperando posicionamento de polígono, 2: seleção, 3: mão livre
+            mode: 2,
             size: 0,
             sides: 0,
             stroke: Colors.DEFAULT,
             fill: null,
             mustStroke: true,
             mustFill: false,
-            cursor: 'default',
+            cursor: 'pointer',
             dragging: false,
             prevScaleFactor : {
                 X: 0,
@@ -133,13 +133,13 @@ Vue.component('panel', {
         },
         reset () {
             drawInterface.clearFreeHandDots();
-            this.mode = 0;
+            this.mode = 2;
             this.size = 0;
             this.sides = 0;
-            this.cursor = 'default';
+            this.cursor = 'pointer';
             this.dragging = false;
             this.stroke = Colors.DEFAULT;
-            this.fill = null;
+            this.fill = Colors.DEFAULT;
             this.mustStroke = true;
             this.mustFill = false;
             this.prevScaleFactor = 0;

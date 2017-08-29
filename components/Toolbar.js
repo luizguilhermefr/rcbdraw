@@ -28,7 +28,7 @@ Vue.component('toolbar', {
                     styleClass: 'icon-delete',
                     enabled: true,
                     action () {
-                        drawInterface.deletePolygon();
+                        deletePolygon();
                     }
                 },
                 {

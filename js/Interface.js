@@ -7,7 +7,6 @@ function Interface (newCanvas) {
     this.scene = new Scene();
     this.freeHandDots = [];
     this.selectedPolygon = null;
-    this.polygonTemporary = null;
 
     this.getRelativeX = function (x) {
         return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
@@ -284,11 +283,11 @@ function Interface (newCanvas) {
     };
 
     this.rotationClick = function (x, y) {
-        if(!this.polygonTemporary) {
-            this.polygonTemporary = this.selectedPolygon.index;
+        if(this.scene.getPolygonTemporary() == null) {
+            this.scene.setPolygonTemporary(this.selectedPolygon.index);
             console.log("ENTROU");
         }
-        this.scene.getPolygonAt(this.polygonTemporary).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.scene.getPolygonAt(this.scene.getPolygonTemporary()).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
         this.scene.makeDirty();
         this.redraw();
     };
@@ -348,6 +347,11 @@ function Interface (newCanvas) {
         } else {
             this.clearSelectedPolygon();
         }
+        this.redraw();
+    };
+
+    this.duplicateSelected = function () {
+        this.scene.addPolygon(this.scene.getPolygonAt(this.selectedPolygon.index).clone(20));
         this.redraw();
     };
 }

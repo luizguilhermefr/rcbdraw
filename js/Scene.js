@@ -1,6 +1,6 @@
 function Scene () {
     this.polygons = [];
-
+    this.polygonTemporary = null;
     this.dirty = false;
 
     this.makeDirty = function () {
@@ -21,6 +21,14 @@ function Scene () {
         }
         return false;
     };
+
+    this.getPolygonTemporary = function () {
+        return polygonTemporary;
+    }
+
+    this.setPolygonTemporary = function (polygon) {
+        this.polygonTemporary.push(polygon);
+    }
 
     this.getPolygons = function () {
         return this.polygons;
