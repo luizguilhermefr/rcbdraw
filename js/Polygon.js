@@ -134,7 +134,12 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         this.boundaries = this.setBoundaries();
     };
 
-    this.rotate = function(vertex) {
+    this.defineAngleAdd = function (vertex) {
+
+        return Math.atan(angleRoration);
+    };
+
+    this.rotate = function(vertex, angleAdd) {
         let newPointTemporary = new Vertex(this.getCenter().getX(), vertex.getY());
         let oppositeCathets = vertex.distanceTo(newPointTemporary);
         let adjacentCathets = newPointTemporary.distanceTo(this.getCenter());
@@ -142,15 +147,13 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
 
         let teta = Math.atan(angleRotation);
 
-        //if(vertex.getX() > this.getCenter().getX())
-         //   teta *= -1;
-
         console.log("mouse: "+vertex.getX()+", "+vertex.getY());
         console.log("centro: "+this.getCenter().getX()+", "+this.getCenter().getY());
         console.log("novo: "+newPointTemporary.getX()+", "+newPointTemporary.getY());
         console.log("angulo:  "+teta);
 
         teta *= Math.PI/180;
+        teta += angleAdd;
 
         let centerReference = this.getCenter();
         this.translate(new Vertex(0,0));
@@ -250,20 +253,21 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         }
 
         //sort
-        for (let i = 0; i < meet.length; i++) {
-            for (let j = i; j < meet.length; j++) {
-                if (meet[ i ] > meet[ j ]) {
-                    let temp = meet[ i ];
-                    meet[ i ] = meet[ j ];
-                    meet[ j ] = temp;
-                }
-            }
-        }
+        // for (let i = 0; i < meet.length; i++) {
+        //     for (let j = i; j < meet.length; j++) {
+        //         if (meet[ i ] > meet[ j ]) {
+        //             let temp = meet[ i ];
+        //             meet[ i ] = meet[ j ];
+        //             meet[ j ] = temp;
+        //         }
+        //     }
+        // }
+        meet.sort();
         return meet;
     };
 
     this.clone = function (displacement = 0) {
-        nextVertices = [];
+        let nextVertices = [];
         this.vertices.forEach(function (v) {
             nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement));
         });

@@ -83,6 +83,9 @@ Vue.component('panel', {
                 case 7:
                     drawInterface.shearVerticalClick(e.clientX, e.clientY);
                     break;
+                case 8:
+                    drawInterface.temporaryXY(e.clientX, e.clientY);
+                    break;
             }
         },
         mouseDown () {
