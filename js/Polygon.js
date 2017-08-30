@@ -134,25 +134,22 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         this.boundaries = this.setBoundaries();
     };
 
-    this.rotate = function(vertexFinish, vertexStart) {
+    this.rotate = function(vertexFinish, vertexStart, clone) {
         let referenceCenter = this.getCenter();
         let sideA = vertexFinish.distanceTo(vertexStart);
         let sideB = referenceCenter.distanceTo(vertexStart);
         let sideC = referenceCenter.distanceTo(vertexFinish);
 
         let teta = Math.acos((sideB*sideB + sideC*sideC - sideA*sideA) / (2*sideB*sideC));
-        //console.log("angulo:  "+teta);
-
-        teta *= Math.PI/180;
-
-        if(vertexFinish.getX() < vertexStart.getX())
-            teta *= -1;
+        let angleB = Math.acos((sideA*sideA + sideC*sideC - sideB*sideB) / (2*sideA*sideC));
+        let angleC = Math.acos((sideA*sideA + sideB*sideB - sideC*sideC) / (2*sideA*sideB));
+        let sum = teta+angleB+angleC;
 
         this.translate(new Vertex(0,0));
 
         for(let i = 0; i < this.vertices.length; i++){
-            vertices[i].setX(this.getNewPointX(vertices[i].getX(),vertices[i].getY(),teta));
-            vertices[i].setY(this.getNewPointY(vertices[i].getX(),vertices[i].getY(),teta));
+            this.vertices[i].setX(Math.round(this.getNewPointX(clone.vertexAt(i).getX(),clone.vertexAt(i).getY(),teta)));
+            this.vertices[i].setY(Math.round(this.getNewPointY(clone.vertexAt(i).getX(),clone.vertexAt(i).getY(),teta)));
         }
 
         this.translate(referenceCenter);

@@ -84,7 +84,6 @@ Vue.component('panel', {
                     drawInterface.shearVerticalClick(e.clientX, e.clientY);
                     break;
                 case 8:
-                    //console.log("aqui3");
                     drawInterface.temporaryXY(e.clientX, e.clientY);
                     break;
             }
@@ -93,7 +92,6 @@ Vue.component('panel', {
             if (this.mode >= 4 && this.mode <= 5 || this.mode == 8) {
                 this.dragging = true;
                 if(this.mode == 8) {
-                    //console.log("aqui2");
                     drawInterface.temporaryXY(e.clientX, e.clientY);
                 }
             }
