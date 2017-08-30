@@ -55,6 +55,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
                 minY = vy;
             }
         }
+        console.log("maxX:"+maxX+" maxY:"+maxY+" minX:"+minX+" minY:"+minY);
 
         return {
             maxX: maxX,
@@ -139,22 +140,22 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         let sideA = vertexFinish.distanceTo(vertexStart);
         let sideB = referenceCenter.distanceTo(vertexStart);
         let sideC = referenceCenter.distanceTo(vertexFinish);
-
-        let teta = Math.acos((sideB*sideB + sideC*sideC - sideA*sideA) / (2*sideB*sideC));
-        let angleB = Math.acos((sideA*sideA + sideC*sideC - sideB*sideB) / (2*sideA*sideC));
-        let angleC = Math.acos((sideA*sideA + sideB*sideB - sideC*sideC) / (2*sideA*sideB));
-        let sum = teta+angleB+angleC;
+        let teta = Math.acos((Math.pow(sideB, 2)+ Math.pow(sideC,2) - Math.pow(sideA,2)) / (2*sideB*sideC));
 
         this.translate(new Vertex(0,0));
 
+        console.log(teta);
+        if(vertexFinish.getX() <= vertexStart.getX())
+            teta *= -1;
+
         for(let i = 0; i < this.vertices.length; i++){
-            this.vertices[i].setX(Math.round(this.getNewPointX(clone.vertexAt(i).getX(),clone.vertexAt(i).getY(),teta)));
-            this.vertices[i].setY(Math.round(this.getNewPointY(clone.vertexAt(i).getX(),clone.vertexAt(i).getY(),teta)));
+            vertices[i].setX(Math.round(this.getNewPointX(clone.vertexAt(i).getX(),clone.vertexAt(i).getY(),teta)));
+            vertices[i].setY(Math.round(this.getNewPointY(clone.vertexAt(i).getX(),clone.vertexAt(i).getY(),teta)));
         }
 
         this.translate(referenceCenter);
-
         this.boundaries = this.setBoundaries();
+        console.log("this.boundaries.maxX:"+this.boundaries.maxX+" this.boundaries.maxY:"+this.boundaries.maxY+" this.boundaries.minX:"+this.boundaries.minX+" this.boundaries.minY:"+this.boundaries.minY);
     };
 
     this.getNewPointX = function (x, y, teta) {
@@ -166,25 +167,25 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
     };
 
     this.scale = function (vertex, prevScaleFactor) {
-        let maybe = false;
+        let mouseMove = false;
         let referenceCenter = this.getCenter();
         let scaleFactor = {
-            X: Math.abs((vertex.getX() - referenceCenter.getX()) / 10000),
-            Y: Math.abs((vertex.getY() - referenceCenter.getY()) / 10000)
+            X: Math.abs((vertex.getX() - referenceCenter.getX()) / 3000),
+            Y: Math.abs((vertex.getY() - referenceCenter.getY()) / 3000)
         };
         if ((scaleFactor.X < prevScaleFactor.X || scaleFactor.Y < prevScaleFactor.Y ) &&
             (scaleFactor.X >= 0 || scaleFactor.Y >= 0)) {
-            maybe = true;
+            mouseMove = true;
         }
         this.translatePoint(referenceCenter);
 
         this.vertices.forEach(function (v) {
-            if (!maybe) {
-                v.setX(v.getX() + (v.getX() * scaleFactor.X));
-                v.setY(v.getY() + (v.getY() * scaleFactor.Y));
-            } else {
+            if (mouseMove) {
                 v.setX(v.getX() - (v.getX() * scaleFactor.X));
                 v.setY(v.getY() - (v.getY() * scaleFactor.Y));
+            } else {
+                v.setX(v.getX() + (v.getX() * scaleFactor.X));
+                v.setY(v.getY() + (v.getY() * scaleFactor.Y));
             }
         });
         referenceCenter.invert();

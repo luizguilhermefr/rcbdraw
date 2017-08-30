@@ -30,11 +30,11 @@ function Scene () {
     this.getPolygonTemporary = function () {
         return this.polygonTemporary;
 
-    }
+    };
 
     this.setPolygonTemporary = function (polygon) {
         this.polygonTemporary = polygon.clone();
-    }
+    };
 
     this.getPolygons = function () {
         return this.polygons;
@@ -51,7 +51,7 @@ function Scene () {
     this.resetSceneTemporary = function() {
         this.vertexTemporary = null;
         this.polygonTemporary = null;
-    }
+    };
 
     this.getPolygonAt = function (id) {
         return this.polygons[id];

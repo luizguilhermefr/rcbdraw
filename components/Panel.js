@@ -122,6 +122,7 @@ Vue.component('panel', {
                         break;
                     case 8:
                         drawInterface.resetSceneTemporary();
+                        drawInterface = drawInterface.rotationClick(e.clientX, e.clientY);
                         break;
                 }
                 this.dragging = false;
