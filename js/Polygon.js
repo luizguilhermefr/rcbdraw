@@ -243,17 +243,6 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
                 meet.push(l.getX(y));
             }
         }
-
-        //sort
-        // for (let i = 0; i < meet.length; i++) {
-        //     for (let j = i; j < meet.length; j++) {
-        //         if (meet[ i ] > meet[ j ]) {
-        //             let temp = meet[ i ];
-        //             meet[ i ] = meet[ j ];
-        //             meet[ j ] = temp;
-        //         }
-        //     }
-        // }
         meet.sort();
         return meet;
     };
