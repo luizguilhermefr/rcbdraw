@@ -134,28 +134,20 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         this.boundaries = this.setBoundaries();
     };
 
-    this.defineAngleAdd = function (vertex) {
+    this.rotate = function(vertexFinish, vertexStart) {
+        let referenceCenter = this.getCenter();
+        let sideA = vertexFinish.distanceTo(vertexStart);
+        let sideB = referenceCenter.distanceTo(vertexStart);
+        let sideC = referenceCenter.distanceTo(vertexFinish);
 
-        return Math.atan(angleRoration);
-    };
-
-    this.rotate = function(vertex, angleAdd) {
-        let newPointTemporary = new Vertex(this.getCenter().getX(), vertex.getY());
-        let oppositeCathets = vertex.distanceTo(newPointTemporary);
-        let adjacentCathets = newPointTemporary.distanceTo(this.getCenter());
-        let angleRotation = oppositeCathets/adjacentCathets;
-
-        let teta = Math.atan(angleRotation);
-
-        console.log("mouse: "+vertex.getX()+", "+vertex.getY());
-        console.log("centro: "+this.getCenter().getX()+", "+this.getCenter().getY());
-        console.log("novo: "+newPointTemporary.getX()+", "+newPointTemporary.getY());
-        console.log("angulo:  "+teta);
+        let teta = Math.acos((sideB*sideB + sideC*sideC - sideA*sideA) / (2*sideB*sideC));
+        //console.log("angulo:  "+teta);
 
         teta *= Math.PI/180;
-        teta += angleAdd;
 
-        let centerReference = this.getCenter();
+        if(vertexFinish.getX() < vertexStart.getX())
+            teta *= -1;
+
         this.translate(new Vertex(0,0));
 
         for(let i = 0; i < this.vertices.length; i++){
@@ -163,7 +155,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
             vertices[i].setY(this.getNewPointY(vertices[i].getX(),vertices[i].getY(),teta));
         }
 
-        this.translate(centerReference);
+        this.translate(referenceCenter);
 
         this.boundaries = this.setBoundaries();
     };

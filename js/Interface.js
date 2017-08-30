@@ -286,13 +286,16 @@ function Interface (newCanvas) {
         this.scene.setTemporaryVertex(x, y);
     };
 
+    this.resetSceneTemporary = function(){
+        this.scene.resetSceneTemporary();
+    };
+
     this.rotationClick = function (x, y) {
         if(this.scene.getPolygonTemporary() === null)
             this.scene.setPolygonTemporary(this.scene.getPolygonAt(this.selectedPolygon.index));
         else
             this.scene.changePolygon(this.selectedPolygon.index, this.scene.getPolygonTemporary());
-
-        this.scene.getPolygonAt(this.selectedPolygon.index).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.scene.getPolygonAt(this.selectedPolygon.index).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), this.scene.getTemporaryVertex());
         this.scene.makeDirty();
         this.redraw();
     };

@@ -84,13 +84,18 @@ Vue.component('panel', {
                     drawInterface.shearVerticalClick(e.clientX, e.clientY);
                     break;
                 case 8:
+                    //console.log("aqui3");
                     drawInterface.temporaryXY(e.clientX, e.clientY);
                     break;
             }
         },
-        mouseDown () {
+        mouseDown (e) {
             if (this.mode >= 4 && this.mode <= 5 || this.mode == 8) {
                 this.dragging = true;
+                if(this.mode == 8) {
+                    //console.log("aqui2");
+                    drawInterface.temporaryXY(e.clientX, e.clientY);
+                }
             }
         },
         mouseMove (e) {
@@ -116,6 +121,9 @@ Vue.component('panel', {
                         break;
                     case 5:
                         this.prevScaleFactor = drawInterface.scaleClick(e.clientX, e.clientY, this.prevScaleFactor);
+                        break;
+                    case 8:
+                        drawInterface.resetSceneTemporary();
                         break;
                 }
                 this.dragging = false;

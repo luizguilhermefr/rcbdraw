@@ -44,6 +44,15 @@ function Scene () {
         this.vertexTemporary = new Vertex(x, y);
     };
 
+    this.getTemporaryVertex = function () {
+        return new Vertex (this.vertexTemporary.getX(), this.vertexTemporary.getY());
+    };
+
+    this.resetSceneTemporary = function() {
+        this.vertexTemporary = null;
+        this.polygonTemporary = null;
+    }
+
     this.getPolygonAt = function (id) {
         return this.polygons[id];
     };
