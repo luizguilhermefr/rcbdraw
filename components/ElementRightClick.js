@@ -1,7 +1,7 @@
 Vue.component('element-right-click', {
 
     template: `
-        <b-list-group v-show="visible" class="rightclick" v-bind:style="styles">
+        <b-list-group class="rightclick" v-bind:style="styles">
           <b-list-group-item v-for="item in items" :key="item.id" href="#" v-on:click.native="click(item.action)">
             {{item.title}}
           </b-list-group-item>
@@ -83,11 +83,13 @@ Vue.component('element-right-click', {
     },
     methods: {
         show (x, y) {
-            console.log(window.innerHeight);
-            console.log(this.$el.offsetHeight);
+            if ((this.$el.clientHeight + y) > window.innerHeight) {
+                this.y = y - this.$el.clientHeight;
+            } else {
+                this.y = y;
+            }
             this.visible = true;
             this.x = x;
-            this.y = y;
         },
         hide () {
             this.visible = false;
@@ -103,8 +105,9 @@ Vue.component('element-right-click', {
         styles: function() {
             return {
                 left: this.x + 'px',
-                top: this.y + 'px'
+                top: this.y + 'px',
+                'margin-left': this.visible ? 0 : '-999em'
             };
         }
-    }
+    },
 });
