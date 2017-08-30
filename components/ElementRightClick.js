@@ -83,6 +83,8 @@ Vue.component('element-right-click', {
     },
     methods: {
         show (x, y) {
+            console.log(window.innerHeight);
+            console.log(this.$el.offsetHeight);
             this.visible = true;
             this.x = x;
             this.y = y;
