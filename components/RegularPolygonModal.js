@@ -4,12 +4,33 @@ Vue.component('regular-polygon-modal', {
         <b-modal id="regular-polygon-modal" title="Polígono Regular" @ok="submit" closeTitle="Cancelar" okTitle="Inserir" :ok-disabled="!canInsert()"> 
             <div class="modal-body">
                 <div class="form-group">
-                    <label>Lados</label>
-                    <input v-model="sides" id="regular-polygon-sides" min="3" type="number" class="form-control"
-                           placeholder="Lados">
                     <label>Tamanho</label>
-                    <input v-model="size" id="regular-polygon-size" min="50" type="number" class="form-control"
-                           placeholder="Tamanho (px)">
+                    <b-input-group>
+                        <b-input-group-addon v-show="!sizeOk()">
+                            <strong class="text-danger">!</strong>
+                        </b-input-group-addon>
+                        <b-form-input placeholder="Tamanho" v-model="size" disabled></b-form-input>
+                        <b-input-group-addon>px</b-input-group-addon>
+                        <b-input-group-button>
+                            <b-btn variant="danger" v-on:click="decreaseSize()">-</b-btn>
+                        </b-input-group-button>
+                        <b-input-group-button>
+                            <b-btn variant="success" v-on:click="increaseSize()">+</b-btn>
+                        </b-input-group-button>
+                    </b-input-group>
+                    <br>
+                    <b-input-group>
+                        <b-input-group-addon v-show="!sidesOk()">
+                            <strong class="text-danger">!</strong>
+                        </b-input-group-addon>
+                        <b-form-input placeholder="Lados" v-model="sides" disabled></b-form-input>
+                        <b-input-group-button>
+                            <b-btn variant="danger" v-on:click="decreaseSides()">-</b-btn>
+                        </b-input-group-button>
+                        <b-input-group-button>
+                            <b-btn variant="success" v-on:click="increaseSides()">+</b-btn>
+                        </b-input-group-button>
+                    </b-input-group>
                     <label>Borda</label>
                     <br>
                     <input type="color" v-model="stroke">
@@ -39,8 +60,26 @@ Vue.component('regular-polygon-modal', {
     },
 
     methods: {
+        sidesOk() {
+            return this.sides >= 3 && this.sides <= 20;
+        },
+        sizeOk() {
+            return this.size >= 50;
+        },
+        increaseSides() {
+            this.sides++;
+        },
+        decreaseSides() {
+            this.sides--;
+        },
+        increaseSize() {
+            this.size++;
+        },
+        decreaseSize() {
+            this.size--;
+        },
         canInsert () {
-            return this.sides >= 3 && this.sides <= 20 && this.size >= 50;
+            return this.sidesOk() && this.sizeOk();
         },
         submit () {
             definePolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill);
