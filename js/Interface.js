@@ -100,6 +100,7 @@ function Interface (newCanvas) {
             this.context.beginPath();
             let boundaries = this.selectedPolygon.polygon.getBoundaries();
             console.log("na atualizacao: "+boundaries.maxX+" "+boundaries.maxY+" "+boundaries.minX+" "+boundaries.minY);
+            console.log("index: "+this.selectedPolygon.index);
             this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
             this.context.lineTo(boundaries.minX - 5, boundaries.maxY + 5);
             this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);
@@ -292,9 +293,10 @@ function Interface (newCanvas) {
         if (this.rotationPolygon === null) {
             this.rotationPolygon = this.scene.getPolygonAt(this.selectedPolygon.index).clone();
         } else {
-            this.scene.changePolygon(this.selectedPolygon.index, this.rotationPolygon);
+            this.scene.changePolygon(this.selectedPolygon.index, this.rotationPolygon.clone());
         }
         this.scene.getPolygonAt(this.selectedPolygon.index).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), this.rotationPolygon);
+        this.selectedPolygon.polygon = this.scene.getPolygonAt(this.selectedPolygon.index);
         this.scene.makeDirty();
         this.redraw();
     };

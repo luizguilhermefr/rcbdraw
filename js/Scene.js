@@ -22,7 +22,7 @@ function Scene () {
     };
 
     this.changePolygon = function (id, newPolygon) {
-        this.polygons[id] = newPolygon.clone();
+        this.polygons[id] = newPolygon;
     };
 
     this.getPolygons = function () {
