@@ -76,6 +76,10 @@ function Interface (newCanvas) {
         this.drawSelectedPolygon();
     };
 
+    this.resetRotationClick = function() {
+        this.rotationPolygon = null;
+    };
+
     this.drawTemporaryPolygon = function () {
         this.context.strokeStyle = Colors.TEMPORARY;
         this.context.beginPath();
@@ -95,6 +99,7 @@ function Interface (newCanvas) {
             this.context.setLineDash([ 5, 3 ]);
             this.context.beginPath();
             let boundaries = this.selectedPolygon.polygon.getBoundaries();
+            console.log("na atualizacao: "+boundaries.maxX+" "+boundaries.maxY+" "+boundaries.minX+" "+boundaries.minY);
             this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
             this.context.lineTo(boundaries.minX - 5, boundaries.maxY + 5);
             this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);

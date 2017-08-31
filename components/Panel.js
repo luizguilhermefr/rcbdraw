@@ -116,6 +116,7 @@ Vue.component('panel', {
                         break;
                     case 8:
                         drawInterface.rotationClick(e.clientX, e.clientY);
+                        drawInterface.resetRotationClick();
                         break;
                 }
                 this.dragging = false;

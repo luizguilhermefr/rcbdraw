@@ -144,6 +144,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         }
         this.translate(referenceCenter);
         this.boundaries = this.setBoundaries();
+        console.log("no processo: "+this.boundaries.maxX+" "+this.boundaries.maxY+" "+this.boundaries.minX+" "+this.boundaries.minY);
 
         return this;
     };
@@ -246,4 +247,8 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         });
         return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
     };
+
+    this.destroyClone = function () {
+        return new Polygon(null);
+    }
 }
