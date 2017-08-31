@@ -13,6 +13,7 @@
     <rcb-navbar></rcb-navbar>
     <open-modal></open-modal>
     <save-modal></save-modal>
+    <export-modal></export-modal>
     <regular-polygon-modal></regular-polygon-modal>
     <properties-modal></properties-modal>
     <about-modal></about-modal>
@@ -29,6 +30,7 @@
 <script type="text/javascript" src="components/OpenModal.js"></script>
 <script type="text/javascript" src="components/PropertiesModal.js"></script>
 <script type="text/javascript" src="components/SaveModal.js"></script>
+<script type="text/javascript" src="components/ExportModal.js"></script>
 <script type="text/javascript" src="components/RegularPolygonModal.js"></script>
 <script type="text/javascript" src="components/AboutModal.js"></script>
 <script type="text/javascript" src="components/RcbNavbar.js"></script>
@@ -45,11 +47,14 @@
 <script type="text/javascript" src="js/Edge.js"></script>
 
 <script type="text/javascript">
+    
+    let panel = null;
+
     window.onload = function () {
         vue = new Vue({
             el: '#rcb'
         });
-        let panel = document.getElementById('drawpanel');
+        panel = document.getElementById('drawpanel');
         panel.onmousedown = function () { // previne a seleção em duplo clique
             return false;
         };

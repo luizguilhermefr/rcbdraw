@@ -56,6 +56,15 @@ Vue.component('rcb-navbar', {
                             action () {
                                 return null;
                             }
+                        },
+                        {
+                            id: 4,
+                            title: 'Exportar...',
+                            modal: 'export-modal',
+                            enabled: true,
+                            action () {
+                                return null;
+                            }
                         }
                     ]
                 }

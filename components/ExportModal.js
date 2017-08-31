@@ -1,13 +1,14 @@
-Vue.component('save-modal', {
+Vue.component('export-modal', {
 
     template: `
-        <b-modal id="save-modal" title="Salvar" @shown="prepareDownload"> 
+        <b-modal id="export-modal" title="Exportar... (BETA)" @shown="prepareDownload"> 
             <div class="modal-body">
-                <p><em>Faça download da cena para seu computador.</em></p>
+                <p><em>Exporte a cena como imagem</em></p>
                 <b-form-input placeholder="Nome do arquivo" v-model="filename"></b-form-input>
             </div>
             <div slot="modal-footer">
-                <a :download="filenameWithExtension" :href="url" class="btn btn-success">Download</a>
+                <a :download="filenameWithExtension.jpg" :href="jpg" class="btn btn-success">JPG</a>
+                <a :download="filenameWithExtension.png" :href="png" class="btn btn-success">PNG</a>
                 <b-button @click="hideModal">Fechar</b-button>
             </div>
         </b-modal>
@@ -16,7 +17,8 @@ Vue.component('save-modal', {
     data: function () {
         return {
             filename: 'rcb',
-            url: ''
+            png: '',
+            jpg: ''
         }
     },
     methods: {
@@ -28,14 +30,16 @@ Vue.component('save-modal', {
                 alert('Por favor, atualize seu browser!');
                 return;
             }
-            let json = JSON.stringify(drawInterface.generateSave());
-            let blob = new Blob([json], {type: 'application/json'});
-            this.url = URL.createObjectURL(blob);
+            this.png = panel.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+            this.jpg = panel.toDataURL('image/jpeg').replace('image/jpeg', 'image/octet-stream');
         }
     },
     computed: {
         filenameWithExtension: function () {
-            return this.filename + '.json';
+            return {
+                png: this.filename + '.png',
+                jpg: this.filename + '.jpg'
+            }
         }
     }
 });
