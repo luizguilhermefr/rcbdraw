@@ -141,7 +141,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         let sideC = referenceCenter.distanceTo(vertexFinish);
         let teta = Math.acos((Math.pow(sideB, 2) + Math.pow(sideC,2) - Math.pow(sideA,2)) / (2 * sideB * sideC));
         this.translatePoint(this.getCenter().invert());
-        if (vertexFinish.getX() <= vertexStart.getX()) {
+        if(vertexFinish.getX() <= vertexStart.getX() || vertexFinish.getY() <= vertexStart.getY())
             teta *= -1;
         }
         for(let i = 0; i < this.vertices.length; i++){
@@ -166,8 +166,8 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         let mouseMove = false;
         let referenceCenter = this.getCenter();
         let scaleFactor = {
-            X: Math.abs((vertex.getX() - referenceCenter.getX()) / 3000),
-            Y: Math.abs((vertex.getY() - referenceCenter.getY()) / 3000)
+            X: Math.abs((vertex.getX() - referenceCenter.getX())/7000),
+            Y: Math.abs((vertex.getY() - referenceCenter.getY())/7000)
         };
         if ((scaleFactor.X < prevScaleFactor.X || scaleFactor.Y < prevScaleFactor.Y ) &&
             (scaleFactor.X >= 0 || scaleFactor.Y >= 0)) {
