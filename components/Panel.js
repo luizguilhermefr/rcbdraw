@@ -88,9 +88,6 @@ Vue.component('panel', {
         mouseDown (e) {
             if (this.mode >= 4 && this.mode <= 5 || this.mode === 8) {
                 this.dragging = true;
-                if(this.mode === 8) {
-                    drawInterface.beginRotation(e.clientX, e.clientY);
-                }
             }
         },
         mouseMove (e) {
@@ -119,7 +116,6 @@ Vue.component('panel', {
                         break;
                     case 8:
                         drawInterface.rotationClick(e.clientX, e.clientY);
-                        drawInterface.endRotation();
                         break;
                 }
                 this.dragging = false;

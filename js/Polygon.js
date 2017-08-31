@@ -134,17 +134,10 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         this.boundaries = this.setBoundaries();
     };
 
-    this.rotate = function(vertexFinish, vertexStart, clone) {
+    this.rotate = function(vertex, clone) {
         let referenceCenter = this.getCenter();
-        let sideA = vertexFinish.distanceTo(vertexStart);
-        let sideB = referenceCenter.distanceTo(vertexStart);
-        let sideC = referenceCenter.distanceTo(vertexFinish);
-        let teta = Math.acos((Math.pow(sideB, 2) + Math.pow(sideC, 2) - Math.pow(sideA, 2)) / (2 * sideB * sideC));
+        let teta = Math.atan2(vertex.getX() - referenceCenter.getX(), -(vertex.getY() - referenceCenter.getY()));
         this.translatePoint(this.getCenter().invert());
-
-        if (vertexFinish.getX() <= vertexStart.getX() || vertexFinish.getY() <= vertexStart.getY()){
-            teta *= -1;
-        }
         for(let i = 0; i < this.vertices.length; i++){
             vertices[i].setX(Math.round(this.getNewPointX(clone.vertexAt(i).getX(),clone.vertexAt(i).getY(),teta)));
             vertices[i].setY(Math.round(this.getNewPointY(clone.vertexAt(i).getX(),clone.vertexAt(i).getY(),teta)));

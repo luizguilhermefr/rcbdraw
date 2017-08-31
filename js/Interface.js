@@ -7,7 +7,6 @@ function Interface (newCanvas) {
     this.scene = new Scene();
     this.freeHandDots = [];
     this.selectedPolygon = null;
-    this.rotationVertex = null;
     this.rotationPolygon = null;
 
     this.getRelativeX = function (x) {
@@ -284,25 +283,13 @@ function Interface (newCanvas) {
         return prevScaleFactor;
     };
 
-    this.beginRotation = function (x, y) {
-        this.rotationVertex = new Vertex(this.getRelativeX(x), this.getRelativeY(y));
-    };
-
-    this.getRotationVertex = function () {
-        return this.rotationVertex;
-    };
-
-    this.endRotation = function(){
-        this.rotationVertex = null;
-    };
-
     this.rotationClick = function (x, y) {
         if (this.rotationPolygon === null) {
             this.rotationPolygon = this.scene.getPolygonAt(this.selectedPolygon.index).clone();
         } else {
             this.scene.changePolygon(this.selectedPolygon.index, this.rotationPolygon);
         }
-        this.scene.getPolygonAt(this.selectedPolygon.index).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), this.rotationVertex, this.rotationPolygon);
+        this.scene.getPolygonAt(this.selectedPolygon.index).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), this.rotationPolygon);
         this.scene.makeDirty();
         this.redraw();
     };
