@@ -169,6 +169,22 @@
         drawInterface.deletePolygon();
     }
 
+    function bringForward() {
+        if (!drawInterface.isSomethingSelected()) {
+            alert('Nenhum objeto selecionado.');
+            return;
+        }
+        drawInterface.bringForward();
+    }
+
+    function bringBackward() {
+        if (!drawInterface.isSomethingSelected()) {
+            alert('Nenhum objeto selecionado.');
+            return;
+        }
+        drawInterface.bringBackward();
+    }
+
 </script>
 </body>
 </html>

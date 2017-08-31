@@ -185,7 +185,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
     };
 
     this.shearX = function (vertex) {
-        let referenceVertex = this.vertices[ this.vertices.length - 1 ].clone();
+        let referenceVertex = this.getCenter();
         let shearFactor = (vertex.getX() - referenceVertex.getX()) / referenceVertex.getY();
         this.translatePoint(referenceVertex);
         this.vertices.forEach(function (v) {
@@ -194,10 +194,12 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         referenceVertex.invert();
         this.translatePoint(referenceVertex);
         this.boundaries = this.setBoundaries();
+
+        return this;
     };
 
     this.shearY = function (vertex) {
-        let referenceVertex = this.vertices[ this.vertices.length - 1 ].clone();
+        let referenceVertex = this.getCenter();
         let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
         this.translatePoint(referenceVertex);
         this.vertices.forEach(function (v) {
@@ -206,6 +208,8 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         referenceVertex.invert();
         this.translatePoint(referenceVertex);
         this.boundaries = this.setBoundaries();
+
+        return this;
     };
 
     this.inside = function (x, y) {

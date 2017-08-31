@@ -40,4 +40,22 @@ function Scene () {
     this.resetDirt = function () {
         this.dirty = false;
     };
+
+    this.bringForward = function(id) {
+        if (id === this.polygons.length - 1) {
+            return;
+        }
+        let tmp = this.polygons[id];
+        this.polygons[id] = this.polygons[id + 1];
+        this.polygons[id + 1] = tmp;
+    };
+
+    this.bringBackward = function(id) {
+        if (id === 0) {
+            return;
+        }
+        let tmp = this.polygons[id];
+        this.polygons[id] = this.polygons[id - 1];
+        this.polygons[id - 1] = tmp;
+    };
 }

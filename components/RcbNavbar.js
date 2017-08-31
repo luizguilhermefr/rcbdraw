@@ -105,7 +105,7 @@ Vue.component('rcb-navbar', {
                     id: 3,
                     title: 'Editar',
                     enabled: true,
-                    subitems: [
+                    subitems: [ 
                         {
                             id: 1,
                             title: 'Rotacionar',
@@ -148,14 +148,6 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 6,
-                            title: 'Propriedades do objeto...',
-                            enabled: true,
-                            action () {
-                                openPropertiesModal();
-                            }
-                        },
-                        {
-                            id: 7,
                             title: 'Duplicar',
                             enabled: true,
                             action () {
@@ -163,13 +155,37 @@ Vue.component('rcb-navbar', {
                             }
                         },
                         {
-                            id: 8,
+                            id: 7,
                             title: 'Excluir',
                             enabled: true,
                             action () {
                                 deletePolygon();
                             }
                         },
+                        {
+                            id: 8,
+                            title: 'Trazer para frente',
+                            enabled: true,
+                            action () {
+                                bringForward();
+                            }
+                        },
+                        {
+                            id: 9,
+                            title: 'Trazer para trás',
+                            enabled: true,
+                            action () {
+                                bringBackward();
+                            }
+                        },
+                        {
+                            id: 10,
+                            title: 'Propriedades do objeto...',
+                            enabled: true,
+                            action () {
+                                openPropertiesModal();
+                            }
+                        }
                     ]
                 },
                 {

@@ -1,8 +1,8 @@
 Vue.component('element-right-click', {
 
     template: `
-        <b-list-group class="rightclick" v-bind:style="styles">
-          <b-list-group-item v-for="item in items" :key="item.id" href="#" v-on:click.native="click(item.action)">
+        <b-list-group class="rightclick" v-bind:style="styles" size="lg">
+          <b-list-group-item class="rightclick-item" v-for="item in items" :key="item.id" href="#" v-on:click.native="click(item.action)">
             {{item.title}}
           </b-list-group-item>
         </b-list-group>
@@ -56,26 +56,18 @@ Vue.component('element-right-click', {
                 },
                 {
                     id: 6,
-                    title: 'Propriedades do objeto...',
-                    enabled: true,
-                    action () {
-                        openPropertiesModal();
-                    }
-                },
-                {
-                    id: 7,
-                    title: 'Duplicar',
-                    enabled: true,
-                    action () {
-                        duplicateSelected();
-                    }
-                },
-                {
-                    id: 8,
                     title: 'Excluir',
                     enabled: true,
                     action () {
                         deletePolygon();
+                    }
+                },
+                {
+                    id: 7,
+                    title: 'Propriedades do objeto...',
+                    enabled: true,
+                    action () {
+                        openPropertiesModal();
                     }
                 }
             ]

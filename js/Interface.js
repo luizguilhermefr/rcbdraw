@@ -356,4 +356,14 @@ function Interface (newCanvas) {
         this.scene.addPolygon(this.scene.getPolygonAt(this.selectedPolygon.index).clone(20));
         this.redraw();
     };
+
+    this.bringForward = function () {
+        this.scene.bringForward(this.selectedPolygon.index);
+        this.redraw();
+    };
+
+    this.bringBackward = function () {
+        this.scene.bringBackward(this.selectedPolygon.index);
+        this.redraw();
+    };
 }
