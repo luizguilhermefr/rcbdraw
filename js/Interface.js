@@ -299,8 +299,7 @@ function Interface (newCanvas) {
     this.rotationClick = function (x, y) {
         if (this.rotationPolygon === null) {
             this.rotationPolygon = this.scene.getPolygonAt(this.selectedPolygon.index).clone();
-        }
-        else {
+        } else {
             this.scene.changePolygon(this.selectedPolygon.index, this.rotationPolygon);
         }
         this.scene.getPolygonAt(this.selectedPolygon.index).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), this.rotationVertex, this.rotationPolygon);

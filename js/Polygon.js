@@ -150,6 +150,8 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         }
         this.translate(referenceCenter);
         this.boundaries = this.setBoundaries();
+
+        return this;
     };
 
     this.getNewPointX = function (x, y, teta) {
