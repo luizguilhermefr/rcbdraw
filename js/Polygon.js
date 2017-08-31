@@ -139,9 +139,10 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         let sideA = vertexFinish.distanceTo(vertexStart);
         let sideB = referenceCenter.distanceTo(vertexStart);
         let sideC = referenceCenter.distanceTo(vertexFinish);
-        let teta = Math.acos((Math.pow(sideB, 2) + Math.pow(sideC,2) - Math.pow(sideA,2)) / (2 * sideB * sideC));
+        let teta = Math.acos((Math.pow(sideB, 2) + Math.pow(sideC, 2) - Math.pow(sideA, 2)) / (2 * sideB * sideC));
         this.translatePoint(this.getCenter().invert());
-        if(vertexFinish.getX() <= vertexStart.getX() || vertexFinish.getY() <= vertexStart.getY())
+
+        if (vertexFinish.getX() <= vertexStart.getX() || vertexFinish.getY() <= vertexStart.getY()){
             teta *= -1;
         }
         for(let i = 0; i < this.vertices.length; i++){
