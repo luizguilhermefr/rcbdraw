@@ -55,7 +55,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
                 minY = vy;
             }
         }
-        console.log("maxX:"+maxX+" maxY:"+maxY+" minX:"+minX+" minY:"+minY);
+        // console.log("maxX:"+maxX+" maxY:"+maxY+" minX:"+minX+" minY:"+minY);
 
         return {
             maxX: maxX,
@@ -145,7 +145,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         this.translate(new Vertex(0,0));
 
         console.log(teta);
-        if(vertexFinish.getX() <= vertexStart.getX())
+        if(vertexFinish.getX() <= vertexStart.getX() || vertexFinish.getY() <= vertexStart.getY())
             teta *= -1;
 
         for(let i = 0; i < this.vertices.length; i++){
@@ -155,7 +155,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
 
         this.translate(referenceCenter);
         this.boundaries = this.setBoundaries();
-        console.log("this.boundaries.maxX:"+this.boundaries.maxX+" this.boundaries.maxY:"+this.boundaries.maxY+" this.boundaries.minX:"+this.boundaries.minX+" this.boundaries.minY:"+this.boundaries.minY);
+        // console.log("this.boundaries.maxX:"+this.boundaries.maxX+" this.boundaries.maxY:"+this.boundaries.maxY+" this.boundaries.minX:"+this.boundaries.minX+" this.boundaries.minY:"+this.boundaries.minY);
     };
 
     this.getNewPointX = function (x, y, teta) {
@@ -170,8 +170,8 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         let mouseMove = false;
         let referenceCenter = this.getCenter();
         let scaleFactor = {
-            X: Math.abs((vertex.getX() - referenceCenter.getX()) / 3000),
-            Y: Math.abs((vertex.getY() - referenceCenter.getY()) / 3000)
+            X: Math.abs((vertex.getX() - referenceCenter.getX())/7000),
+            Y: Math.abs((vertex.getY() - referenceCenter.getY())/7000)
         };
         if ((scaleFactor.X < prevScaleFactor.X || scaleFactor.Y < prevScaleFactor.Y ) &&
             (scaleFactor.X >= 0 || scaleFactor.Y >= 0)) {
