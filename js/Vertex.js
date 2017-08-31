@@ -30,6 +30,8 @@ function Vertex (x, y) {
     this.invert = function () {
         this.x *=  -1;
         this.y *= -1;
+
+        return this;
     };
 
     this.distanceTo = function (vertex) {

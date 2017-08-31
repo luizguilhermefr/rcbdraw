@@ -55,7 +55,6 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
                 minY = vy;
             }
         }
-        console.log("maxX:"+maxX+" maxY:"+maxY+" minX:"+minX+" minY:"+minY);
 
         return {
             maxX: maxX,
@@ -140,22 +139,17 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         let sideA = vertexFinish.distanceTo(vertexStart);
         let sideB = referenceCenter.distanceTo(vertexStart);
         let sideC = referenceCenter.distanceTo(vertexFinish);
-        let teta = Math.acos((Math.pow(sideB, 2)+ Math.pow(sideC,2) - Math.pow(sideA,2)) / (2*sideB*sideC));
-
-        this.translate(new Vertex(0,0));
-
-        console.log(teta);
-        if(vertexFinish.getX() <= vertexStart.getX())
+        let teta = Math.acos((Math.pow(sideB, 2) + Math.pow(sideC,2) - Math.pow(sideA,2)) / (2 * sideB * sideC));
+        this.translatePoint(this.getCenter().invert());
+        if (vertexFinish.getX() <= vertexStart.getX()) {
             teta *= -1;
-
+        }
         for(let i = 0; i < this.vertices.length; i++){
             vertices[i].setX(Math.round(this.getNewPointX(clone.vertexAt(i).getX(),clone.vertexAt(i).getY(),teta)));
             vertices[i].setY(Math.round(this.getNewPointY(clone.vertexAt(i).getX(),clone.vertexAt(i).getY(),teta)));
         }
-
         this.translate(referenceCenter);
         this.boundaries = this.setBoundaries();
-        console.log("this.boundaries.maxX:"+this.boundaries.maxX+" this.boundaries.maxY:"+this.boundaries.maxY+" this.boundaries.minX:"+this.boundaries.minX+" this.boundaries.minY:"+this.boundaries.minY);
     };
 
     this.getNewPointX = function (x, y, teta) {

@@ -56,7 +56,7 @@ Vue.component('panel', {
         },
         expectRotation () {
             this.mode = 8;
-            this.cursor = 'move'; //mudar
+            this.cursor = 'move';
         },
         expectShear (direction) {
             if (direction === 'x') {
@@ -83,16 +83,13 @@ Vue.component('panel', {
                 case 7:
                     drawInterface.shearVerticalClick(e.clientX, e.clientY);
                     break;
-                case 8:
-                    drawInterface.temporaryXY(e.clientX, e.clientY);
-                    break;
             }
         },
         mouseDown (e) {
-            if (this.mode >= 4 && this.mode <= 5 || this.mode == 8) {
+            if (this.mode >= 4 && this.mode <= 5 || this.mode === 8) {
                 this.dragging = true;
-                if(this.mode == 8) {
-                    drawInterface.temporaryXY(e.clientX, e.clientY);
+                if(this.mode === 8) {
+                    drawInterface.beginRotation(e.clientX, e.clientY);
                 }
             }
         },
@@ -121,8 +118,8 @@ Vue.component('panel', {
                         this.prevScaleFactor = drawInterface.scaleClick(e.clientX, e.clientY, this.prevScaleFactor);
                         break;
                     case 8:
-                        drawInterface.resetSceneTemporary();
-                        drawInterface = drawInterface.rotationClick(e.clientX, e.clientY);
+                        drawInterface.rotationClick(e.clientX, e.clientY);
+                        drawInterface.endRotation();
                         break;
                 }
                 this.dragging = false;

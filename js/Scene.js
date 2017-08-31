@@ -1,8 +1,6 @@
 function Scene () {
     this.polygons = [];
-    this.polygonTemporary = null;
     this.dirty = false;
-    this.vertexTemporary = null;
 
     this.makeDirty = function () {
       this.dirty = true;
@@ -27,30 +25,8 @@ function Scene () {
         this.polygons[id] = newPolygon.clone();
     };
 
-    this.getPolygonTemporary = function () {
-        return this.polygonTemporary;
-
-    };
-
-    this.setPolygonTemporary = function (polygon) {
-        this.polygonTemporary = polygon.clone();
-    };
-
     this.getPolygons = function () {
         return this.polygons;
-    };
-
-    this.setTemporaryVertex = function (x, y) {
-        this.vertexTemporary = new Vertex(x, y);
-    };
-
-    this.getTemporaryVertex = function () {
-        return new Vertex (this.vertexTemporary.getX(), this.vertexTemporary.getY());
-    };
-
-    this.resetSceneTemporary = function() {
-        this.vertexTemporary = null;
-        this.polygonTemporary = null;
     };
 
     this.getPolygonAt = function (id) {

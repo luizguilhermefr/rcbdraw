@@ -7,6 +7,8 @@ function Interface (newCanvas) {
     this.scene = new Scene();
     this.freeHandDots = [];
     this.selectedPolygon = null;
+    this.rotationVertex = null;
+    this.rotationPolygon = null;
 
     this.getRelativeX = function (x) {
         return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
@@ -282,20 +284,26 @@ function Interface (newCanvas) {
         return prevScaleFactor;
     };
 
-    this.temporaryXY = function (x, y) {
-        this.scene.setTemporaryVertex(this.getRelativeX(x), this.getRelativeY(y));
+    this.beginRotation = function (x, y) {
+        this.rotationVertex = new Vertex(this.getRelativeX(x), this.getRelativeY(y));
     };
 
-    this.resetSceneTemporary = function(){
-        this.scene.resetSceneTemporary();
+    this.getRotationVertex = function () {
+        return this.rotationVertex;
+    };
+
+    this.endRotation = function(){
+        this.rotationVertex = null;
     };
 
     this.rotationClick = function (x, y) {
-        if(this.scene.getPolygonTemporary() === null)
-            this.scene.setPolygonTemporary(this.scene.getPolygonAt(this.selectedPolygon.index));
-        else
-            this.scene.changePolygon(this.selectedPolygon.index, this.scene.getPolygonTemporary());
-        this.scene.getPolygonAt(this.selectedPolygon.index).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), this.scene.getTemporaryVertex(), this.scene.getPolygonTemporary());
+        if (this.rotationPolygon === null) {
+            this.rotationPolygon = this.scene.getPolygonAt(this.selectedPolygon.index).clone();
+        }
+        else {
+            this.scene.changePolygon(this.selectedPolygon.index, this.rotationPolygon);
+        }
+        this.scene.getPolygonAt(this.selectedPolygon.index).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), this.rotationVertex, this.rotationPolygon);
         this.scene.makeDirty();
         this.redraw();
     };
