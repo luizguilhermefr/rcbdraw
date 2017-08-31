@@ -19,7 +19,7 @@ Vue.component('element-right-click', {
                     title: 'Rotacionar',
                     enabled: true,
                     action () {
-                        return null;
+                        expectRotation();
                     }
                 },
                 {
