@@ -164,7 +164,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 8,
-                            title: 'Trazer para frente',
+                            title: 'Trazer nível à frente',
                             enabled: true,
                             action () {
                                 bringForward();
@@ -172,7 +172,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 9,
-                            title: 'Trazer para trás',
+                            title: 'Levar nível à trás',
                             enabled: true,
                             action () {
                                 bringBackward();
