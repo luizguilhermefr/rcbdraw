@@ -1,3 +1,4 @@
+// noinspection LightningSingletonTags
 Vue.component('panel', {
 
     template: `

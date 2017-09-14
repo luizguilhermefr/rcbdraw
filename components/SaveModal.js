@@ -29,7 +29,8 @@ Vue.component('save-modal', {
                 return;
             }
             let json = JSON.stringify(drawInterface.generateSave());
-            let blob = new Blob([json], {type: 'application/json'});
+            //let blob = new Blob([json], {type: 'application/json'});
+            let blob = new Blob([json], {type: 'text/plain'});
             this.url = URL.createObjectURL(blob);
         }
     },
