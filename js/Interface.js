@@ -99,8 +99,6 @@ function Interface (newCanvas) {
             this.context.setLineDash([ 5, 3 ]);
             this.context.beginPath();
             let boundaries = this.selectedPolygon.polygon.getBoundaries();
-            console.log("na atualizacao: "+boundaries.maxX+" "+boundaries.maxY+" "+boundaries.minX+" "+boundaries.minY);
-            console.log("index: "+this.selectedPolygon.index);
             this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
             this.context.lineTo(boundaries.minX - 5, boundaries.maxY + 5);
             this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);
@@ -365,12 +363,18 @@ function Interface (newCanvas) {
     };
 
     this.bringForward = function () {
-        this.scene.bringForward(this.selectedPolygon.index);
+        let forward = this.scene.bringForward(this.selectedPolygon.index);
+        if (forward) {
+            this.selectedPolygon = forward;
+        }
         this.redraw();
     };
 
     this.bringBackward = function () {
-        this.scene.bringBackward(this.selectedPolygon.index);
+        let backward = this.scene.bringBackward(this.selectedPolygon.index);
+        if (backward) {
+            this.selectedPolygon = backward;
+        }
         this.redraw();
     };
 }

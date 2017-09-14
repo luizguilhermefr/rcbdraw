@@ -43,19 +43,29 @@ function Scene () {
 
     this.bringForward = function(id) {
         if (id === this.polygons.length - 1) {
-            return;
+            return false;
         }
         let tmp = this.polygons[id];
         this.polygons[id] = this.polygons[id + 1];
         this.polygons[id + 1] = tmp;
+
+        return {
+            index: id + 1,
+            polygon: tmp
+        };
     };
 
     this.bringBackward = function(id) {
         if (id === 0) {
-            return;
+            return false;
         }
         let tmp = this.polygons[id];
         this.polygons[id] = this.polygons[id - 1];
         this.polygons[id - 1] = tmp;
+
+        return {
+            index: id - 1,
+            polygon: tmp
+        };
     };
 }
