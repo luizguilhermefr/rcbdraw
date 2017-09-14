@@ -29,9 +29,6 @@ function Edge (from, to) {
         if (y >= this.from.getY() && y < this.to.getY()) {
             return true;
         }
-        if (y >= this.to.getY() && y < this.from.getY()) {
-            return true;
-        }
-        return false;
+        return y >= this.to.getY() && y < this.from.getY();
     }
 }

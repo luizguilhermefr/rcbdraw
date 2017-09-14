@@ -56,7 +56,6 @@ function Interface (newCanvas) {
             let vertex = polygon.vertexAt(j);
             this.context.lineTo(vertex.getX(), vertex.getY());
         }
-        // this.context.lineTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
         this.context.closePath();
         this.context.stroke();
     };
