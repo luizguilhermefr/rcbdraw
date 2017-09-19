@@ -26,60 +26,20 @@ function Interface (newCanvas) {
     };
 
     this.fillPoly = function (polygon) {
-        let lines = [];
+        let edges = [];
         for (let i = 0; i < polygon.vertices.length - 1; i++) {
-            if(polygon.vertices[i].getY() < polygon.vertices[i + 1].getY()) {
-                lines.push(new Edge(polygon.vertices[i], polygon.vertices[i + 1]));
-            }else{
-                lines.push(new Edge(polygon.vertices[i + 1], polygon.vertices[i]));
-            }
+            // if(polygon.getY() > )
+            edges.push(new Edge(polygon.vertices[i], polygon.vertices[i+1]));
         }
 
         let minY = polygon.getBoundaries().minY;
         let maxY = polygon.getBoundaries().maxY;
 
-        // ordenar todas as arestas por valor de Y crescente
-        for (let i = 0; i < lines.length - 1; i++){
-            for (let j = 0; j < lines.length - 1; j++){
-                if(lines[j].from.getY() > lines[j+1].from.getY() ){
-                    let temp = lines[j];
-                    lines[j] = lines[j+1];
-                    lines[j+1] = temp;
-                }
-            }
+        let scanline = [];
+        for(let i = minY; i < maxY; i++) {
+            scanline.push(polygon.createList(edges, minY, maxY));
         }
-        // comecar pelo menor valor de Y
-        for(let scanline = minY; scanline <= maxY; scanline++){
-            let meet = [];
-            for(let i = 0; i < lines.length; i++){
-                if(scanline == lines[i].from.getY()){
-                    if(scanline == lines[i].to.getY()){
-                        // a aresta esta na horizontal
-                        lines[i].deactive();
-                        meet[i] = parseInt(lines[i].curX);
-                    }else{
-                        lines[i].activate();
-                    }
-                }
-                if(scanline == lines[i].to.getY()){
-                    lines[i].deactive();
-                    meet[i] = parseInt(lines[i].curX);
-                }
-                if(scanline > lines[i].from.getY() && scanline < lines[i].to.getY()){
-                    lines[i].update();
-                    meet[i] = parseInt(lines[i].curX);
-                }
-            }
-            meet.sort();
-            this.context.strokeStyle = polygon.fillColor;
-            this.context.lineWidth = 3;
-            this.context.beginPath();
-            for(let k = 0; k < meet.length; k+=2){
-                this.context.moveTo(meet[k],scanline);
-                this.context.lineTo(meet[k+1], scanline);
-            }
-            this.context.stroke();
-        }
+        // console.log(scanline);
     };
 
     this.strokePoly = function (polygon) {

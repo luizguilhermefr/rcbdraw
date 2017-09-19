@@ -20,6 +20,7 @@ function Edge (from, to) {
     this.setTo = function (vertex) {
         this.to = vertex;
     };
+<<<<<<< Updated upstream
 
     this.activate = function () {
         this.curX = this.from.getX();
@@ -33,4 +34,15 @@ function Edge (from, to) {
         this.curX += parseFloat(parseFloat(1)/parseFloat(this.m));
     };
 
+=======
+    this.getM = function () {
+      return 1 / this.m;
+    };
+    this.isValidY = function (y) {
+        if (y >= this.from.getY() && y < this.to.getY()) {
+            return true;
+        }
+        return y >= this.to.getY() && y < this.from.getY();
+    }
+>>>>>>> Stashed changes
 }
