@@ -228,26 +228,6 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         return isInside;
     };
 
-    this.getMeetPoint = function (y, lines) {
-        let meet = [];
-        for (let i = 0; i < lines.length; i++) {
-            let l = lines[ i ];
-            if (l.isValidY(y)) {
-                meet.push(l.getX(y));
-            }
-        }
-        for (let i = 0; i < meet.length; i++) {
-            for (let j = i; j < meet.length; j++) {
-                if (meet[ i ] > meet[ j ]) {
-                    let temp = meet[ i ];
-                    meet[ i ] = meet[ j ];
-                    meet[ j ] = temp;
-                }
-            }
-        }
-        return meet;
-    };
-
     this.clone = function (displacement = 0) {
         let nextVertices = [];
         this.vertices.forEach(function (v) {

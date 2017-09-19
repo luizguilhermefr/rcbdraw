@@ -1,7 +1,9 @@
 function Edge (from, to) {
     this.from = from;
     this.to = to;
-    this.m = (this.to.getY() - this.from.getY()) / (this.to.getX() - this.from.getX());
+    // this.m = 1 / ((this.to.getY() - this.from.getY()) / (this.to.getX() - this.from.getX()));
+    this.m = (this.from.getY() - this.to.getY()) / (this.from.getX() - this.to.getX());
+    this.curX = 0;
 
     this.getFrom = function () {
         return this.from;
@@ -19,16 +21,16 @@ function Edge (from, to) {
         this.to = vertex;
     };
 
-    this.getX = function (y) {
-        if (!this.isValidY(y))
-            throw new RangeError();
-        return 1 / this.m * (y - this.from.getY()) + this.from.getX();
+    this.activate = function () {
+        this.curX = this.from.getX();
     };
 
-    this.isValidY = function (y) {
-        if (y >= this.from.getY() && y < this.to.getY()) {
-            return true;
-        }
-        return y >= this.to.getY() && y < this.from.getY();
-    }
+    this.deactive = function () {
+        this.curX = this.to.getX();
+    };
+
+    this.update = function () {
+        this.curX += parseFloat(parseFloat(1)/parseFloat(this.m));
+    };
+
 }

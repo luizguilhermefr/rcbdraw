@@ -27,24 +27,59 @@ function Interface (newCanvas) {
 
     this.fillPoly = function (polygon) {
         let lines = [];
-        for (let i = 1; i < polygon.vertices.length; i++) {
-            lines.push(new Edge(polygon.vertices[ i - 1 ], polygon.vertices[ i ]));
+        for (let i = 0; i < polygon.vertices.length - 1; i++) {
+            if(polygon.vertices[i].getY() < polygon.vertices[i + 1].getY()) {
+                lines.push(new Edge(polygon.vertices[i], polygon.vertices[i + 1]));
+            }else{
+                lines.push(new Edge(polygon.vertices[i + 1], polygon.vertices[i]));
+            }
         }
 
         let minY = polygon.getBoundaries().minY;
         let maxY = polygon.getBoundaries().maxY;
 
-        this.context.strokeStyle = polygon.fillColor;
-        this.context.lineWidth = 3;
-        this.context.beginPath();
-        for (let i = minY; i < maxY + 1; i++) {
-            let meetPoint = polygon.getMeetPoint(i, lines);
-            for (let j = 1; j < meetPoint.length; j += 2) {
-                this.context.moveTo(meetPoint[ j - 1 ], i);
-                this.context.lineTo(meetPoint[ j ], i);
+        // ordenar todas as arestas por valor de Y crescente
+        for (let i = 0; i < lines.length - 1; i++){
+            for (let j = 0; j < lines.length - 1; j++){
+                if(lines[j].from.getY() > lines[j+1].from.getY() ){
+                    let temp = lines[j];
+                    lines[j] = lines[j+1];
+                    lines[j+1] = temp;
+                }
             }
         }
-        this.context.stroke();
+        // comecar pelo menor valor de Y
+        for(let scanline = minY; scanline <= maxY; scanline++){
+            let meet = [];
+            for(let i = 0; i < lines.length; i++){
+                if(scanline == lines[i].from.getY()){
+                    if(scanline == lines[i].to.getY()){
+                        // a aresta esta na horizontal
+                        lines[i].deactive();
+                        meet[i] = parseInt(lines[i].curX);
+                    }else{
+                        lines[i].activate();
+                    }
+                }
+                if(scanline == lines[i].to.getY()){
+                    lines[i].deactive();
+                    meet[i] = parseInt(lines[i].curX);
+                }
+                if(scanline > lines[i].from.getY() && scanline < lines[i].to.getY()){
+                    lines[i].update();
+                    meet[i] = parseInt(lines[i].curX);
+                }
+            }
+            meet.sort();
+            this.context.strokeStyle = polygon.fillColor;
+            this.context.lineWidth = 3;
+            this.context.beginPath();
+            for(let k = 0; k < meet.length; k+=2){
+                this.context.moveTo(meet[k],scanline);
+                this.context.lineTo(meet[k+1], scanline);
+            }
+            this.context.stroke();
+        }
     };
 
     this.strokePoly = function (polygon) {
