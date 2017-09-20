@@ -52,9 +52,8 @@ function Interface (newCanvas) {
             active.sort(function(a,b){
                 return a.x - b.x;
             });
-            console.log(active);
             this.context.strokeStyle = polygon.fillColor;
-            this.context.lineWidth = 3;
+            this.context.lineWidth = 1;
             this.context.beginPath();
             for(let d = 0; d < active.length - 1; d+=2) {
                 this.context.moveTo(active[d].getX(),y);
