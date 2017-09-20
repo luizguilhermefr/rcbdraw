@@ -228,25 +228,6 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         return isInside;
     };
 
-<<<<<<< Updated upstream
-=======
-    this.createList = function (edges,scanline) {
-        let edgesToScanline = [];
-        edges.sort();
-        edgesToScanline[0] = edges[0].getX();
-        for(let i = 0; i < scanline.length; i++){
-            // let  = [];
-            for(let j = 0; j < edges.length; j++){
-                if(edges.isValidY(scanline[i])){
-                    meetPoint.push(edges[j].getX());
-                }
-            }
-            edgesToScanline.push(meetPoint);
-        }
-        return edgesToScanline;
-    };
-
->>>>>>> Stashed changes
     this.clone = function (displacement = 0) {
         let nextVertices = [];
         this.vertices.forEach(function (v) {

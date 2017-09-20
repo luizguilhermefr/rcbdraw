@@ -28,18 +28,43 @@ function Interface (newCanvas) {
     this.fillPoly = function (polygon) {
         let edges = [];
         for (let i = 0; i < polygon.vertices.length - 1; i++) {
-            // if(polygon.getY() > )
-            edges.push(new Edge(polygon.vertices[i], polygon.vertices[i+1]));
+            if(polygon.vertices[i].getY() < polygon.vertices[i + 1].getY()) {
+                edges.push(new Edge(polygon.vertices[i], polygon.vertices[i + 1]));
+            }else{
+                edges.push(new Edge(polygon.vertices[i + 1], polygon.vertices[i]));
+            }
         }
 
         let minY = polygon.getBoundaries().minY;
         let maxY = polygon.getBoundaries().maxY;
 
-        let scanline = [];
-        for(let i = minY; i < maxY; i++) {
-            scanline.push(polygon.createList(edges, minY, maxY));
+        let active = [];
+
+        for(let y = minY; y <= maxY; y++) {
+            for(let j = edges.length - 1; j > -1; j--){
+                let actualEdge = edges[j];
+
+                if(actualEdge.isValidY(y)){
+                    edges.splice(j,1);
+                    active.push(actualEdge);
+                }
+            }
+            active.sort(function(a,b){
+                return a.x - b.x;
+            });
+            console.log(active);
+            this.context.strokeStyle = polygon.fillColor;
+            this.context.lineWidth = 3;
+            this.context.beginPath();
+            for(let d = 0; d < active.length - 1; d+=2) {
+                this.context.moveTo(active[d].getX(),y);
+                this.context.lineTo(active[d+1].getX(), y);
+            }
+            this.context.stroke();
+            active = active.filter(function (a) {
+               return a.next();
+            });
         }
-        // console.log(scanline);
     };
 
     this.strokePoly = function (polygon) {

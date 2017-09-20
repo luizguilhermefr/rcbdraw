@@ -1,10 +1,11 @@
 function Edge (from, to) {
     this.from = from;
     this.to = to;
-    // this.m = 1 / ((this.to.getY() - this.from.getY()) / (this.to.getX() - this.from.getX()));
-    this.m = (this.from.getY() - this.to.getY()) / (this.from.getX() - this.to.getX());
-    this.curX = 0;
-
+    this.dx = (this.from.getX() - this.to.getX());
+    this.dy = (this.from.getY() - this.to.getY());
+    this.m =  this.dx / this.dy;
+    this.x = setX(this.from, this.dx, this.dy);
+    this.y = Math.ceil(this.from.getY());
     this.getFrom = function () {
         return this.from;
     };
@@ -20,29 +21,21 @@ function Edge (from, to) {
     this.setTo = function (vertex) {
         this.to = vertex;
     };
-<<<<<<< Updated upstream
 
-    this.activate = function () {
-        this.curX = this.from.getX();
+    function setX (from,dx,dy) {
+        return from.getX() + (dx * (Math.ceil(from.getY()) - from.getY()) / dy);
+    }
+
+    this.getX = function () {
+      return this.x;
     };
 
-    this.deactive = function () {
-        this.curX = this.to.getX();
-    };
-
-    this.update = function () {
-        this.curX += parseFloat(parseFloat(1)/parseFloat(this.m));
-    };
-
-=======
-    this.getM = function () {
-      return 1 / this.m;
+    this.next = function () {
+        this.x += this.m;
+        this.y++;
+        return this.y < this.to.getY();
     };
     this.isValidY = function (y) {
-        if (y >= this.from.getY() && y < this.to.getY()) {
-            return true;
-        }
-        return y >= this.to.getY() && y < this.from.getY();
+        return (y >= this.from.getY() && y < this.to.getY());
     }
->>>>>>> Stashed changes
 }
