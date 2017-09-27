@@ -26,7 +26,7 @@ function Interface (newCanvas) {
     };
 
     this.fillPoly = function (polygon) {
-        let edges = polygon.createEdges();
+        polygon.createEdges();
 
         let minY = polygon.getBoundaries().minY;
         let maxY = polygon.getBoundaries().maxY;
@@ -34,7 +34,7 @@ function Interface (newCanvas) {
         let intersections = [];
 
         for(let y = minY; y <= maxY; y++) {
-            polygon.intersections(edges, intersections, y);
+            polygon.intersections(intersections, y);
             this.context.strokeStyle = polygon.fillColor;
             this.context.lineWidth = 1;
             this.context.beginPath();

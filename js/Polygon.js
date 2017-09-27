@@ -1,9 +1,10 @@
-function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false) {
+function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false, edges = []) {
     this.vertices = vertices;
     this.strokeColor = strokeColor;
     this.fillColor = fillColor;
     this.mustStroke = mustStroke;
     this.mustFill = mustFill;
+    this.edges = edges;
 
     this.getStrokeColor = function () {
         return this.strokeColor;
@@ -239,23 +240,21 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
     };
 
     this.createEdges = function () {
-        let edges = [];
         for (let i = 0; i < this.vertices.length - 1; i++) {
             if(this.vertices[i].getY() < this.vertices[i + 1].getY()) {
-                edges.push(new Edge(this.vertices[i], this.vertices[i + 1]));
+                this.edges.push(new Edge(this.vertices[i], this.vertices[i + 1]));
             }else{
-                edges.push(new Edge(this.vertices[i + 1], this.vertices[i]));
+                this.edges.push(new Edge(this.vertices[i + 1], this.vertices[i]));
             }
         }
-        return edges;
     };
 
-    this.intersections = function (edges, active, y) {
-        for(let j = edges.length - 1; j > -1; j--){
-            let actualEdge = edges[j];
+    this.intersections = function (active, y) {
+        for(let j = this.edges.length - 1; j > -1; j--){
+            let actualEdge = this.edges[j];
 
             if(actualEdge.isValidY(y)){
-                edges.splice(j,1);
+                this.edges.splice(j,1);
                 active.push(actualEdge);
             }
         }
