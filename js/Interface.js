@@ -2,12 +2,13 @@ function Interface (newCanvas) {
     this.canvas = newCanvas;
     this.context = this.canvas.getContext('2d');
     this.rect = this.canvas.getBoundingClientRect();
-    this.context.lineWidth = 2;
+    this.context.lineWidth = 1;
     this.context.strokeStyle = Colors.DEFAULT;
     this.scene = new Scene();
     this.freeHandDots = [];
     this.selectedPolygon = null;
     this.rotationPolygon = null;
+    this.scalePolygon = null;
 
     this.getRelativeX = function (x) {
         return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
@@ -48,7 +49,7 @@ function Interface (newCanvas) {
     };
 
     this.strokePoly = function (polygon) {
-        this.context.lineWidth = 2;
+        this.context.lineWidth = 1;
         this.context.strokeStyle = polygon.strokeColor;
         this.context.beginPath();
         this.context.moveTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
@@ -77,6 +78,10 @@ function Interface (newCanvas) {
 
     this.resetRotationClick = function() {
         this.rotationPolygon = null;
+    };
+
+    this.resetScaleClick = function() {
+        this.scalePolygon = null;
     };
 
     this.drawTemporaryPolygon = function () {
@@ -278,12 +283,16 @@ function Interface (newCanvas) {
         this.redraw();
     };
 
-    this.scaleClick = function (x, y, prevScaleFactor) {
-        let poly = this.scene.getPolygonAt(this.selectedPolygon.index);
-        prevScaleFactor = poly.scale(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), prevScaleFactor);
+    this.scaleClick = function (x, y) {
+        if (this.scalePolygon === null) {
+            this.scalePolygon = this.scene.getPolygonAt(this.selectedPolygon.index).clone();
+        } else {
+            this.scene.changePolygon(this.selectedPolygon.index, this.scalePolygon.clone());
+        }
+        this.scene.getPolygonAt(this.selectedPolygon.index).scale(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), this.scalePolygon);
+        this.selectedPolygon.polygon = this.scene.getPolygonAt(this.selectedPolygon.index);
         this.scene.makeDirty();
         this.redraw();
-        return prevScaleFactor;
     };
 
     this.rotationClick = function (x, y) {

@@ -98,7 +98,7 @@ Vue.component('panel', {
                         drawInterface.translateClick(e.clientX, e.clientY);
                         break;
                     case 5:
-                        this.prevScaleFactor = drawInterface.scaleClick(e.clientX, e.clientY,this.prevScaleFactor);
+                         drawInterface.scaleClick(e.clientX, e.clientY);
                         break;
                     case 8:
                         drawInterface.rotationClick(e.clientX, e.clientY);
@@ -113,7 +113,8 @@ Vue.component('panel', {
                         drawInterface.translateClick(e.clientX, e.clientY);
                         break;
                     case 5:
-                        this.prevScaleFactor = drawInterface.scaleClick(e.clientX, e.clientY, this.prevScaleFactor);
+                        drawInterface.scaleClick(e.clientX, e.clientY);
+                        drawInterface.resetScaleClick();
                         break;
                     case 8:
                         drawInterface.rotationClick(e.clientX, e.clientY);
