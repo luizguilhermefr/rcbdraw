@@ -144,8 +144,6 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         }
         this.translate(referenceCenter);
         this.boundaries = this.setBoundaries();
-        console.log("no processo: "+this.boundaries.maxX+" "+this.boundaries.maxY+" "+this.boundaries.minX+" "+this.boundaries.minY);
-
         return this;
     };
 
@@ -238,5 +236,38 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
 
     this.destroyClone = function () {
         return new Polygon(null);
-    }
+    };
+
+    this.createEdges = function () {
+        let edges = [];
+        for (let i = 0; i < this.vertices.length - 1; i++) {
+            if(this.vertices[i].getY() < this.vertices[i + 1].getY()) {
+                edges.push(new Edge(this.vertices[i], this.vertices[i + 1]));
+            }else{
+                edges.push(new Edge(this.vertices[i + 1], this.vertices[i]));
+            }
+        }
+        return edges;
+    };
+
+    this.intersections = function (edges, active, y) {
+        for(let j = edges.length - 1; j > -1; j--){
+            let actualEdge = edges[j];
+
+            if(actualEdge.isValidY(y)){
+                edges.splice(j,1);
+                active.push(actualEdge);
+            }
+        }
+        active.sort(function(a,b){
+            return a.x - b.x;
+        });
+    };
+
+    this.addValueM = function (intersections) {
+        intersections = intersections.filter(function (a) {
+            return a.next();
+        });
+        return intersections;
+    };
 }

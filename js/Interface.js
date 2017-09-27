@@ -26,43 +26,24 @@ function Interface (newCanvas) {
     };
 
     this.fillPoly = function (polygon) {
-        let edges = [];
-        for (let i = 0; i < polygon.vertices.length - 1; i++) {
-            if(polygon.vertices[i].getY() < polygon.vertices[i + 1].getY()) {
-                edges.push(new Edge(polygon.vertices[i], polygon.vertices[i + 1]));
-            }else{
-                edges.push(new Edge(polygon.vertices[i + 1], polygon.vertices[i]));
-            }
-        }
+        let edges = polygon.createEdges();
 
         let minY = polygon.getBoundaries().minY;
         let maxY = polygon.getBoundaries().maxY;
 
-        let active = [];
+        let intersections = [];
 
         for(let y = minY; y <= maxY; y++) {
-            for(let j = edges.length - 1; j > -1; j--){
-                let actualEdge = edges[j];
-
-                if(actualEdge.isValidY(y)){
-                    edges.splice(j,1);
-                    active.push(actualEdge);
-                }
-            }
-            active.sort(function(a,b){
-                return a.x - b.x;
-            });
+            polygon.intersections(edges, intersections, y);
             this.context.strokeStyle = polygon.fillColor;
             this.context.lineWidth = 1;
             this.context.beginPath();
-            for(let d = 0; d < active.length - 1; d+=2) {
-                this.context.moveTo(active[d].getX(),y);
-                this.context.lineTo(active[d+1].getX(), y);
+            for(let d = 0; d < intersections.length - 1; d+=2) {
+                this.context.moveTo(intersections[d].getX(),y);
+                this.context.lineTo(intersections[d+1].getX(), y);
             }
             this.context.stroke();
-            active = active.filter(function (a) {
-               return a.next();
-            });
+            intersections = polygon.addValueM(intersections);
         }
     };
 
