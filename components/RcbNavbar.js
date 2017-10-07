@@ -9,7 +9,7 @@ Vue.component('rcb-navbar', {
         <b-collapse is-nav id="nav_collapse"> 
             <b-nav is-nav-bar class="ml-0"> 
                <b-nav-item-dropdown v-for="item in items" :text="item.title" :key="item.id" :disabled="!item.enabled"> 
-                   <b-dropdown-item v-on:click="subitem.action" v-b-modal="subitem.modal" to="#" v-for="subitem in item.subitems" :key="subitem.id" :disabled="!subitem.enabled">{{subitem.title}}</b-dropdown-item> 
+                   <b-dropdown-item v-on:click="subitem.action" v-b-modal="subitem.modal" to="#" v-for="subitem in item.subitems" :key="subitem.id" :disabled="!subitem.enabled"><i v-bind:class="subitem.icon" aria-hidden="true"></i> {{subitem.title}}</b-dropdown-item> 
                </b-nav-item-dropdown> 
             </b-nav> 
         </b-collapse> 
@@ -28,6 +28,7 @@ Vue.component('rcb-navbar', {
                             id: 1,
                             title: 'Novo',
                             enabled: true,
+                            icon: 'fa fa-file-text',
                             action () {
                                 if (drawInterface.shouldAskOnReset()) {
                                     if (confirm('Tem certeza que deseja criar um novo arquivo? As alteraçoes serão perdidas.')) {
@@ -43,6 +44,7 @@ Vue.component('rcb-navbar', {
                             id: 2,
                             title: 'Abrir',
                             modal: 'open-modal',
+                            icon: 'fa fa-folder-open',
                             enabled: true,
                             action () {
                                 return null;
@@ -53,6 +55,7 @@ Vue.component('rcb-navbar', {
                             title: 'Salvar',
                             modal: 'save-modal',
                             enabled: true,
+                            icon: 'fa fa-save',
                             action () {
                                 return null;
                             }
@@ -62,6 +65,7 @@ Vue.component('rcb-navbar', {
                             title: 'Exportar...',
                             modal: 'export-modal',
                             enabled: true,
+                            icon: 'fa fa-cog',
                             action () {
                                 return null;
                             }
@@ -78,6 +82,7 @@ Vue.component('rcb-navbar', {
                             id: 1,
                             title: 'Selecionar',
                             enabled: true,
+                            icon: 'fa fa-mouse-pointer',
                             action () {
                                 expectSelection();
                             }
@@ -86,6 +91,7 @@ Vue.component('rcb-navbar', {
                             id: 2,
                             title: 'Mão Livre',
                             enabled: true,
+                            icon: 'fa fa-hand-pointer-o',
                             action () {
                                 expectFreehand();
                             }
@@ -95,6 +101,7 @@ Vue.component('rcb-navbar', {
                             title: 'Polígono Regular',
                             modal: 'regular-polygon-modal',
                             enabled: true,
+                            icon: 'fa fa-square-o',
                             action () {
                                 return null;
                             }
@@ -110,6 +117,7 @@ Vue.component('rcb-navbar', {
                             id: 1,
                             title: 'Rotacionar',
                             enabled: true,
+                            icon: 'fa fa-circle-o-notch',
                             action () {
                                 expectRotation();
                             }
@@ -118,6 +126,7 @@ Vue.component('rcb-navbar', {
                             id: 2,
                             title: 'Transladar',
                             enabled: true,
+                            icon: 'fa fa-arrows',
                             action () {
                                 expectTranslate();
                             }
@@ -126,6 +135,7 @@ Vue.component('rcb-navbar', {
                             id: 3,
                             title: 'Escalar',
                             enabled: true,
+                            icon: 'fa fa-compress',
                             action () {
                                 expectScale();
                             }
@@ -134,6 +144,7 @@ Vue.component('rcb-navbar', {
                             id: 4,
                             title: 'Cisalhar Horizontalmente',
                             enabled: true,
+                            icon: 'fa fa-arrows-h',
                             action () {
                                 expectShear('x');
                             }
@@ -142,6 +153,7 @@ Vue.component('rcb-navbar', {
                             id: 5,
                             title: 'Cisalhar Verticalmente',
                             enabled: true,
+                            icon: 'fa fa-arrows-v',
                             action () {
                                 expectShear('y');
                             }
@@ -150,6 +162,7 @@ Vue.component('rcb-navbar', {
                             id: 6,
                             title: 'Duplicar',
                             enabled: true,
+                            icon: 'fa fa-files-o',
                             action () {
                                 duplicateSelected();
                             }
@@ -158,6 +171,7 @@ Vue.component('rcb-navbar', {
                             id: 7,
                             title: 'Excluir',
                             enabled: true,
+                            icon: 'fa fa-trash-o',
                             action () {
                                 deletePolygon();
                             }
@@ -166,6 +180,7 @@ Vue.component('rcb-navbar', {
                             id: 8,
                             title: 'Trazer nível à frente',
                             enabled: true,
+                            icon: 'fa fa-level-up',
                             action () {
                                 bringForward();
                             }
@@ -174,6 +189,7 @@ Vue.component('rcb-navbar', {
                             id: 9,
                             title: 'Levar nível à trás',
                             enabled: true,
+                            icon: 'fa fa-level-down',
                             action () {
                                 bringBackward();
                             }
@@ -182,6 +198,7 @@ Vue.component('rcb-navbar', {
                             id: 10,
                             title: 'Propriedades do objeto...',
                             enabled: true,
+                            icon: 'fa fa-info',
                             action () {
                                 openPropertiesModal();
                             }
@@ -198,6 +215,7 @@ Vue.component('rcb-navbar', {
                             title: 'Sobre o RCBDraw',
                             modal: 'about-modal',
                             enabled: true,
+                            icon: 'fa fa-info-circle',
                             action () {
                                 return null;
                             }
@@ -206,6 +224,7 @@ Vue.component('rcb-navbar', {
                             id: 2,
                             title: 'Ajuda',
                             enabled: false,
+                            icon: 'fa fa-question-circle',
                             action () {
                                 return null;
                             }
