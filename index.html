@@ -18,7 +18,10 @@
     <regular-polygon-modal></regular-polygon-modal>
     <properties-modal></properties-modal>
     <about-modal></about-modal>
-    <panel ref="panel"></panel>
+    <panel ref="panelFront"></panel>
+    <panel ref="panelTop"></panel>
+    <panel ref="panelLeft"></panel>
+    <panel ref="panelPerspective"></panel>
     <element-right-click ref="elementRightClick"></element-right-click>
     <panel-right-click ref="panelRightClick"></panel-right-click>
     <toolbar></toolbar>
@@ -56,26 +59,43 @@
         vue = new Vue({
             el: '#rcb'
         });
-        panel = document.getElementById('drawpanel');
-        panel.onmousedown = function () { // previne a seleção em duplo clique
-            return false;
-        };
-        panel.addEventListener('contextmenu', function (e) {
-            toggleReset();
-            vue.$refs.elementRightClick.hide();
-            vue.$refs.panelRightClick.hide();
-            drawInterface.selectionClick(e.clientX, e.clientY);
-            if (!drawInterface.isSomethingSelected()) {
-                vue.$refs.panelRightClick.show(e.clientX, e.clientY);
-            } else {
-                vue.$refs.elementRightClick.show(e.clientX, e.clientY);
+
+        panels = Array.from(document.getElementsByClassName('canvas'));
+
+        halfScreen = [window.innerWidth / 2 - 40, window.innerHeight / 2];
+
+        drawInterface = new Interface();
+
+        panels.forEach(function (panel) {
+
+            panel.addEventListener('contextmenu', function (e) {
+                toggleReset();
+                vue.$refs.elementRightClick.hide();
+                vue.$refs.panelRightClick.hide();
+                drawInterface.selectionClick(e.clientX, e.clientY);
+                if (!drawInterface.isSomethingSelected()) {
+                    vue.$refs.panelRightClick.show(e.clientX, e.clientY);
+                } else {
+                    vue.$refs.elementRightClick.show(e.clientX, e.clientY);
+                }
+                e.preventDefault();
+            }, false);
+            
+            panel.onmousedown = function () { // previne a seleção em duplo clique
+                return false;
             }
-            e.preventDefault();
-        }, false);
-        panel.addEventListener('click', function () {
-            vue.$refs.elementRightClick.hide();
-            vue.$refs.panelRightClick.hide();
-        }, false);
+
+            panel.addEventListener('click', function () {
+                vue.$refs.elementRightClick.hide();
+                vue.$refs.panelRightClick.hide();
+            }, false);
+
+            panel.width = halfScreen[0];
+            panel.height = halfScreen[1];
+            drawInterface.pushPanel(panel);
+        });
+
+
         window.addEventListener('keyup', function (event) {
             if (event.keyCode === 27) {
                 toggleReset();
@@ -83,28 +103,25 @@
                 drawInterface.deletePolygon();
             }
         }, false);
-        panel.width = window.innerWidth;
-        panel.height = window.innerHeight;
-        drawInterface = new Interface(panel);
     };
 
     function definePolygon (sides, size, stroke, fill, mustStroke, mustFill) {
         toggleReset();
-        vue.$refs.panel.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
+        vue.$refs.panelTop.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
     }
 
     function expectSelection () {
         toggleReset();
-        vue.$refs.panel.expectSelection();
+        vue.$refs.panelTop.expectSelection();
     }
 
     function expectFreehand () {
         toggleReset();
-        vue.$refs.panel.expectFreehand();
+        vue.$refs.panelTop.expectFreehand();
     }
 
     function toggleReset () {
-        vue.$refs.panel.reset();
+        vue.$refs.panelTop.reset();
     }
 
     function duplicateSelected () {
@@ -133,7 +150,7 @@
             return;
         }
         toggleReset();
-        vue.$refs.panel.expectRotation();
+        vue.$refs.panelTop.expectRotation();
     }
 
     function expectTranslate () {
@@ -142,7 +159,7 @@
             return;
         }
         toggleReset();
-        vue.$refs.panel.expectTranslate();
+        vue.$refs.panelTop.expectTranslate();
     }
 
     function expectScale () {
@@ -151,7 +168,7 @@
             return;
         }
         toggleReset();
-        vue.$refs.panel.expectScale();
+        vue.$refs.panelTop.expectScale();
     }
 
     function expectShear (direction) {
@@ -160,7 +177,7 @@
             return;
         }
         toggleReset();
-        vue.$refs.panel.expectShear(direction);
+        vue.$refs.panelTop.expectShear(direction);
     }
 
     function deletePolygon() {

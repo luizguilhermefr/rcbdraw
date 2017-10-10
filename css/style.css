@@ -3,7 +3,6 @@ html, body {
     height: 100%;
     margin: 0;
     border: 0;
-    overflow: hidden;
     display: block;
     background-color: #292b2c;
 }
@@ -12,19 +11,12 @@ html, body {
     margin-bottom: 0;
 }
 
-.canvas {
-    position: absolute;
-    left: 0;
-    top: 0;
-    background-color: #f3f3f3;
+.all-canvas {
+    display:inline-block;
 }
 
-div#mouse {
-    border-radius: 50%;
-    position: absolute;
-    height: 20px;
-    width: 20px;
-    background-color: blue;
+.canvas {
+    background-color: #f3f3f3;
 }
 
 .rightclick {

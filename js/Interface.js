@@ -1,14 +1,20 @@
-function Interface (newCanvas) {
-    this.canvas = newCanvas;
-    this.context = this.canvas.getContext('2d');
-    this.rect = this.canvas.getBoundingClientRect();
-    this.context.lineWidth = 1;
-    this.context.strokeStyle = Colors.DEFAULT;
+function Interface () {
+    this.canvas = [];
+    this.context = null;
+    this.rect = null;
     this.scene = new Scene();
     this.freeHandDots = [];
     this.selectedPolygon = null;
     this.rotationPolygon = null;
     this.scalePolygon = null;
+
+    this.pushPanel = function(panel) {
+        this.canvas.push(panel);
+        this.context = panel.getContext('2d');
+        this.rect = panel.getBoundingClientRect();
+        this.context.lineWidth = 1;
+        this.context.strokeStyle = Colors.DEFAULT;
+    };
 
     this.getRelativeX = function (x) {
         return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
@@ -203,7 +209,8 @@ function Interface (newCanvas) {
             for (let j = 0; j < polygons[ i ].countVertices(); j++) {
                 current.vertices.push([
                     polygons[ i ].vertexAt(j).getX(),
-                    polygons[ i ].vertexAt(j).getY()
+                    polygons[ i ].vertexAt(j).getY(),
+                    polygons[ i ].vertexAt(j).getZ()
                 ]);
             }
             dump.push(current);

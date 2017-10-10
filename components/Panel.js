@@ -2,8 +2,8 @@
 Vue.component('panel', {
 
     template: `
-        <div>
-            <canvas v-bind:style="{cursor: cursor}" id="drawpanel" width="1366" height="1024" class="canvas col-md-12" v-on:click="onClick" @mousedown="mouseDown" @mouseup="mouseUp" @mousemove="mouseMove">
+        <div class="all-canvas">
+            <canvas v-bind:style="{cursor: cursor}" class="canvas col-md-12" v-on:click="onClick" @mousedown="mouseDown" @mouseup="mouseUp" @mousemove="mouseMove">
                 Seu navegador não suporta o Canvas do HTML5. <br>
                 Procure atualizá-lo.
             </canvas>
