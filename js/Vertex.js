@@ -1,6 +1,7 @@
-function Vertex (x, y) {
+function Vertex(x, y, z) {
     this.x = Math.round(x);
     this.y = Math.round(y);
+    this.z = Math.round(z);
 
     this.getX = function () {
         return this.x;
@@ -8,6 +9,10 @@ function Vertex (x, y) {
 
     this.getY = function () {
         return this.y;
+    };
+
+    this.getZ = function () {
+        return this.z;
     };
 
     this.setX = function (val) {
@@ -18,9 +23,14 @@ function Vertex (x, y) {
         this.y = val;
     };
 
+    this.setZ = function (val) {
+        this.z = val;
+    };
+
     this.setCoords = function (x, y) {
         this.x = x;
         this.y = y;
+        this.z = z;
     };
 
     this.clone = function () {
@@ -28,8 +38,9 @@ function Vertex (x, y) {
     };
 
     this.invert = function () {
-        this.x *=  -1;
+        this.x *= -1;
         this.y *= -1;
+        this.z *= -1;
 
         return this;
     };
