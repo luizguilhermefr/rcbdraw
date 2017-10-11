@@ -1,28 +1,9 @@
 function Interface () {
-    this.canvas = [];
-    this.context = null;
-    this.rect = null;
     this.scene = new Scene();
     this.freeHandDots = [];
     this.selectedPolygon = null;
     this.rotationPolygon = null;
     this.scalePolygon = null;
-
-    this.pushPanel = function(panel) {
-        this.canvas.push(panel);
-        this.context = panel.getContext('2d');
-        this.rect = panel.getBoundingClientRect();
-        this.context.lineWidth = 1;
-        this.context.strokeStyle = Colors.DEFAULT;
-    };
-
-    this.getRelativeX = function (x) {
-        return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
-    };
-
-    this.getRelativeY = function (y) {
-        return Math.round((y - this.rect.top) / (this.rect.bottom - this.rect.top) * this.canvas.height);
-    };
 
     this.getNewDotX = function (x, y, teta) {
         return (x * Math.cos(teta)) - (y * Math.sin(teta));
@@ -54,28 +35,21 @@ function Interface () {
         }
     };
 
-    this.strokePoly = function (polygon) {
-        this.context.lineWidth = 1;
-        this.context.strokeStyle = polygon.strokeColor;
-        this.context.beginPath();
-        this.context.moveTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
-        for (let j = 1; j < polygon.countVertices(); j++) {
-            let vertex = polygon.vertexAt(j);
-            this.context.lineTo(vertex.getX(), vertex.getY());
-        }
-        this.context.closePath();
-        this.context.stroke();
-    };
-
     this.redraw = function () {
-        this.clearAll();
+        vue.$refs.panelFront.clearPanel();
+        vue.$refs.panelTop.clearPanel();
+        vue.$refs.panelLeft.clearPanel();
+        vue.$refs.panelPerspective.clearPanel();
         let polygons = this.scene.getPolygons();
         for (let i = 0; i < polygons.length; i++) {
             if (polygons[ i ].mustFill) {
-                this.fillPoly(polygons[ i ]);
+                //this.fillPoly(polygons[ i ]);
             }
             if (polygons[ i ].mustStroke) {
-                this.strokePoly(polygons[ i ]);
+                vue.$refs.panelFront.strokePoly(polygons[i]);
+                vue.$refs.panelTop.strokePoly(polygons[i]);
+                vue.$refs.panelLeft.strokePoly(polygons[i]);
+                vue.$refs.panelPerspective.strokePoly(polygons[i]);
             }
         }
         this.drawTemporaryPolygon();
@@ -91,7 +65,7 @@ function Interface () {
     };
 
     this.drawTemporaryPolygon = function () {
-        this.context.strokeStyle = Colors.TEMPORARY;
+        /*this.context.strokeStyle = Colors.TEMPORARY;
         this.context.beginPath();
         if (this.freeHandDots.length > 1) {
             this.context.moveTo(this.freeHandDots[ 0 ].x, this.freeHandDots[ 0 ].y);
@@ -99,7 +73,7 @@ function Interface () {
                 this.context.lineTo(this.freeHandDots[ n ].x, this.freeHandDots[ n ].y);
             }
             this.context.stroke();
-        }
+        }*/
     };
 
     this.drawSelectedPolygon = function () {
@@ -153,8 +127,6 @@ function Interface () {
             dotX = this.getNewDotX(dotX, dotY, angle);
             dotY = this.getNewDotY(temp, dotY, angle);
         }
-        x = this.getRelativeX(x);
-        y = this.getRelativeY(y);
         tempVertices.push(new Vertex(dotX + x, (dotY * (-1)) + y));
         for (let i = 0; i < sides; i++) {
             temp = dotX;
@@ -175,10 +147,6 @@ function Interface () {
         this.selectedPolygon = null;
         this.scene = new Scene();
         this.redraw();
-    };
-
-    this.clearAll = function () {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     };
 
     this.openFile = function (opened) {
@@ -337,8 +305,8 @@ function Interface () {
             distance: Number.POSITIVE_INFINITY
         };
         let point = {
-            x: this.getRelativeX(x),
-            y: this.getRelativeY(y)
+            x: x,
+            y: y
         };
         for (let i = 0; i < polygons.length; i++) {
             if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries())) {

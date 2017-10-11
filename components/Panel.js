@@ -3,7 +3,20 @@ Vue.component('panel', {
 
     template: `
         <div class="all-canvas">
-            <canvas v-bind:style="{cursor: cursor}" class="canvas col-md-12" v-on:click="onClick" @mousedown="mouseDown" @mouseup="mouseUp" @mousemove="mouseMove">
+            <canvas
+                :id="myId"
+                class="canvas col-md-12"
+                v-bind:style="{cursor: cursor}"
+                v-on:click="onClick"
+                @keyup.esc="esc"
+                @keyup.delete="delete"
+                @click="onClick"
+                @mousedown.prevent="mouseDown"
+                @contextmenu.prevent="contextMenu"
+                @mousedown="mouseDown"
+                @mouseup="mouseUp"
+                @mousemove="mouseMove"
+            >
                 Seu navegador não suporta o Canvas do HTML5. <br>
                 Procure atualizá-lo.
             </canvas>
@@ -11,8 +24,14 @@ Vue.component('panel', {
          </div>
         `,
 
+    props: [ 'identifier' ],
+
     data: function () {
         return {
+            myId: this.identifier,
+            canvas: null,
+            context: null,
+            rect: null,
             mode: 2,
             size: 0,
             sides: 0,
@@ -22,7 +41,7 @@ Vue.component('panel', {
             mustFill: false,
             cursor: 'pointer',
             dragging: false,
-            prevScaleFactor : {
+            prevScaleFactor: {
                 X: 0,
                 Y: 0
             }
@@ -98,7 +117,7 @@ Vue.component('panel', {
                         drawInterface.translateClick(e.clientX, e.clientY);
                         break;
                     case 5:
-                         drawInterface.scaleClick(e.clientX, e.clientY);
+                        drawInterface.scaleClick(e.clientX, e.clientY);
                         break;
                     case 8:
                         drawInterface.rotationClick(e.clientX, e.clientY);
@@ -149,6 +168,60 @@ Vue.component('panel', {
             this.mustStroke = true;
             this.mustFill = false;
             this.prevScaleFactor = 0;
+        },
+        clearPanel () {
+            this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        },
+        getRelativeX (x) {
+            return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
+        },
+        getRelativeY (y) {
+            return Math.round((y - this.rect.top) / (this.rect.bottom - this.rect.top) * this.canvas.height);
+        },
+        strokePoly (polygon) {
+            this.context.strokeStyle = polygon.strokeColor;
+            this.context.beginPath();
+            this.context.moveTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
+            for (let j = 1; j < polygon.countVertices(); j++) {
+                let vertex = polygon.vertexAt(j);
+                this.context.lineTo(this.getRelativeX(vertex.getX()), this.getRelativeY(vertex.getY()));
+            }
+            this.context.closePath();
+            this.context.stroke();
+        },
+        fillPoly (polygon) {
+            //
+        },
+        contextMenu (e) {
+            toggleReset();
+            vue.$refs.elementRightClick.hide();
+            vue.$refs.panelRightClick.hide();
+            drawInterface.selectionClick(e.clientX, e.clientY);
+            if (!drawInterface.isSomethingSelected()) {
+                vue.$refs.panelRightClick.show(e.clientX, e.clientY);
+            } else {
+                vue.$refs.elementRightClick.show(e.clientX, e.clientY);
+            }
+        },
+        mouseDown () {
+            return false;
+        },
+        onClick () {
+            vue.$refs.elementRightClick.hide();
+            vue.$refs.panelRightClick.hide();
+        },
+        delete () {
+            drawInterface.deletePolygon();
+        },
+        esc () {
+            toggleReset();
         }
+    },
+    mounted () {
+        this.canvas = document.getElementById(this.myId);
+        this.context = this.canvas.getContext('2d');
+        this.rect = this.canvas.getBoundingClientRect();
+        this.context.lineWidth = 1;
+        this.context.strokeStyle = Colors.DEFAULT;
     }
 });

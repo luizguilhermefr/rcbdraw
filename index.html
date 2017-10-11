@@ -19,10 +19,10 @@
     <properties-modal></properties-modal>
     <about-modal></about-modal>
     <toolbar></toolbar>
-    <panel ref="panelFront"></panel>
-    <panel ref="panelTop"></panel>    
-    <panel ref="panelLeft"></panel>
-    <panel ref="panelPerspective"></panel>
+    <panel ref="panelFront" identifier="panelFront"></panel>
+    <panel ref="panelTop" identifier="panelTop"></panel>
+    <panel ref="panelLeft" identifier="panelLeft"></panel>
+    <panel ref="panelPerspective" identifier="panelPerspective"></panel>
     <element-right-click ref="elementRightClick"></element-right-click>
     <panel-right-click ref="panelRightClick"></panel-right-click>    
 </div>
@@ -51,58 +51,22 @@
 <script type="text/javascript" src="js/Edge.js"></script>
 
 <script type="text/javascript">
-    
-    let panel = null;
-
-
     window.onload = function () {
         vue = new Vue({
             el: '#rcb'
         });
 
-        panels = Array.from(document.getElementsByClassName('canvas'));
-
-        halfScreen = [(window.innerWidth * 0.85) / 2 - 40, (window.innerHeight * 0.92) / 2];
-
         drawInterface = new Interface();
 
-        panels.forEach(function (panel) {
+        dimensions = {
+            width: (window.innerWidth - 310) / 2,
+            height: (window.innerHeight * 0.92) / 2
+        };
 
-            panel.addEventListener('contextmenu', function (e) {
-                toggleReset();
-                vue.$refs.elementRightClick.hide();
-                vue.$refs.panelRightClick.hide();
-                drawInterface.selectionClick(e.clientX, e.clientY);
-                if (!drawInterface.isSomethingSelected()) {
-                    vue.$refs.panelRightClick.show(e.clientX, e.clientY);
-                } else {
-                    vue.$refs.elementRightClick.show(e.clientX, e.clientY);
-                }
-                e.preventDefault();
-            }, false);
-            
-            panel.onmousedown = function () { // previne a seleção em duplo clique
-                return false;
-            }
-
-            panel.addEventListener('click', function () {
-                vue.$refs.elementRightClick.hide();
-                vue.$refs.panelRightClick.hide();
-            }, false);
-
-            panel.width = halfScreen[0];
-            panel.height = halfScreen[1];
-            drawInterface.pushPanel(panel);
+        Array.from(document.getElementsByClassName('canvas')).forEach(function (panel) {
+            panel.width = dimensions.width;
+            panel.height = dimensions.height;
         });
-
-
-        window.addEventListener('keyup', function (event) {
-            if (event.keyCode === 27) {
-                toggleReset();
-            } else if (event.keyCode === 46) {
-                drawInterface.deletePolygon();
-            }
-        }, false);
     };
 
     function definePolygon (sides, size, stroke, fill, mustStroke, mustFill) {
