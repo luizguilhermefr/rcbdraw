@@ -7,15 +7,13 @@ Vue.component('panel', {
                 :id="myId"
                 class="canvas col-md-12"
                 v-bind:style="{cursor: cursor}"
+                v-on:keyup.esc="esc"
+                v-on:keyup.del="del"
                 v-on:click="onClick"
-                @keyup.esc="esc"
-                @keyup.delete="delete"
-                @click="onClick"
-                @mousedown.prevent="mouseDown"
-                @contextmenu.prevent="contextMenu"
-                @mousedown="mouseDown"
-                @mouseup="mouseUp"
-                @mousemove="mouseMove"
+                v-on:contextmenu.prevent="contextMenu"
+                v-on:mousedown="mouseDown"
+                v-on:mouseup="mouseUp"
+                v-on:mousemove="mouseMove"
             >
                 Seu navegador não suporta o Canvas do HTML5. <br>
                 Procure atualizá-lo.
@@ -32,6 +30,8 @@ Vue.component('panel', {
             canvas: null,
             context: null,
             rect: null,
+            offsetLeft: 0,
+            offsetTop: 0,
             mode: 2,
             size: 0,
             sides: 0,
@@ -89,7 +89,7 @@ Vue.component('panel', {
         onClick (e) {
             switch (this.mode) {
                 case 1:
-                    this.putPoly(e.clientX, e.clientY);
+                    this.putPoly(this.getRelativeX(e.clientX), this.getRelativeY(e.clientY));
                     break;
                 case 2:
                     this.selectionClick(e.clientX, e.clientY);
@@ -173,10 +173,10 @@ Vue.component('panel', {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         },
         getRelativeX (x) {
-            return Math.round((x - this.rect.left) / (this.rect.right - this.rect.left) * this.canvas.width);
+            return Math.round(x - this.offsetTop);// / (this.rect.right - this.rect.left) * this.canvas.width);
         },
         getRelativeY (y) {
-            return Math.round((y - this.rect.top) / (this.rect.bottom - this.rect.top) * this.canvas.height);
+            return Math.round((y - this.offsetLeft));// / (this.rect.bottom - this.rect.top) * this.canvas.height);
         },
         strokePoly (polygon) {
             this.context.strokeStyle = polygon.strokeColor;
@@ -184,7 +184,7 @@ Vue.component('panel', {
             this.context.moveTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
             for (let j = 1; j < polygon.countVertices(); j++) {
                 let vertex = polygon.vertexAt(j);
-                this.context.lineTo(this.getRelativeX(vertex.getX()), this.getRelativeY(vertex.getY()));
+                this.context.lineTo(vertex.getX(), vertex.getY());
             }
             this.context.closePath();
             this.context.stroke();
@@ -203,14 +203,7 @@ Vue.component('panel', {
                 vue.$refs.elementRightClick.show(e.clientX, e.clientY);
             }
         },
-        mouseDown () {
-            return false;
-        },
-        onClick () {
-            vue.$refs.elementRightClick.hide();
-            vue.$refs.panelRightClick.hide();
-        },
-        delete () {
+        del () {
             drawInterface.deletePolygon();
         },
         esc () {
@@ -219,6 +212,8 @@ Vue.component('panel', {
     },
     mounted () {
         this.canvas = document.getElementById(this.myId);
+        this.offsetLeft = this.canvas.offsetLeft;
+        this.offsetTop = this.canvas.offsetTop;
         this.context = this.canvas.getContext('2d');
         this.rect = this.canvas.getBoundingClientRect();
         this.context.lineWidth = 1;

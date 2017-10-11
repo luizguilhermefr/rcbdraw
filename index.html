@@ -71,17 +71,23 @@
 
     function definePolygon (sides, size, stroke, fill, mustStroke, mustFill) {
         toggleReset();
+        vue.$refs.panelFront.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
         vue.$refs.panelTop.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
+        vue.$refs.panelLeft.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
     }
 
     function expectSelection () {
         toggleReset();
+        vue.$refs.panelFront.expectSelection();
         vue.$refs.panelTop.expectSelection();
+        vue.$refs.panelLeft.expectSelection();
     }
 
     function expectFreehand () {
         toggleReset();
+        vue.$refs.panelFront.expectFreehand();
         vue.$refs.panelTop.expectFreehand();
+        vue.$refs.panelLeft.expectFreehand();
     }
 
     function toggleReset () {
