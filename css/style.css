@@ -4,7 +4,36 @@ html, body {
     margin: 0;
     border: 0;
     display: block;
+    padding-top: 25px;
+    padding-left: 5px;
     background-color: #292b2c;
+}
+
+.toolbar {
+    color: white;
+    float: right;
+    margin-right: 5px;
+    margin-top: 10px;
+}
+
+.ul-toolbar {
+    position: relative;
+    left: -20px;
+    list-style-type: none;   
+}
+
+.ul-toolbar a {
+    text-decoration: none;   
+    color: silver; 
+}
+
+.ul-toolbar a:hover {
+    color: white;
+}
+
+.ul-toolbar li {
+    
+    margin-top: 15px;
 }
 
 .navbar {
@@ -27,10 +56,6 @@ html, body {
 
 .rightclick-item {
     font-size: 14px;
-}
-
-.paleta-ferramentas-center {
-    width: 100%;
 }
 
 .paleta-ferramentas {
@@ -68,52 +93,8 @@ html, body {
     border-radius: 35px;
 }
 
-.icon {
-    display: block;
-    float: left;
-    width: 25px;
-    height: 25px;
-    font-size: 0;
-    text-align: center;
-    margin: 0px auto;
-}
-
-.icon-mouse {
-    background: url("../icons/select.png") center center/25px no-repeat;
-    margin-left: -4px;
-}
-
-.icon-delete {
-    background: url("../icons/delete.png") center center/25px no-repeat;
-    margin-left: -4px;
-}
-
-.icon-triangle {
-    background: url("../icons/triangle.png") center center/25px no-repeat;
-    margin-left: -4px;
-}
-
-.icon-square {
-    background: url("../icons/square.png") center center/25px no-repeat;
-    margin-left: -4px;
-}
-
-.icon-pentagon {
-    background: url("../icons/pentagon.png") center center/25px no-repeat;
-    margin-left: -4px;
-}
-
-.icon-hexagon {
-    background: url("../icons/hexagon.png") center center/25px no-repeat;
-    margin-left: -4px;
-}
-
-.icon-regular {
-    background: url("../icons/regular.png") center center/25px no-repeat;
-    margin-left: -4px;
-}
-
-.icon-freehand {
-    background: url("../icons/freehand.png") center center/25px no-repeat;
-    margin-left: -4px;
+.toolbar-icon {
+	border-radius: 100%;
+	height: 25px;
+	width: 25px;
 }

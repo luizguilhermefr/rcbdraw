@@ -10,6 +10,8 @@ Vue.component('about-modal', {
                 <p><br></p>
                 <p>Cascavel, Paraná - 2017</p>
                 <p><strong>Versão 2.0</strong></p>
+                <br><br>
+                <a target="_blank" href="https://icons8.com/icon/new-icons/nolan">Crédito dos ícones</a>
             </div>
             <div slot="modal-close"></div>
         </b-modal>

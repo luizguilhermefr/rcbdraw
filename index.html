@@ -18,13 +18,13 @@
     <regular-polygon-modal></regular-polygon-modal>
     <properties-modal></properties-modal>
     <about-modal></about-modal>
+    <toolbar></toolbar>
     <panel ref="panelFront"></panel>
-    <panel ref="panelTop"></panel>
+    <panel ref="panelTop"></panel>    
     <panel ref="panelLeft"></panel>
     <panel ref="panelPerspective"></panel>
     <element-right-click ref="elementRightClick"></element-right-click>
-    <panel-right-click ref="panelRightClick"></panel-right-click>
-    <toolbar></toolbar>
+    <panel-right-click ref="panelRightClick"></panel-right-click>    
 </div>
 
 <script type="text/javascript" src="libs/vue/vue.js"></script>
@@ -62,7 +62,7 @@
 
         panels = Array.from(document.getElementsByClassName('canvas'));
 
-        halfScreen = [window.innerWidth / 2 - 40, window.innerHeight / 2];
+        halfScreen = [(window.innerWidth * 0.85) / 2 - 40, (window.innerHeight * 0.92) / 2];
 
         drawInterface = new Interface();
 
