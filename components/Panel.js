@@ -42,7 +42,8 @@ Vue.component('panel', {
             prevScaleFactor: {
                 X: 0,
                 Y: 0
-            }
+            },
+            freeHandDots: []
         };
     },
     methods: {
@@ -85,23 +86,23 @@ Vue.component('panel', {
             this.cursor = 'pointer';
         },
         onClick (e) {
-            // alert('client: ' + e.clientX + '/'+ e.clientY);
-            // alert('normalized: ' + this.getRelativeX(e.clientX) + '/'+ this.getRelativeY(e.clientY));
+            x = this.getRelativeX(e.clientX);
+            y = this.getRelativeY(e.clientY);
             switch (this.mode) {
                 case 1:
-                    this.putPoly(this.getRelativeX(e.clientX), this.getRelativeY(e.clientY));
+                    this.putPoly(x, y);
                     break;
                 case 2:
-                    this.selectionClick(e.clientX, e.clientY);
+                    this.selectionClick(x, y);
                     break;
                 case 3:
-                    this.freehandClick(e.clientX, e.clientY);
+                    this.freehandClick(x, y);
                     break;
                 case 6:
-                    drawInterface.shearHorizontalClick(e.clientX, e.clientY);
+                    drawInterface.shearHorizontalClick(x, y);
                     break;
                 case 7:
-                    drawInterface.shearVerticalClick(e.clientX, e.clientY);
+                    drawInterface.shearVerticalClick(x, y);
                     break;
             }
         },
@@ -151,13 +152,13 @@ Vue.component('panel', {
         },
         freehandClick (x, y) {
             drawInterface.clearSelectedPolygon(true);
-            if (!drawInterface.pushFreeHandDot(x, y)) {
-                drawInterface.clearFreeHandDots();
+            if (!this.pushFreeHandDot(x, y)) {
+                this.clearFreeHandDots();
                 this.reset();
             }
         },
         reset () {
-            drawInterface.clearFreeHandDots();
+            this.clearFreeHandDots();
             this.mode = 2;
             this.size = 0;
             this.sides = 0;
@@ -181,7 +182,7 @@ Vue.component('panel', {
         strokePoly (polygon) {
             this.context.strokeStyle = polygon.strokeColor;
             this.context.beginPath();
-            this.context.moveTo(polygon.vertexAt(0).getX(),polygon.vertexAt(0).getY());
+            this.context.moveTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
             for (let j = 1; j < polygon.countVertices(); j++) {
                 let vertex = polygon.vertexAt(j);
                 this.context.lineTo(vertex.getX(), vertex.getY());
@@ -190,7 +191,68 @@ Vue.component('panel', {
             this.context.stroke();
         },
         fillPoly (polygon) {
-            //
+            polygon.createEdges();
+            let minY = polygon.getBoundaries().minY;
+            let maxY = polygon.getBoundaries().maxY;
+            let intersections = [];
+            for (let y = minY; y <= maxY; y++) {
+                polygon.intersections(intersections, y);
+                this.context.strokeStyle = polygon.fillColor;
+                this.context.lineWidth = 1;
+                this.context.beginPath();
+                for (let d = 0; d < intersections.length - 1; d += 2) {
+                    this.context.moveTo(intersections[ d ].getX(), y);
+                    this.context.lineTo(intersections[ d + 1 ].getX(), y);
+                }
+                this.context.stroke();
+                intersections = polygon.addValueM(intersections);
+            }
+        },
+        drawTemporaryPolygon () {
+            this.context.strokeStyle = Colors.TEMPORARY;
+            this.context.beginPath();
+            if (this.freeHandDots.length > 1) {
+                this.context.moveTo(this.freeHandDots[ 0 ].getX(), this.freeHandDots[ 0 ].getY());
+                for (let n = 1; n < this.freeHandDots.length; n++) {
+                    this.context.lineTo(this.freeHandDots[ n ].getX(), this.freeHandDots[ n ].getY());
+                }
+                this.context.stroke();
+            }
+        },
+        pushFreeHandDot (x, y) {
+            this.freeHandDots.push(new Vertex(x, y, 0));
+            drawInterface.redraw();
+            let mustContinue = !this.mustEndFreeHand();
+            if (!mustContinue) {
+                drawInterface.convertTemporaryToPolygon(this.freeHandDots);
+            }
+
+            return mustContinue;
+        },
+        clearFreeHandDots () {
+            this.freeHandDots = [];
+            drawInterface.redraw();
+        },
+        mustEndFreeHand () {
+            if (this.freeHandDots.length < 3) {
+                return false;
+            }
+            return this.freeHandDots[ 0 ].distanceTo(this.freeHandDots[ this.freeHandDots.length -
+            1 ]) < 20;
+        },
+        drawSelectedPolygon (polygon) {
+            this.context.strokeStyle = Colors.DEFAULT;
+            this.context.lineWidth = 1;
+            this.context.setLineDash([ 5, 3 ]);
+            this.context.beginPath();
+            let boundaries = polygon.getBoundaries();
+            this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
+            this.context.lineTo(boundaries.minX - 5, boundaries.maxY + 5);
+            this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);
+            this.context.lineTo(boundaries.maxX + 5, boundaries.minY - 5);
+            this.context.lineTo(boundaries.minX - 5, boundaries.minY - 5);
+            this.context.stroke();
+            this.context.setLineDash([]);
         },
         contextMenu (e) {
             toggleReset();

@@ -1,6 +1,5 @@
 function Interface () {
     this.scene = new Scene();
-    this.freeHandDots = [];
     this.selectedPolygon = null;
     this.rotationPolygon = null;
     this.scalePolygon = null;
@@ -13,28 +12,6 @@ function Interface () {
         return (x * Math.sin(teta)) + (y * Math.cos(teta));
     };
 
-    this.fillPoly = function (polygon) {
-        polygon.createEdges();
-
-        let minY = polygon.getBoundaries().minY;
-        let maxY = polygon.getBoundaries().maxY;
-
-        let intersections = [];
-
-        for(let y = minY; y <= maxY; y++) {
-            polygon.intersections(intersections, y);
-            this.context.strokeStyle = polygon.fillColor;
-            this.context.lineWidth = 1;
-            this.context.beginPath();
-            for(let d = 0; d < intersections.length - 1; d+=2) {
-                this.context.moveTo(intersections[d].getX(),y);
-                this.context.lineTo(intersections[d+1].getX(), y);
-            }
-            this.context.stroke();
-            intersections = polygon.addValueM(intersections);
-        }
-    };
-
     this.redraw = function () {
         vue.$refs.panelFront.clearPanel();
         vue.$refs.panelTop.clearPanel();
@@ -43,7 +20,10 @@ function Interface () {
         let polygons = this.scene.getPolygons();
         for (let i = 0; i < polygons.length; i++) {
             if (polygons[ i ].mustFill) {
-                //this.fillPoly(polygons[ i ]);
+                vue.$refs.panelFront.fillPoly(polygons[i]);
+                vue.$refs.panelTop.fillPoly(polygons[i]);
+                vue.$refs.panelLeft.fillPoly(polygons[i]);
+                vue.$refs.panelPerspective.fillPoly(polygons[i]);
             }
             if (polygons[ i ].mustStroke) {
                 vue.$refs.panelFront.strokePoly(polygons[i]);
@@ -52,7 +32,10 @@ function Interface () {
                 vue.$refs.panelPerspective.strokePoly(polygons[i]);
             }
         }
-        this.drawTemporaryPolygon();
+        vue.$refs.panelFront.drawTemporaryPolygon();
+        vue.$refs.panelTop.drawTemporaryPolygon();
+        vue.$refs.panelLeft.drawTemporaryPolygon();
+        vue.$refs.panelPerspective.drawTemporaryPolygon();
         this.drawSelectedPolygon();
     };
 
@@ -64,32 +47,13 @@ function Interface () {
         this.scalePolygon = null;
     };
 
-    this.drawTemporaryPolygon = function () {
-        /*this.context.strokeStyle = Colors.TEMPORARY;
-        this.context.beginPath();
-        if (this.freeHandDots.length > 1) {
-            this.context.moveTo(this.freeHandDots[ 0 ].x, this.freeHandDots[ 0 ].y);
-            for (let n = 1; n < this.freeHandDots.length; n++) {
-                this.context.lineTo(this.freeHandDots[ n ].x, this.freeHandDots[ n ].y);
-            }
-            this.context.stroke();
-        }*/
-    };
 
     this.drawSelectedPolygon = function () {
         if (this.selectedPolygon !== null) {
-            this.context.strokeStyle = Colors.DEFAULT;
-            this.context.lineWidth = 1;
-            this.context.setLineDash([ 5, 3 ]);
-            this.context.beginPath();
-            let boundaries = this.selectedPolygon.polygon.getBoundaries();
-            this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
-            this.context.lineTo(boundaries.minX - 5, boundaries.maxY + 5);
-            this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);
-            this.context.lineTo(boundaries.maxX + 5, boundaries.minY - 5);
-            this.context.lineTo(boundaries.minX - 5, boundaries.minY - 5);
-            this.context.stroke();
-            this.context.setLineDash([]);
+            vue.$refs.panelFront.drawSelectedPolygon(this.selectedPolygon.polygon);
+            vue.$refs.panelTop.drawSelectedPolygon(this.selectedPolygon.polygon);
+            vue.$refs.panelLeft.drawSelectedPolygon(this.selectedPolygon.polygon);
+            vue.$refs.panelPerspective.drawSelectedPolygon(this.selectedPolygon.polygon);
         }
     };
 
@@ -198,38 +162,12 @@ function Interface () {
         return Math.abs(r * point.x + s * point.y + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
     };
 
-    this.clearFreeHandDots = function () {
-        this.freeHandDots = [];
-        this.redraw();
-    };
-
-    this.pushFreeHandDot = function (x, y) {
-        this.freeHandDots.push({
-            x: this.getRelativeX(x),
-            y: this.getRelativeY(y)
-        });
-        this.redraw();
-        let mustContinue = !this.mustEndFreeHand();
-        if (!mustContinue) {
-            this.convertTemporaryToPolygon();
-        }
-        return mustContinue;
-    };
-
-    this.mustEndFreeHand = function () {
-        if (this.freeHandDots.length < 3) {
-            return false;
-        }
-        return this.distanceBetweenTwoPoints(this.freeHandDots[ 0 ], this.freeHandDots[ this.freeHandDots.length -
-        1 ]) < 20;
-    };
-
-    this.convertTemporaryToPolygon = function () {
+    this.convertTemporaryToPolygon = function (freeHandDots) {
         let tempVertices = [];
-        for (let i = 0; i < this.freeHandDots.length - 1; i++) {
-            tempVertices.push(new Vertex(this.freeHandDots[ i ].x, this.freeHandDots[ i ].y));
+        for (let i = 0; i < freeHandDots.length - 1; i++) {
+            tempVertices.push(new Vertex(freeHandDots[ i ].x, freeHandDots[ i ].y));
         }
-        tempVertices.push(new Vertex(this.freeHandDots[ 0 ].x, this.freeHandDots[ 0 ].y));
+        tempVertices.push(new Vertex(freeHandDots[ 0 ].x, freeHandDots[ 0 ].y));
         this.scene.addPolygon(new Polygon(tempVertices));
         this.scene.makeDirty();
         this.redraw();
