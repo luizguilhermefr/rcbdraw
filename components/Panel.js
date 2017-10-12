@@ -113,31 +113,35 @@ Vue.component('panel', {
         },
         mouseMove (e) {
             if (this.dragging) {
+                x = this.getRelativeX(e.clientX);
+                y = this.getRelativeY(e.clientY);
                 switch (this.mode) {
                     case 4:
-                        drawInterface.translateClick(e.clientX, e.clientY);
+                        drawInterface.translateClick(x, y);
                         break;
                     case 5:
-                        drawInterface.scaleClick(e.clientX, e.clientY);
+                        drawInterface.scaleClick(x, y);
                         break;
                     case 8:
-                        drawInterface.rotationClick(e.clientX, e.clientY);
+                        drawInterface.rotationClick(x, y);
                         break;
                 }
             }
         },
         mouseUp (e) {
             if (this.dragging) {
+                x = this.getRelativeX(e.clientX);
+                y = this.getRelativeY(e.clientY);
                 switch (this.mode) {
                     case 4:
-                        drawInterface.translateClick(e.clientX, e.clientY);
+                        drawInterface.translateClick(x, y);
                         break;
                     case 5:
-                        drawInterface.scaleClick(e.clientX, e.clientY);
+                        drawInterface.scaleClick(x, y);
                         drawInterface.resetScaleClick();
                         break;
                     case 8:
-                        drawInterface.rotationClick(e.clientX, e.clientY);
+                        drawInterface.rotationClick(x, y);
                         drawInterface.resetRotationClick();
                         break;
                 }
@@ -255,10 +259,12 @@ Vue.component('panel', {
             this.context.setLineDash([]);
         },
         contextMenu (e) {
+            x = this.getRelativeX(e.clientX);
+            y = this.getRelativeY(e.clientY);
             toggleReset();
             vue.$refs.elementRightClick.hide();
             vue.$refs.panelRightClick.hide();
-            drawInterface.selectionClick(e.clientX, e.clientY);
+            drawInterface.selectionClick(x, y);
             if (!drawInterface.isSomethingSelected()) {
                 vue.$refs.panelRightClick.show(e.clientX, e.clientY);
             } else {

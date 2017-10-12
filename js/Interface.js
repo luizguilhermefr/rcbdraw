@@ -187,7 +187,7 @@ function Interface () {
     };
 
     this.translateClick = function (x, y) {
-        this.scene.getPolygonAt(this.selectedPolygon.index).translate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.scene.getPolygonAt(this.selectedPolygon.index).translate(new Vertex(x, y));
         this.scene.makeDirty();
         this.redraw();
     };
@@ -198,7 +198,7 @@ function Interface () {
         } else {
             this.scene.changePolygon(this.selectedPolygon.index, this.scalePolygon.clone());
         }
-        this.scene.getPolygonAt(this.selectedPolygon.index).scale(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), this.scalePolygon);
+        this.scene.getPolygonAt(this.selectedPolygon.index).scale(new Vertex(x, y), this.scalePolygon);
         this.selectedPolygon.polygon = this.scene.getPolygonAt(this.selectedPolygon.index);
         this.scene.makeDirty();
         this.redraw();
@@ -210,20 +210,20 @@ function Interface () {
         } else {
             this.scene.changePolygon(this.selectedPolygon.index, this.rotationPolygon.clone());
         }
-        this.scene.getPolygonAt(this.selectedPolygon.index).rotate(new Vertex(this.getRelativeX(x), this.getRelativeY(y)), this.rotationPolygon);
+        this.scene.getPolygonAt(this.selectedPolygon.index).rotate(new Vertex(x, y), this.rotationPolygon);
         this.selectedPolygon.polygon = this.scene.getPolygonAt(this.selectedPolygon.index);
         this.scene.makeDirty();
         this.redraw();
     };
 
     this.shearHorizontalClick = function (x, y) {
-        this.scene.getPolygonAt(this.selectedPolygon.index).shearX(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.scene.getPolygonAt(this.selectedPolygon.index).shearX(new Vertex(x, y));
         this.scene.makeDirty();
         this.redraw();
     };
 
     this.shearVerticalClick = function (x, y) {
-        this.scene.getPolygonAt(this.selectedPolygon.index).shearY(new Vertex(this.getRelativeX(x), this.getRelativeY(y)));
+        this.scene.getPolygonAt(this.selectedPolygon.index).shearY(new Vertex(x, y));
         this.scene.makeDirty();
         this.redraw();
     };

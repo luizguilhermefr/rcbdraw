@@ -91,7 +91,9 @@
     }
 
     function toggleReset () {
+        vue.$refs.panelFront.reset();
         vue.$refs.panelTop.reset();
+        vue.$refs.panelLeft.reset();
     }
 
     function duplicateSelected () {
