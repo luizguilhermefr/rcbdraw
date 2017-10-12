@@ -30,8 +30,6 @@ Vue.component('panel', {
             canvas: null,
             context: null,
             rect: null,
-            offsetLeft: 0,
-            offsetTop: 0,
             mode: 2,
             size: 0,
             sides: 0,
@@ -87,6 +85,8 @@ Vue.component('panel', {
             this.cursor = 'pointer';
         },
         onClick (e) {
+            // alert('client: ' + e.clientX + '/'+ e.clientY);
+            // alert('normalized: ' + this.getRelativeX(e.clientX) + '/'+ this.getRelativeY(e.clientY));
             switch (this.mode) {
                 case 1:
                     this.putPoly(this.getRelativeX(e.clientX), this.getRelativeY(e.clientY));
@@ -173,15 +173,15 @@ Vue.component('panel', {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         },
         getRelativeX (x) {
-            return Math.round(x - this.offsetTop);// / (this.rect.right - this.rect.left) * this.canvas.width);
+            return Math.round(x - this.canvas.offsetLeft);
         },
         getRelativeY (y) {
-            return Math.round((y - this.offsetLeft));// / (this.rect.bottom - this.rect.top) * this.canvas.height);
+            return Math.round(y - this.canvas.offsetTop);
         },
         strokePoly (polygon) {
             this.context.strokeStyle = polygon.strokeColor;
             this.context.beginPath();
-            this.context.moveTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
+            this.context.moveTo(polygon.vertexAt(0).getX(),polygon.vertexAt(0).getY());
             for (let j = 1; j < polygon.countVertices(); j++) {
                 let vertex = polygon.vertexAt(j);
                 this.context.lineTo(vertex.getX(), vertex.getY());
@@ -212,8 +212,6 @@ Vue.component('panel', {
     },
     mounted () {
         this.canvas = document.getElementById(this.myId);
-        this.offsetLeft = this.canvas.offsetLeft;
-        this.offsetTop = this.canvas.offsetTop;
         this.context = this.canvas.getContext('2d');
         this.rect = this.canvas.getBoundingClientRect();
         this.context.lineWidth = 1;
