@@ -22,7 +22,7 @@
     <panel ref="panelFront" identifier="panelFront"></panel>
     <panel ref="panelTop" identifier="panelTop"></panel>
     <panel ref="panelLeft" identifier="panelLeft"></panel>
-    <panel ref="panelPerspective" identifier="panelPerspective"></panel>
+    <panel ref="panelPerspective" identifier="panelPerspective" readonly="true"></panel>
     <element-right-click ref="elementRightClick"></element-right-click>
     <panel-right-click ref="panelRightClick"></panel-right-click>    
 </div>
@@ -67,7 +67,21 @@
             panel.width = dimensions.width;
             panel.height = dimensions.height;
         });
+
+        window.addEventListener('keyup', function (event) {
+            if (event.keyCode === 27) { // esc
+                escape();
+            } else if (event.keyCode === 46) {
+                drawInterface.deletePolygon(); // delete
+            }
+        }, false);
     };
+
+    function escape() {
+        toggleReset();
+        vue.$refs.elementRightClick.hide();
+        vue.$refs.panelRightClick.hide();
+    }
 
     function definePolygon (sides, size, stroke, fill, mustStroke, mustFill) {
         toggleReset();

@@ -4,11 +4,9 @@ Vue.component('panel', {
     template: `
         <div class="all-canvas">
             <canvas
-                :id="myId"
+                :id="identifier"
                 class="canvas col-md-12"
                 v-bind:style="{cursor: cursor}"
-                v-on:keyup.esc="esc"
-                v-on:keyup.del="del"
                 v-on:click="onClick"
                 v-on:contextmenu.prevent="contextMenu"
                 v-on:mousedown="mouseDown"
@@ -22,22 +20,21 @@ Vue.component('panel', {
          </div>
         `,
 
-    props: [ 'identifier' ],
+    props: [ 'identifier', 'readonly' ],
 
     data: function () {
         return {
-            myId: this.identifier,
             canvas: null,
             context: null,
             rect: null,
-            mode: 2,
+            mode: -1,
             size: 0,
             sides: 0,
             stroke: Colors.DEFAULT,
             fill: null,
             mustStroke: true,
             mustFill: false,
-            cursor: 'pointer',
+            cursor: 'default',
             dragging: false,
             prevScaleFactor: {
                 X: 0,
@@ -163,10 +160,10 @@ Vue.component('panel', {
         },
         reset () {
             this.clearFreeHandDots();
-            this.mode = 2;
+            this.mode = this.readonly ? -1 : 2;
             this.size = 0;
             this.sides = 0;
-            this.cursor = 'pointer';
+            this.cursor = this.readonly ? 'default' : 'pointer';
             this.dragging = false;
             this.stroke = Colors.DEFAULT;
             this.fill = Colors.DEFAULT;
@@ -270,19 +267,15 @@ Vue.component('panel', {
             } else {
                 vue.$refs.elementRightClick.show(e.clientX, e.clientY);
             }
-        },
-        del () {
-            drawInterface.deletePolygon();
-        },
-        esc () {
-            toggleReset();
         }
     },
     mounted () {
-        this.canvas = document.getElementById(this.myId);
+        this.canvas = document.getElementById(this.identifier);
         this.context = this.canvas.getContext('2d');
         this.rect = this.canvas.getBoundingClientRect();
         this.context.lineWidth = 1;
         this.context.strokeStyle = Colors.DEFAULT;
+        this.cursor = this.readonly ? 'default' : 'pointer'
+        this.mode = this.readonly ? -1 : 2
     }
 });
