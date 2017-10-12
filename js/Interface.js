@@ -151,10 +151,6 @@ function Interface () {
         return dump;
     };
 
-    this.distanceBetweenTwoPoints = function (first, second) {
-        return Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2));
-    };
-
     this.distanceBetweenPointAndEdge = function (point, edge) {
         let r = edge.y2 - edge.y1;
         let s = -(edge.x2 - edge.x1);
