@@ -9,7 +9,7 @@ Vue.component('regular-polygon-modal', {
                         <b-input-group-addon v-show="!sizeOk()">
                             <strong class="text-danger">!</strong>
                         </b-input-group-addon>
-                        <b-form-input placeholder="Tamanho" v-model="size" disabled></b-form-input>
+                        <b-form-input placeholder="Tamanho" v-model.number="size" disabled></b-form-input>
                         <b-input-group-addon>px</b-input-group-addon>
                         <b-input-group-button>
                             <b-btn variant="danger" v-on:click="decreaseSize()">-</b-btn>
@@ -23,7 +23,7 @@ Vue.component('regular-polygon-modal', {
                         <b-input-group-addon v-show="!sidesOk()">
                             <strong class="text-danger">!</strong>
                         </b-input-group-addon>
-                        <b-form-input placeholder="Lados" v-model="sides" disabled></b-form-input>
+                        <b-form-input placeholder="Lados" v-model.number="sides" disabled></b-form-input>
                         <b-input-group-button>
                             <b-btn variant="danger" v-on:click="decreaseSides()">-</b-btn>
                         </b-input-group-button>

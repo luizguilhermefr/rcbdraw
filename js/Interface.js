@@ -13,40 +13,56 @@ function Interface () {
     };
 
     this.redraw = function () {
+        this.clearPanels();
+        let polygons = this.scene.getPolygons();
+        for (let i = 0; i < polygons.length; i++) {
+            if (polygons[ i ].mustFill) {
+                this.fillPoly(polygons[ i ]);
+            }
+            if (polygons[ i ].mustStroke) {
+                this.strokePoly(polygons[ i ]);
+            }
+        }
+        this.drawTemporaryPolygon();
+        this.drawSelectedPolygon();
+        this.drawAxis();
+    };
+
+    this.resetRotationClick = function () {
+        this.rotationPolygon = null;
+    };
+
+    this.resetScaleClick = function () {
+        this.scalePolygon = null;
+    };
+
+    this.clearPanels = function () {
         vue.$refs.panelFront.clearPanel();
         vue.$refs.panelTop.clearPanel();
         vue.$refs.panelLeft.clearPanel();
         vue.$refs.panelPerspective.clearPanel();
-        let polygons = this.scene.getPolygons();
-        for (let i = 0; i < polygons.length; i++) {
-            if (polygons[ i ].mustFill) {
-                vue.$refs.panelFront.fillPoly(polygons[i]);
-                vue.$refs.panelTop.fillPoly(polygons[i]);
-                vue.$refs.panelLeft.fillPoly(polygons[i]);
-                vue.$refs.panelPerspective.fillPoly(polygons[i]);
-            }
-            if (polygons[ i ].mustStroke) {
-                vue.$refs.panelFront.strokePoly(polygons[i]);
-                vue.$refs.panelTop.strokePoly(polygons[i]);
-                vue.$refs.panelLeft.strokePoly(polygons[i]);
-                vue.$refs.panelPerspective.strokePoly(polygons[i]);
-            }
-        }
+    };
+
+    this.strokePoly = function (polygon) {
+        vue.$refs.panelFront.strokePoly(polygon);
+        vue.$refs.panelTop.strokePoly(polygon);
+        vue.$refs.panelLeft.strokePoly(polygon);
+        vue.$refs.panelPerspective.strokePoly(polygon);
+    };
+
+    this.fillPoly = function (polygon) {
+        vue.$refs.panelFront.fillPoly(polygon);
+        vue.$refs.panelTop.fillPoly(polygon);
+        vue.$refs.panelLeft.fillPoly(polygon);
+        vue.$refs.panelPerspective.fillPoly(polygon);
+    };
+
+    this.drawTemporaryPolygon = function () {
         vue.$refs.panelFront.drawTemporaryPolygon();
         vue.$refs.panelTop.drawTemporaryPolygon();
         vue.$refs.panelLeft.drawTemporaryPolygon();
         vue.$refs.panelPerspective.drawTemporaryPolygon();
-        this.drawSelectedPolygon();
     };
-
-    this.resetRotationClick = function() {
-        this.rotationPolygon = null;
-    };
-
-    this.resetScaleClick = function() {
-        this.scalePolygon = null;
-    };
-
 
     this.drawSelectedPolygon = function () {
         if (this.selectedPolygon !== null) {
@@ -55,6 +71,13 @@ function Interface () {
             vue.$refs.panelLeft.drawSelectedPolygon(this.selectedPolygon.polygon);
             vue.$refs.panelPerspective.drawSelectedPolygon(this.selectedPolygon.polygon);
         }
+    };
+
+    this.drawAxis = function () {
+        vue.$refs.panelFront.drawAxis();
+        vue.$refs.panelTop.drawAxis();
+        vue.$refs.panelLeft.drawAxis();
+        vue.$refs.panelPerspective.drawAxis();
     };
 
     this.clearSelectedPolygon = function (redraw = false) {
@@ -80,9 +103,9 @@ function Interface () {
         let teta = ((2 * Math.PI) / sides);
         dotX = 0;
         dotY = size;
-        if (sides % 2 == 0) {
+        if (sides % 2 === 0) {
             let angle = 0;
-            if (sides == 4) {
+            if (sides === 4) {
                 angle = (2 * Math.PI) / 8;
             } else {
                 angle = (2 * Math.PI);

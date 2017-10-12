@@ -19,12 +19,40 @@
     <properties-modal></properties-modal>
     <about-modal></about-modal>
     <toolbar></toolbar>
-    <panel ref="panelFront" identifier="panelFront"></panel>
-    <panel ref="panelTop" identifier="panelTop"></panel>
-    <panel ref="panelLeft" identifier="panelLeft"></panel>
-    <panel ref="panelPerspective" identifier="panelPerspective" readonly="true"></panel>
+
+    <panel
+            ref="panelFront"
+            identifier="panelFront"
+            title="front"
+            h="x"
+            v="y"
+    ></panel>
+
+    <panel
+            ref="panelTop"
+            identifier="panelTop"
+            title="top"
+            h="x"
+            v="z"
+    ></panel>
+
+    <panel
+            ref="panelLeft"
+            identifier="panelLeft"
+            title="left"
+            h="z"
+            v="y"
+    ></panel>
+
+    <panel
+            ref="panelPerspective"
+            identifier="panelPerspective"
+            readonly="true"
+            title="perspective"
+    ></panel>
+
     <element-right-click ref="elementRightClick"></element-right-click>
-    <panel-right-click ref="panelRightClick"></panel-right-click>    
+    <panel-right-click ref="panelRightClick"></panel-right-click>
 </div>
 
 <script type="text/javascript" src="libs/vue/vue.js"></script>
@@ -77,7 +105,7 @@
         }, false);
     };
 
-    function escape() {
+    function escape () {
         toggleReset();
         vue.$refs.elementRightClick.hide();
         vue.$refs.panelRightClick.hide();
@@ -136,7 +164,9 @@
             return;
         }
         toggleReset();
+        vue.$refs.panelFront.expectRotation();
         vue.$refs.panelTop.expectRotation();
+        vue.$refs.panelLeft.expectRotation();
     }
 
     function expectTranslate () {
@@ -145,7 +175,9 @@
             return;
         }
         toggleReset();
+        vue.$refs.panelFront.expectTranslate();
         vue.$refs.panelTop.expectTranslate();
+        vue.$refs.panelLeft.expectTranslate();
     }
 
     function expectScale () {
@@ -154,7 +186,9 @@
             return;
         }
         toggleReset();
+        vue.$refs.panelFront.expectScale();
         vue.$refs.panelTop.expectScale();
+        vue.$refs.panelLeft.expectScale();
     }
 
     function expectShear (direction) {
@@ -163,10 +197,12 @@
             return;
         }
         toggleReset();
+        vue.$refs.panelFront.expectShear(direction);
         vue.$refs.panelTop.expectShear(direction);
+        vue.$refs.panelLeft.expectShear(direction);
     }
 
-    function deletePolygon() {
+    function deletePolygon () {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
             return;
@@ -174,7 +210,7 @@
         drawInterface.deletePolygon();
     }
 
-    function bringForward() {
+    function bringForward () {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
             return;
@@ -182,7 +218,7 @@
         drawInterface.bringForward();
     }
 
-    function bringBackward() {
+    function bringBackward () {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
             return;

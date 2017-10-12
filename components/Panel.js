@@ -9,7 +9,7 @@ Vue.component('panel', {
                 v-bind:style="{cursor: cursor}"
                 v-on:click="onClick"
                 v-on:contextmenu.prevent="contextMenu"
-                v-on:mousedown="mouseDown"
+                v-on:mousedown.prevent="mouseDown"
                 v-on:mouseup="mouseUp"
                 v-on:mousemove="mouseMove"
             >
@@ -20,7 +20,7 @@ Vue.component('panel', {
          </div>
         `,
 
-    props: [ 'identifier', 'readonly' ],
+    props: [ 'identifier', 'readonly', 'title', 'h', 'v'],
 
     data: function () {
         return {
@@ -107,6 +107,8 @@ Vue.component('panel', {
             if (this.mode >= 4 && this.mode <= 5 || this.mode === 8) {
                 this.dragging = true;
             }
+
+            return false;
         },
         mouseMove (e) {
             if (this.dragging) {
@@ -267,6 +269,27 @@ Vue.component('panel', {
             } else {
                 vue.$refs.elementRightClick.show(e.clientX, e.clientY);
             }
+        },
+        drawAxis() {
+            this.context.strokeStyle = Colors.DEFAULT;
+            this.context.lineWidth = 1;
+            this.context.font = '12px Arial';
+            this.context.fillText(this.title, 10, 30);
+            if (this.h != null && this.v != null) {
+                this.context.moveTo(10, 40);
+                this.context.lineTo(10, 80);
+                this.context.lineTo(5, 75);
+                this.context.moveTo(10, 80);
+                this.context.lineTo(15, 75);
+                this.context.fillText(this.v, 8, 90);
+                this.context.moveTo(10, 40);
+                this.context.lineTo(50, 40);
+                this.context.lineTo(45, 35);
+                this.context.moveTo(50, 40);
+                this.context.lineTo(45, 45);
+                this.context.fillText(this.h, 55, 42);
+                this.context.stroke();
+            }
         }
     },
     mounted () {
@@ -275,7 +298,7 @@ Vue.component('panel', {
         this.rect = this.canvas.getBoundingClientRect();
         this.context.lineWidth = 1;
         this.context.strokeStyle = Colors.DEFAULT;
-        this.cursor = this.readonly ? 'default' : 'pointer'
-        this.mode = this.readonly ? -1 : 2
+        this.cursor = this.readonly ? 'default' : 'pointer';
+        this.mode = this.readonly ? -1 : 2;
     }
 });
