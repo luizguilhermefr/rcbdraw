@@ -6,38 +6,6 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
     this.mustFill = mustFill;
     this.edges = edges;
 
-    this.getStrokeColor = function () {
-        return this.strokeColor;
-    };
-
-    this.getFillColor = function () {
-        return this.fillColor;
-    };
-
-    this.shouldFill = function () {
-        return this.mustFill;
-    };
-
-    this.shouldStroke = function () {
-        return this.mustStroke;
-    };
-
-    this.setFillColor = function (color) {
-        this.fillColor = color;
-    };
-
-    this.setStrokeColor = function (color) {
-        this.strokeColor = color;
-    };
-
-    this.setMustStroke = function (must) {
-        this.mustStroke = must;
-    };
-
-    this.setMustFill = function (must) {
-        this.mustFill = must;
-    };
-
     this.setBoundaries = function () {
         let maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE, minX = Number.MAX_VALUE, minY = Number.MAX_VALUE;
         for (let i = 0; i < this.vertices.length; i++) {
