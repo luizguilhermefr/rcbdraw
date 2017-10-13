@@ -95,7 +95,7 @@ function Interface () {
         return false;
     };
 
-    this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y) {
+    this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, h, v) {
         let dotX;
         let dotY;
         let temp;
@@ -114,12 +114,39 @@ function Interface () {
             dotX = this.getNewDotX(dotX, dotY, angle);
             dotY = this.getNewDotY(temp, dotY, angle);
         }
-        tempVertices.push(new Vertex(dotX + x, (dotY * (-1)) + y));
+        let tempX = 100;
+        let tempY = 100;
+        let tempZ = 100;
+        if (h === 'x' && v === 'y') { // front
+            tempX = dotX + x;
+            tempY = (dotY * (-1)) + y;
+        } else if (h === 'x' && v === 'z') { // top
+            tempX = dotX + x;
+            tempZ = (dotY * (-1)) + y;
+        } else { // left
+            tempZ = dotX + x;
+            tempY = (dotY * (-1)) + y;
+        }
+        let tempVertex = new Vertex(tempX, tempY, tempZ);
+        tempVertices.push(tempVertex);
         for (let i = 0; i < sides; i++) {
             temp = dotX;
             dotX = this.getNewDotX(dotX, dotY, teta);
             dotY = this.getNewDotY(temp, dotY, teta);
-            tempVertices.push(new Vertex(dotX + x, (dotY * (-1)) + y));
+            if (h === 'x' && v === 'y') { // front
+                tempX = dotX + x;
+                tempY = (dotY * (-1)) + y;
+                tempZ = 100;
+            } else if (h === 'x' && v === 'z') { // top
+                tempX = dotX + x;
+                tempZ = (dotY * (-1)) + y;
+                tempY = 100;
+            } else { // left
+                tempZ = dotX + x;
+                tempY = (dotY * (-1)) + y;
+                tempX = 100;
+            }
+            tempVertices.push(new Vertex(tempX, tempY, tempZ));
         }
         this.scene.addPolygon(new Polygon(tempVertices, stroke, fill, mustStroke, mustFill));
         this.scene.makeDirty();

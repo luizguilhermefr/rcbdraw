@@ -216,6 +216,7 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         return isInside;
     };
 
+    // noinspection SyntaxError
     this.clone = function (displacement = 0) {
         let nextVertices = [];
         this.vertices.forEach(function (v) {

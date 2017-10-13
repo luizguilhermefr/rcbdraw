@@ -83,6 +83,7 @@ Vue.component('panel', {
             this.cursor = 'pointer';
         },
         onClick (e) {
+            let y, x;
             x = this.getRelativeX(e.clientX);
             y = this.getRelativeY(e.clientY);
             switch (this.mode) {
@@ -111,6 +112,7 @@ Vue.component('panel', {
             return false;
         },
         mouseMove (e) {
+            let y, x;
             if (this.dragging) {
                 x = this.getRelativeX(e.clientX);
                 y = this.getRelativeY(e.clientY);
@@ -128,6 +130,7 @@ Vue.component('panel', {
             }
         },
         mouseUp (e) {
+            let y, x;
             if (this.dragging) {
                 x = this.getRelativeX(e.clientX);
                 y = this.getRelativeY(e.clientY);
@@ -148,7 +151,7 @@ Vue.component('panel', {
             }
         },
         putPoly (x, y) {
-            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y);
+            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
         },
         selectionClick (x, y) {
             drawInterface.selectionClick(x, y);
@@ -185,10 +188,31 @@ Vue.component('panel', {
         strokePoly (polygon) {
             this.context.strokeStyle = polygon.strokeColor;
             this.context.beginPath();
-            this.context.moveTo(polygon.vertexAt(0).getX(), polygon.vertexAt(0).getY());
+            let coordX, coordY;
+            if (this.h === 'x' && this.v === 'y') { // front
+                coordX = polygon.vertexAt(0).getX();
+                coordY = polygon.vertexAt(0).getY();
+            } else if (this.h === 'x' && this.v === 'z') { // top
+                coordX = polygon.vertexAt(0).getX();
+                coordY = polygon.vertexAt(0).getZ();
+            } else { // left
+                coordX = polygon.vertexAt(0).getZ();
+                coordY = polygon.vertexAt(0).getY();
+            }
+            this.context.moveTo(coordX, coordY);
             for (let j = 1; j < polygon.countVertices(); j++) {
                 let vertex = polygon.vertexAt(j);
-                this.context.lineTo(vertex.getX(), vertex.getY());
+                if (this.h === 'x' && this.v === 'y') { // front
+                    coordX =vertex.getX();
+                    coordY = vertex.getY();
+                } else if (this.h === 'x' && this.v === 'z') { // top
+                    coordX = vertex.getX();
+                    coordY = vertex.getZ();
+                } else { // left
+                    coordX = vertex.getZ();
+                    coordY = vertex.getY();
+                }
+                this.context.lineTo(coordX, coordY);
             }
             this.context.closePath();
             this.context.stroke();
@@ -258,8 +282,8 @@ Vue.component('panel', {
             this.context.setLineDash([]);
         },
         contextMenu (e) {
-            x = this.getRelativeX(e.clientX);
-            y = this.getRelativeY(e.clientY);
+            let x = this.getRelativeX(e.clientX);
+            let y = this.getRelativeY(e.clientY);
             toggleReset();
             vue.$refs.elementRightClick.hide();
             vue.$refs.panelRightClick.hide();
@@ -275,6 +299,7 @@ Vue.component('panel', {
             this.context.lineWidth = 1;
             this.context.font = '12px Arial';
             this.context.fillText(this.title, 10, 30);
+            // noinspection EqualityComparisonWithCoercionJS
             if (this.h != null && this.v != null) {
                 this.context.moveTo(10, 40);
                 this.context.lineTo(10, 80);
