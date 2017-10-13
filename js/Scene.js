@@ -1,19 +1,19 @@
 function Scene () {
-    this.polygons = [];
+    this.solids = [];
     this.dirty = false;
 
     this.makeDirty = function () {
-      this.dirty = true;
+        this.dirty = true;
     };
 
-    this.addPolygon = function (polygon) {
-        this.polygons.push(polygon);
+    this.addSolid = function (solid) {
+        this.solids.push(solid);
     };
 
-    this.removePolygon = function (id) {
-        for (let i = 0; i < this.polygons.length; i++) {
+    this.removeSolid = function (index) {
+        for (let i = 0; i < this.solids.length; i++) {
             if (i === id) {
-                this.polygons.splice(id, 1);
+                this.solids.splice(index, 1);
                 this.dirty = true;
                 return true;
             }
@@ -21,16 +21,16 @@ function Scene () {
         return false;
     };
 
-    this.changePolygon = function (id, newPolygon) {
-        this.polygons[id] = newPolygon;
+    this.changeSolid = function (index, newSolid) {
+        this.solids[index] = newSolid;
     };
 
-    this.getPolygons = function () {
-        return this.polygons;
+    this.getSolids = function () {
+        return this.solids;
     };
 
-    this.getPolygonAt = function (id) {
-        return this.polygons[id];
+    this.getSolidAt = function (index) {
+        return this.solids[index];
     };
 
     this.isDirty = function () {
@@ -41,31 +41,31 @@ function Scene () {
         this.dirty = false;
     };
 
-    this.bringForward = function(id) {
-        if (id === this.polygons.length - 1) {
+    this.bringForward = function(index) {
+        if (index === this.solids.length - 1) {
             return false;
         }
-        let tmp = this.polygons[id];
-        this.polygons[id] = this.polygons[id + 1];
-        this.polygons[id + 1] = tmp;
+        let tmp = this.solids[index];
+        this.solids[index] = this.solids[index + 1];
+        this.solids[index + 1] = tmp;
 
         return {
-            index: id + 1,
-            polygon: tmp
+            index: index + 1,
+            solid: tmp
         };
     };
 
-    this.bringBackward = function(id) {
-        if (id === 0) {
+    this.bringBackward = function(index) {
+        if (index === 0) {
             return false;
         }
-        let tmp = this.polygons[id];
-        this.polygons[id] = this.polygons[id - 1];
-        this.polygons[id - 1] = tmp;
+        let tmp = this.solids[index];
+        this.solids[index] = this.solids[index - 1];
+        this.solids[index - 1] = tmp;
 
         return {
-            index: id - 1,
-            polygon: tmp
+            index: index - 1,
+            solid: tmp
         };
     };
 }
