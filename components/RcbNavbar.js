@@ -4,7 +4,7 @@ Vue.component('rcb-navbar', {
     <b-navbar id="navbar" toggleable fixed="top" type="inverse" variant="inverse"> 
         <b-nav-toggle target="nav_collapse"></b-nav-toggle> 
         <b-link class="navbar-brand" to="#"> 
-            <span>RCBDraw 2.0</span> 
+            <span>RCBDraw 3D</span> 
         </b-link> 
         <b-collapse is-nav id="nav_collapse"> 
             <b-nav is-nav-bar class="ml-0"> 
