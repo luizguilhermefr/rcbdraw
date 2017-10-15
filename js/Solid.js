@@ -50,7 +50,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
             let vertices = this.polygons[j].vertices;
             for (let i = 0; i < vertices.length; i++) {
                 let v = vertices[i];
-                let vx = v.getX(), vy = v.getY(), vz = v.getY();
+                let vx = v.getX(), vy = v.getY(), vz = v.getZ();
                 if (vx > maxX) {
                     maxX = vx;
                 }

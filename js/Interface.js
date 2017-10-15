@@ -68,7 +68,7 @@ function Interface () {
     };
 
     this.drawSelectedSolid = function () {
-        if (this.selectedSolid !== null) {
+        if (this.selectedSolid !== null) {            
             vue.$refs.panelFront.drawSelectedSolid(this.selectedSolid.solid);
             vue.$refs.panelTop.drawSelectedSolid(this.selectedSolid.solid);
             vue.$refs.panelLeft.drawSelectedSolid(this.selectedSolid.solid);
@@ -148,7 +148,7 @@ function Interface () {
                 tempZ = dotX + x + z;
                 tempY = (dotY * (-1)) + y;
                 tempX = 100;
-            }
+            }            
             tempVertices.push(new Vertex(tempX, tempY, tempZ));
         }
         let polygon = new Polygon(tempVertices, stroke, fill, mustStroke, mustFill);

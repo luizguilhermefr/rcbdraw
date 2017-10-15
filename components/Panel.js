@@ -317,7 +317,7 @@ Vue.component('panel', {
                     this.context.lineTo(boundaries.maxX + 5, boundaries.minY - 5);
                     this.context.lineTo(boundaries.minX - 5, boundaries.minY - 5);              
                     break;
-                case 'panelTop':
+                case 'panelTop':                                        
                     this.context.moveTo(boundaries.minX - 5, boundaries.minZ - 5);
                     this.context.lineTo(boundaries.minX - 5, boundaries.maxZ + 5);
                     this.context.lineTo(boundaries.maxX + 5, boundaries.maxZ + 5);
