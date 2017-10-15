@@ -69,10 +69,10 @@ function Interface () {
 
     this.drawSelectedSolid = function () {
         if (this.selectedSolid !== null) {            
-            vue.$refs.panelFront.drawSelectedSolid(this.selectedSolid.solid);
-            vue.$refs.panelTop.drawSelectedSolid(this.selectedSolid.solid);
-            vue.$refs.panelLeft.drawSelectedSolid(this.selectedSolid.solid);
-            vue.$refs.panelPerspective.drawSelectedSolid(this.selectedSolid.solid);
+            vue.$refs.panelFront.drawSelectedSolid(this.scene.getSolids()[this.selectedSolid.index]);
+            vue.$refs.panelTop.drawSelectedSolid(this.scene.getSolids()[this.selectedSolid.index]);
+            vue.$refs.panelLeft.drawSelectedSolid(this.scene.getSolids()[this.selectedSolid.index]);
+            vue.$refs.panelPerspective.drawSelectedSolid(this.scene.getSolids()[this.selectedSolid.index]);
         }
     };
 
@@ -371,16 +371,14 @@ function Interface () {
             }                
             if (lowestDistance.distance < 10) {
                 this.selectedSolid = {
-                    index: lowestDistance.poly,
-                    solid: solids[ z ]
+                    index: lowestDistance.solid
                 };
-            } 
-            /*else {
-                alert('criar o clearSelectedSolid');
-                //this.clearSelectedPolygon();
-            }*/
-        }
-        this.redraw();
+                console.log(this.selectedSolid);
+            }else {
+                this.selectedSolid = null;                
+            }
+            this.redraw();
+        }        
     };
 
     this.distanceBetweenTwoPoints = function (first, second) {
