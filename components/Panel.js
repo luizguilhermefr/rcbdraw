@@ -110,7 +110,7 @@ Vue.component('panel', {
 
             switch (this.mode) {
                 case 1:
-                    this.putPoly(x, y);
+                    this.putPoly(x, y, z);
                     break;
                 case 2:
                     this.selectionClick(x, y, z);
@@ -172,8 +172,8 @@ Vue.component('panel', {
                 this.dragging = false;
             }
         },
-        putPoly (x, y) {
-            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
+        putPoly (x, y, z) {
+            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, z, this.h, this.v);
         },
         selectionClick (x, y, z) {
             drawInterface.selectionClick(x, y, z, this.identifier);

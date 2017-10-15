@@ -98,9 +98,9 @@ function Interface () {
         return false;
     };
 
-    this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, h, v) {
+    this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, z, h, v) {
         let dotX;
-        let dotY;
+        let dotY;        
         let temp;
         let tempVertices = [];
         let teta = ((2 * Math.PI) / sides);
@@ -125,9 +125,9 @@ function Interface () {
             tempY = (dotY * (-1)) + y;
         } else if (h === 'x' && v === 'z') { // top
             tempX = dotX + x;
-            tempZ = (dotY * (-1)) + y;
+            tempZ = (dotY * (-1)) + y + z;
         } else { // left
-            tempZ = dotX + x;
+            tempZ = dotX + x + z;
             tempY = (dotY * (-1)) + y;
         }
         let tempVertex = new Vertex(tempX, tempY, tempZ);
@@ -142,10 +142,10 @@ function Interface () {
                 tempZ = 100;
             } else if (h === 'x' && v === 'z') { // top
                 tempX = dotX + x;
-                tempZ = (dotY * (-1)) + y;
+                tempZ = (dotY * (-1)) + y + z;
                 tempY = 100;
             } else { // left
-                tempZ = dotX + x;
+                tempZ = dotX + x + z;
                 tempY = (dotY * (-1)) + y;
                 tempX = 100;
             }
@@ -359,8 +359,7 @@ function Interface () {
                             y2: to.getY(),
                             z2: to.getZ(),
                         };
-                        let currentDistance = this.distanceBetweenPointAndEdge(this.edgePanel(edge,panel,point));
-                        console.log(currentDistance);
+                        let currentDistance = this.distanceBetweenPointAndEdge(this.edgePanel(edge,panel,point));                        
                         if (currentDistance < lowestDistance.distance) {
                             lowestDistance = {
                                 solid: z,
@@ -375,10 +374,11 @@ function Interface () {
                     index: lowestDistance.poly,
                     solid: solids[ z ]
                 };
-            } else {
+            } 
+            /*else {
                 alert('criar o clearSelectedSolid');
                 //this.clearSelectedPolygon();
-            }
+            }*/
         }
         this.redraw();
     };
