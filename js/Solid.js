@@ -2,6 +2,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
     this.polygons = polygons;
     this.mustStroke = mustStroke;
     this.mustFill = mustStroke;
+    this.boundaries;
 
     this.getPolygons = function (){
         return this.polygons;
@@ -41,5 +42,49 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
 
     this.shouldStroke = function () {
         return this.mustStroke;
+    };        
+
+    this.setBoundaries = function () {
+        let maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE, maxZ = Number.MIN_VALUE, minX = Number.MAX_VALUE, minY = Number.MAX_VALUE, minZ = Number.MAX_VALUE;
+        for(let j = 0; j < this.polygons.length; j++) {
+            let vertices = this.polygons[j].vertices;
+            for (let i = 0; i < vertices.length; i++) {
+                let v = vertices[i];
+                let vx = v.getX(), vy = v.getY(), vz = v.getY();
+                if (vx > maxX) {
+                    maxX = vx;
+                }
+                if (vx < minX) {
+                    minX = vx;
+                }
+                if (vy > maxY) {
+                    maxY = vy;
+                }
+                if (vy < minY) {
+                    minY = vy;
+                }
+                if (vz > maxZ) {
+                    maxZ = vz;
+                }
+                if (vz < minZ) {
+                    minZ = vz;
+                }
+            }
+        }
+
+        return {
+            maxX: maxX,
+            minX: minX,
+            maxY: maxY,
+            minY: minY,
+            minZ: minZ,
+            maxZ: maxZ
+        };
     };
+
+    this.getBoundaries = function () {
+        return this.boundaries;
+    };
+
+    this.boundaries = this.setBoundaries();
 }

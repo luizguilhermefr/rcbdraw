@@ -152,7 +152,7 @@ function Interface () {
             tempVertices.push(new Vertex(tempX, tempY, tempZ));
         }
         let polygon = new Polygon(tempVertices, stroke, fill, mustStroke, mustFill);
-        this.scene.addSolid(new Solid([polygon]));
+        this.scene.addSolid(new Solid([polygon]));        
         this.scene.makeDirty();
         this.redraw();
     };
@@ -218,17 +218,29 @@ function Interface () {
 
     this.isInsideBoundaryTolerance = function (point, boundary) {
         let tolerance = 20;
-        if (point.x > boundary.maxX + tolerance) {
-            return false;
+        if( point.x != -1) {
+            if (point.x > boundary.maxX + tolerance) {
+                return false;
+            }
+            if (point.x < boundary.minX - tolerance) {
+                return false;
+            }
         }
-        if (point.x < boundary.minX - tolerance) {
-            return false;
+        if( point.y != -1) {
+            if (point.y > boundary.maxY + tolerance) {
+                return false;
+            }
+            if (point.y < boundary.minY - tolerance) {
+                return false;
+            }
         }
-        if (point.y > boundary.maxY + tolerance) {
-            return false;
-        }
-        if (point.y < boundary.minY - tolerance) {
-            return false;
+        if( point.z != -1) {
+            if (point.z > boundary.maxZ + tolerance) {
+                return false;
+            }
+            if (point.z < boundary.minZ - tolerance) {
+                return false;
+            }
         }
         return true;
     };
@@ -277,46 +289,109 @@ function Interface () {
         return !(this.selectedSolid === null);
     };
 
-    this.selectionClick = function (x, y) {
-        // let polygons = this.scene.getPolygons();
-        // let lowestDistance = {
-        //     poly: -1,
-        //     distance: Number.POSITIVE_INFINITY
-        // };
-        // let point = {
-        //     x: x,
-        //     y: y
-        // };
-        // for (let i = 0; i < polygons.length; i++) {
-        //     if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries())) {
-        //         for (let j = 0; j < polygons[ i ].countVertices() - 1; j++) {
-        //             let from = polygons[ i ].vertexAt(j);
-        //             let to = polygons[ i ].vertexAt(j + 1);
-        //             let edge = {
-        //                 x1: from.getX(),
-        //                 y1: from.getY(),
-        //                 x2: to.getX(),
-        //                 y2: to.getY()
-        //             };
-        //             let currentDistance = this.distanceBetweenPointAndEdge(point, edge);
-        //             if (currentDistance < lowestDistance.distance) {
-        //                 lowestDistance = {
-        //                     poly: i,
-        //                     distance: currentDistance
-        //                 };
-        //             }
-        //         }
-        //     }
-        // }
-        // if (lowestDistance.distance < 10) {
-        //     this.selectedPolygon = {
-        //         index: lowestDistance.poly,
-        //         polygon: polygons[ lowestDistance.poly ]
-        //     };
-        // } else {
-        //     this.clearSelectedPolygon();
-        // }
-        // this.redraw();
+    this.edgePanel = function ( edge, panel, point ) {
+        switch (panel) {
+            case 'panelFront':
+                return {
+                    x1: edge.x1,
+                    y1: edge.y1,                    
+                    x2: edge.x2,
+                    y2: edge.y2,
+                    pointX: point.x,
+                    pointY: point.y
+                };            
+                break;
+            case 'panelTop':
+                return {
+                    x1: edge.x1,
+                    y1: edge.z1,                    
+                    x2: edge.x2,
+                    y2: edge.z2,
+                    pointX: point.x,
+                    pointY: point.z
+                };  
+                break;
+            case 'panelLeft':
+                return {
+                    x1: edge.z1,
+                    y1: edge.y1,                    
+                    x2: edge.z2,
+                    y2: edge.y2,
+                    pointX: point.z,
+                    pointY: point.y
+                };  
+                break;
+            case 'panelPerspective':
+                return {
+                    x1: edge.z1,
+                    y1: edge.y1,                    
+                    x2: edge.z2,
+                    y2: edge.y2,
+                    pointX: point.z,
+                    pointY: point.y
+                };  
+                break;
+        }  
+    }
+    this.selectionClick = function (x, y, z, panel) {            
+        let solids = this.scene.getSolids();
+        let lowestDistance = {
+            solid: -1,
+            distance: Number.POSITIVE_INFINITY
+        };
+        let point = {
+            x: x,
+            y: y,
+            z: z
+        };
+        for (let z = 0; z < solids.length; z++) {            
+            let polygons = solids[z].getPolygons();
+            for (let i = 0; i < polygons.length; i++) {                
+                if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries())) {                    
+                    for (let j = 0; j < polygons[ i ].countVertices() - 1; j++) {
+                        let from = polygons[ i ].vertexAt(j);
+                        let to = polygons[ i ].vertexAt(j + 1);
+                        let edge = {
+                            x1: from.getX(),
+                            y1: from.getY(),
+                            z1: from.getZ(),
+                            x2: to.getX(),
+                            y2: to.getY(),
+                            z2: to.getZ(),
+                        };
+                        let currentDistance = this.distanceBetweenPointAndEdge(this.edgePanel(edge,panel,point));
+                        console.log(currentDistance);
+                        if (currentDistance < lowestDistance.distance) {
+                            lowestDistance = {
+                                solid: z,
+                                distance: currentDistance
+                            };
+                        }
+                    }
+                }
+            }                
+            if (lowestDistance.distance < 10) {
+                this.selectedSolid = {
+                    index: lowestDistance.poly,
+                    solid: solids[ z ]
+                };
+            } else {
+                alert('criar o clearSelectedSolid');
+                //this.clearSelectedPolygon();
+            }
+        }
+        this.redraw();
+    };
+
+    this.distanceBetweenTwoPoints = function (first, second) {
+        return Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2));
+    };
+
+    this.distanceBetweenPointAndEdge = function (data) {
+        let r = data.y2 - data.y1;
+        let s = -(data.x2 - data.x1);
+        let t = data.x2 * data.y1 - data.x1 * data.y2;
+        return Math.abs(r * data.pointX + s * data.pointY + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
     };
 
     this.duplicateSelected = function () {

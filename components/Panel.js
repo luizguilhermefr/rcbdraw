@@ -82,16 +82,38 @@ Vue.component('panel', {
             }
             this.cursor = 'pointer';
         },
-        onClick (e) {
-            let y, x;
-            x = this.getRelativeX(e.clientX);
-            y = this.getRelativeY(e.clientY);
+        onClick (e) {            
+            let x, y, z;            
+            
+            switch (this.identifier) {
+                case 'panelFront':
+                    x = this.getRelativeX(e.clientX);
+                    y = this.getRelativeY(e.clientY);     
+                    z = -1;               
+                    break;
+                case 'panelTop':
+                    x = this.getRelativeX(e.clientX);
+                    y = -1;
+                    z = this.getRelativeY(e.clientY);
+                    break;
+                case 'panelLeft':
+                    x = -1;
+                    z = this.getRelativeX(e.clientX);
+                    y = this.getRelativeY(e.clientY);
+                    break;
+                case 'panelPerspective':
+                    x = -1;
+                    z = this.getRelativeX(e.clientX);
+                    y = this.getRelativeY(e.clientY);
+                    break;
+            }
+
             switch (this.mode) {
                 case 1:
                     this.putPoly(x, y);
                     break;
                 case 2:
-                    this.selectionClick(x, y);
+                    this.selectionClick(x, y, z);
                     break;
                 case 3:
                     this.freehandClick(x, y);
@@ -153,8 +175,8 @@ Vue.component('panel', {
         putPoly (x, y) {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
         },
-        selectionClick (x, y) {
-            drawInterface.selectionClick(x, y);
+        selectionClick (x, y, z) {
+            drawInterface.selectionClick(x, y, z, this.identifier);
         },
         freehandClick (x, y) {
             drawInterface.clearSelectedPolygon(true);
@@ -278,6 +300,45 @@ Vue.component('panel', {
             this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);
             this.context.lineTo(boundaries.maxX + 5, boundaries.minY - 5);
             this.context.lineTo(boundaries.minX - 5, boundaries.minY - 5);
+            this.context.stroke();
+            this.context.setLineDash([]);
+        },
+        drawSelectedSolid (solid) {
+            this.context.strokeStyle = Colors.DEFAULT;
+            this.context.lineWidth = 1;
+            this.context.setLineDash([ 5, 3 ]);
+            this.context.beginPath();
+            let boundaries = solid.getBoundaries();            
+            switch (this.identifier) {
+                case 'panelFront':
+                    this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
+                    this.context.lineTo(boundaries.minX - 5, boundaries.maxY + 5);
+                    this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);
+                    this.context.lineTo(boundaries.maxX + 5, boundaries.minY - 5);
+                    this.context.lineTo(boundaries.minX - 5, boundaries.minY - 5);              
+                    break;
+                case 'panelTop':
+                    this.context.moveTo(boundaries.minX - 5, boundaries.minZ - 5);
+                    this.context.lineTo(boundaries.minX - 5, boundaries.maxZ + 5);
+                    this.context.lineTo(boundaries.maxX + 5, boundaries.maxZ + 5);
+                    this.context.lineTo(boundaries.maxX + 5, boundaries.minZ - 5);
+                    this.context.lineTo(boundaries.minX - 5, boundaries.minZ - 5);
+                    break;
+                case 'panelLeft':
+                    this.context.moveTo(boundaries.minZ - 5, boundaries.minY - 5);
+                    this.context.lineTo(boundaries.minZ - 5, boundaries.maxY + 5);
+                    this.context.lineTo(boundaries.maxZ + 5, boundaries.maxY + 5);
+                    this.context.lineTo(boundaries.maxZ + 5, boundaries.minY - 5);
+                    this.context.lineTo(boundaries.minZ - 5, boundaries.minY - 5);
+                    break;
+                case 'panelPerspective':
+                    this.context.moveTo(boundaries.minZ - 5, boundaries.minY - 5);
+                    this.context.lineTo(boundaries.minZ - 5, boundaries.maxY + 5);
+                    this.context.lineTo(boundaries.maxZ + 5, boundaries.maxY + 5);
+                    this.context.lineTo(boundaries.maxZ + 5, boundaries.minY - 5);
+                    this.context.lineTo(boundaries.minZ - 5, boundaries.minY - 5);
+                    break;
+            }            
             this.context.stroke();
             this.context.setLineDash([]);
         },
