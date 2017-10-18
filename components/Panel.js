@@ -82,31 +82,41 @@ Vue.component('panel', {
             }
             this.cursor = 'pointer';
         },
-        onClick (e) {            
-            let x, y, z;            
-            
+        defineXYZ (clientX, clientY, clientZ) {
             switch (this.identifier) {
                 case 'panelFront':
-                    x = this.getRelativeX(e.clientX);
-                    y = this.getRelativeY(e.clientY);     
-                    z = -1;               
+                    return {
+                        x: this.getRelativeX(clientX),
+                        y: this.getRelativeY(clientY),     
+                        z: -1
+                    }
                     break;
                 case 'panelTop':
-                    x = this.getRelativeX(e.clientX);
-                    y = -1;
-                    z = this.getRelativeY(e.clientY);
+                    return {
+                        x: this.getRelativeX(clientX),
+                        y: -1,
+                        z: this.getRelativeY(clientY)
+                    }
                     break;
                 case 'panelLeft':
-                    x = -1;
-                    z = this.getRelativeX(e.clientX);
-                    y = this.getRelativeY(e.clientY);
+                    return {
+                        x: -1,
+                        z: this.getRelativeX(clientX),
+                        y: this.getRelativeY(clientY)
+                    }
                     break;
                 case 'panelPerspective':
-                    x = -1;
-                    z = this.getRelativeX(e.clientX);
-                    y = this.getRelativeY(e.clientY);
+                    return {
+                        x: -1,
+                        z: this.getRelativeX(clientX),
+                        y: this.getRelativeY(clientY)
+                    }
                     break;
             }
+        },
+        onClick (e) {            
+            let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
+            let x = temp.x, y = temp.y, z = temp.z;     
 
             switch (this.mode) {
                 case 1:
@@ -133,39 +143,37 @@ Vue.component('panel', {
 
             return false;
         },
-        mouseMove (e) {
-            let y, x;
-            if (this.dragging) {
-                x = this.getRelativeX(e.clientX);
-                y = this.getRelativeY(e.clientY);
+        mouseMove (e) {            
+            if (this.dragging) {                
+                let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
+                let x = temp.x, y = temp.y, z = temp.z;
                 switch (this.mode) {
                     case 4:
-                        drawInterface.translateClick(x, y);
+                        drawInterface.translateClick(x, y, z);
                         break;
                     case 5:
-                        drawInterface.scaleClick(x, y);
+                        drawInterface.scaleClick(x, y, z);
                         break;
                     case 8:
-                        drawInterface.rotationClick(x, y);
+                        drawInterface.rotationClick(x, y, z);
                         break;
                 }
             }
         },
         mouseUp (e) {
-            let y, x;
             if (this.dragging) {
-                x = this.getRelativeX(e.clientX);
-                y = this.getRelativeY(e.clientY);
+                let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
+                let x = temp.x, y = temp.y, z = temp.z;                
                 switch (this.mode) {
                     case 4:
-                        drawInterface.translateClick(x, y);
+                        drawInterface.translateClick(x, y, z);
                         break;
                     case 5:
-                        drawInterface.scaleClick(x, y);
+                        drawInterface.scaleClick(x, y, z);
                         drawInterface.resetScaleClick();
                         break;
                     case 8:
-                        drawInterface.rotationClick(x, y);
+                        drawInterface.rotationClick(x, y, z);
                         drawInterface.resetRotationClick();
                         break;
                 }
@@ -176,7 +184,7 @@ Vue.component('panel', {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, z, this.h, this.v);
         },
         selectionClick (x, y, z) {
-            drawInterface.selectionClick(x, y, z, this.identifier);
+            drawInterface.selectionClick(x, y, z);
         },
         freehandClick (x, y) {
             drawInterface.clearSelectedPolygon(true);

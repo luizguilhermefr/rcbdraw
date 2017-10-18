@@ -245,8 +245,8 @@ function Interface () {
         return true;
     };
 
-    this.translateClick = function (x, y) {
-        this.selectedSolid.solid.translate(new Vertex(x, y));
+    this.translateClick = function (x, y, z) {               
+        this.selectedSolid.solid.translate(new Vertex(x, y, z));
         this.scene.makeDirty();
         this.redraw();
     };
@@ -289,51 +289,39 @@ function Interface () {
         return !(this.selectedSolid === null);
     };
 
-    this.edgePanel = function ( edge, panel, point ) {
-        switch (panel) {
-            case 'panelFront':
-                return {
-                    x1: edge.x1,
-                    y1: edge.y1,                    
-                    x2: edge.x2,
-                    y2: edge.y2,
-                    pointX: point.x,
-                    pointY: point.y
-                };            
-                break;
-            case 'panelTop':
-                return {
-                    x1: edge.x1,
-                    y1: edge.z1,                    
-                    x2: edge.x2,
-                    y2: edge.z2,
-                    pointX: point.x,
-                    pointY: point.z
-                };  
-                break;
-            case 'panelLeft':
-                return {
-                    x1: edge.z1,
-                    y1: edge.y1,                    
-                    x2: edge.z2,
-                    y2: edge.y2,
-                    pointX: point.z,
-                    pointY: point.y
-                };  
-                break;
-            case 'panelPerspective':
-                return {
-                    x1: edge.z1,
-                    y1: edge.y1,                    
-                    x2: edge.z2,
-                    y2: edge.y2,
-                    pointX: point.z,
-                    pointY: point.y
-                };  
-                break;
+    this.edgePanel = function ( edge, point ) {
+        if( point.z == -1) {
+            return {
+                x1: edge.x1,
+                y1: edge.y1,                    
+                x2: edge.x2,
+                y2: edge.y2,
+                pointX: point.x,
+                pointY: point.y
+            }
+        } else if ( point.y == -1) {
+            return {
+                x1: edge.x1,
+                y1: edge.z1,                    
+                x2: edge.x2,
+                y2: edge.z2,
+                pointX: point.x,
+                pointY: point.z
+            }
+        } else if ( point.x == -1) {
+            return {
+                x1: edge.z1,
+                y1: edge.y1,                    
+                x2: edge.z2,
+                y2: edge.y2,
+                pointX: point.z,
+                pointY: point.y
+            }
+        } else {
+            alert('problemas');
         }  
     }
-    this.selectionClick = function (x, y, z, panel) {            
+    this.selectionClick = function (x, y, z) {            
         let solids = this.scene.getSolids();
         let lowestDistance = {
             solid: -1,
@@ -359,7 +347,7 @@ function Interface () {
                             y2: to.getY(),
                             z2: to.getZ(),
                         };
-                        let currentDistance = this.distanceBetweenPointAndEdge(this.edgePanel(edge,panel,point));                        
+                        let currentDistance = this.distanceBetweenPointAndEdge(this.edgePanel(edge, point));                        
                         if (currentDistance < lowestDistance.distance) {
                             lowestDistance = {
                                 solid: z,
@@ -371,7 +359,8 @@ function Interface () {
             }                
             if (lowestDistance.distance < 10) {
                 this.selectedSolid = {
-                    index: lowestDistance.solid
+                    index: lowestDistance.solid,
+                    solid: solids[lowestDistance.solid]
                 };
                 console.log(this.selectedSolid);
             }else {

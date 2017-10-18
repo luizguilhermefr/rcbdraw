@@ -61,18 +61,21 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         let area = this.getArea() * 6;
         let center = {
             x: 0,
-            y: 0
+            y: 0,
+            z: 0
         };
         for (let i = 0; i < this.vertices.length - 1; i++) {
             let temp = (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getY()) -
                 (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getY());
             center.x += (this.vertices[ i ].getX() + this.vertices[ i + 1 ].getX()) * temp;
             center.y += (this.vertices[ i ].getY() + this.vertices[ i + 1 ].getY()) * temp;
+            center.z += (this.vertices[ i ].getZ() + this.vertices[ i + 1 ].getZ()) * temp;
         }
         center.x /= area;
         center.y /= area;
+        center.z /= area;
 
-        return new Vertex(center.x, center.y);
+        return new Vertex(center.x, center.y, center.z);
     };
 
     this.closestPoint = function (vertex) {
@@ -90,16 +93,39 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         return closestPoint.vertex;
     };
 
-    this.translatePoint = function (vertex) {
-        this.vertices.forEach(function (v) {
-            v.setX(v.getX() - vertex.getX());
-            v.setY(v.getY() - vertex.getY());
-        });
+    this.translatePoint = function (vertex, panel) {
+        if(panel == 1) {
+            this.vertices.forEach(function (v) {
+                v.setX(v.getX() - vertex.getX());
+                v.setY(v.getY() - vertex.getY());   
+                v.setZ(v.getZ());         
+            });
+        } else if(panel == 2) {
+            this.vertices.forEach(function (v) {
+                v.setX(v.getX() - vertex.getX());
+                v.setY(v.getY());
+                v.setZ(v.getZ() - vertex.getZ());            
+            });
+        } else if(panel == 3) {
+            this.vertices.forEach(function (v) {                
+                v.setX(v.getX());
+                v.setY(v.getY() - vertex.getY());            
+                v.setZ(v.getZ() - vertex.getZ());
+            });
+        }
     };
 
     this.translate = function (vertex) {
-        let currentCenter = this.getCenter();
-        this.translatePoint(new Vertex(currentCenter.getX() - vertex.getX(), currentCenter.getY() - vertex.getY()));
+        let currentCenter = this.getCenter();   
+        let panel;  
+        if(vertex.getX() == -1)
+            panel = 3;
+        else if(vertex.getY() == -1)
+            panel = 2;
+        else if(vertex.getZ() == -1)
+            panel = 1;
+
+        this.translatePoint(new Vertex(currentCenter.getX() - vertex.getX(), currentCenter.getY() - vertex.getY(), currentCenter.getZ() - vertex.getZ()),panel);
         this.boundaries = this.setBoundaries();
     };
 
