@@ -28,7 +28,7 @@ function Interface () {
         }
         this.drawTemporaryPolygon();
         this.drawSelectedSolid();
-        this.drawAxis();
+        this.drawAxis();        
     };
 
     this.resetRotationClick = function () {
@@ -99,6 +99,7 @@ function Interface () {
     };
 
     this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, z, h, v) {
+        let panel;        
         let dotX;
         let dotY;        
         let temp;
@@ -119,16 +120,21 @@ function Interface () {
         }
         let tempX = 100;
         let tempY = 100;
-        let tempZ = 100;
-        if (h === 'x' && v === 'y') { // front
+        let tempZ = 100;        
+        if (z === -1) { // front
+            panel = 1;
             tempX = dotX + x;
             tempY = (dotY * (-1)) + y;
-        } else if (h === 'x' && v === 'z') { // top
+        } else if (y === -1) { // top
+            panel = 2;
             tempX = dotX + x;
             tempZ = (dotY * (-1)) + y + z;
-        } else { // left
+        } else if (x === -1) { // left
+            panel = 3;
             tempZ = dotX + x + z;
             tempY = (dotY * (-1)) + y;
+        } else {
+            console.log('problemas');
         }
         let tempVertex = new Vertex(tempX, tempY, tempZ);
         tempVertices.push(tempVertex);
@@ -136,22 +142,25 @@ function Interface () {
             temp = dotX;
             dotX = this.getNewDotX(dotX, dotY, teta);
             dotY = this.getNewDotY(temp, dotY, teta);
-            if (h === 'x' && v === 'y') { // front
+            if (z === -1) { // front
                 tempX = dotX + x;
                 tempY = (dotY * (-1)) + y;
                 tempZ = 100;
-            } else if (h === 'x' && v === 'z') { // top
+            } else if (y === -1) { // top
                 tempX = dotX + x;
                 tempZ = (dotY * (-1)) + y + z;
                 tempY = 100;
-            } else { // left
+            } else if (x === -1) { // left
                 tempZ = dotX + x + z;
                 tempY = (dotY * (-1)) + y;
                 tempX = 100;
+            } else {
+                console.log('problemas');
             }            
+            
             tempVertices.push(new Vertex(tempX, tempY, tempZ));
         }
-        let polygon = new Polygon(tempVertices, stroke, fill, mustStroke, mustFill);
+        let polygon = new Polygon(tempVertices, stroke, fill, mustStroke, mustFill, panel);
         this.scene.addSolid(new Solid([polygon]));        
         this.scene.makeDirty();
         this.redraw();
@@ -248,7 +257,7 @@ function Interface () {
     this.translateClick = function (x, y, z) {               
         this.selectedSolid.solid.translate(new Vertex(x, y, z));
         this.scene.makeDirty();
-        this.redraw();
+        this.redraw();        
     };
 
     this.scaleClick = function (x, y) {
@@ -262,13 +271,13 @@ function Interface () {
         this.redraw();
     };
 
-    this.rotationClick = function (x, y) {
+    this.rotationClick = function (x, y, z) {
         if (this.rotationSolid === null) {
             this.rotationSolid = this.selectedSolid.solid.clone();
         } else {
             this.scene.changeSolid(this.selectedSolid.index, this.rotationSolid.clone());
         }
-        this.selectedSolid.solid.rotate(new Vertex(x, y), this.rotationSolid);
+        this.selectedSolid.solid.rotate(new Vertex(x, y, z), this.rotationSolid);
         this.scene.makeDirty();
         this.redraw();
     };
@@ -361,12 +370,11 @@ function Interface () {
                 this.selectedSolid = {
                     index: lowestDistance.solid,
                     solid: solids[lowestDistance.solid]
-                };
-                console.log(this.selectedSolid);
+                };                
             }else {
                 this.selectedSolid = null;                
             }
-            this.redraw();
+            this.redraw();            
         }        
     };
 

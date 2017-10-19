@@ -1,10 +1,11 @@
-function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false, edges = []) {
+function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false, panel, edges = []) {
     this.vertices = vertices;
     this.strokeColor = strokeColor;
     this.fillColor = fillColor;
     this.mustStroke = mustStroke;
     this.mustFill = mustFill;
-    this.edges = edges;
+    this.edges = edges;    
+    this.panelConstruct = panel;
 
     this.setBoundaries = function () {
         let maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE, minX = Number.MAX_VALUE, minY = Number.MAX_VALUE;
@@ -48,34 +49,70 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
     this.boundaries = this.setBoundaries();
 
     this.getArea = function () {
-        let area = 0;
-        for (let i = 0; i < this.vertices.length - 1; i++) {
-            area += (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getY()) -
-                (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getY());
+        let area = 0;        
+        if(this.panelConstruct == 1) {
+            for (let i = 0; i < this.vertices.length - 1; i++) {
+                area += (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getY()) -
+                    (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getY());
+            }
+        } else if(this.panelConstruct == 2) {
+            for (let i = 0; i < this.vertices.length - 1; i++) {
+                area += (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getZ()) -
+                    (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getZ());
+            }
+        } else if(this.panelConstruct == 3) {
+            for (let i = 0; i < this.vertices.length - 1; i++) {
+                area += (this.vertices[ i ].getZ() * this.vertices[ i + 1 ].getY()) -
+                    (this.vertices[ i + 1 ].getZ() * this.vertices[ i ].getY());
+            }
         }
         area /= 2;
         return area;
     };
 
-    this.getCenter = function () {
+    this.setCenter = function () {        
         let area = this.getArea() * 6;
         let center = {
             x: 0,
             y: 0,
             z: 0
-        };
-        for (let i = 0; i < this.vertices.length - 1; i++) {
-            let temp = (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getY()) -
-                (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getY());
-            center.x += (this.vertices[ i ].getX() + this.vertices[ i + 1 ].getX()) * temp;
-            center.y += (this.vertices[ i ].getY() + this.vertices[ i + 1 ].getY()) * temp;
-            center.z += (this.vertices[ i ].getZ() + this.vertices[ i + 1 ].getZ()) * temp;
-        }
+        };        
+        if(this.panelConstruct == 1) {
+            for (let i = 0; i < this.vertices.length - 1; i++) {
+                let temp = (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getY()) -
+                    (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getY());
+                center.x += (this.vertices[ i ].getX() + this.vertices[ i + 1 ].getX()) * temp;
+                center.y += (this.vertices[ i ].getY() + this.vertices[ i + 1 ].getY()) * temp;
+                //center.z += (this.vertices[ i ].getZ() + this.vertices[ i + 1 ].getZ()) * temp;
+            }
+        } else if(this.panelConstruct == 2) {             
+            for (let i = 0; i < this.vertices.length - 1; i++) {                
+                let temp = (this.vertices[ i ].getX() * this.vertices[ i + 1 ].getZ()) -
+                    (this.vertices[ i + 1 ].getX() * this.vertices[ i ].getZ());
+                center.x += (this.vertices[ i ].getX() + this.vertices[ i + 1 ].getX()) * temp;                
+                center.z += (this.vertices[ i ].getZ() + this.vertices[ i + 1 ].getZ()) * temp;
+                //center.y += (this.vertices[ i ].getY() + this.vertices[ i + 1 ].getY()) * temp;
+            }
+        } else if(this.panelConstruct == 3) {
+            for (let i = 0; i < this.vertices.length - 1; i++) {
+                let temp = (this.vertices[ i ].getZ() * this.vertices[ i + 1 ].getY()) -
+                    (this.vertices[ i + 1 ].getZ() * this.vertices[ i ].getY());                
+                center.y += (this.vertices[ i ].getY() + this.vertices[ i + 1 ].getY()) * temp;
+                center.z += (this.vertices[ i ].getZ() + this.vertices[ i + 1 ].getZ()) * temp;
+                //center.x += (this.vertices[ i ].getX() + this.vertices[ i + 1 ].getX()) * temp;
+            }
+        }                        
         center.x /= area;
         center.y /= area;
-        center.z /= area;
+        center.z /= area;       
 
-        return new Vertex(center.x, center.y, center.z);
+        return new Vertex(center.x, center.y, center.z);        
+    }
+    
+    this.center = this.setCenter();
+
+    this.getCenter = function ( ) {        
+        return this.center;        
     };
 
     this.closestPoint = function (vertex) {
@@ -93,39 +130,75 @@ function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEF
         return closestPoint.vertex;
     };
 
-    this.translatePoint = function (vertex, panel) {
-        if(panel == 1) {
-            this.vertices.forEach(function (v) {
-                v.setX(v.getX() - vertex.getX());
-                v.setY(v.getY() - vertex.getY());   
-                v.setZ(v.getZ());         
-            });
+    this.translatePoint = function (vertex, panel) {                
+        if(panel == 1) {            
+            for( let v = 0; v < this.vertices.length; v++){                
+                if(this.panelConstruct != panel) {
+                    if(this.panelConstruct == 2) {
+                        this.vertices[v].setX(this.vertices[v].getX() - vertex.getX()); 
+                        this.vertices[v].setY(vertex.getY());                
+                    } else if (this.panelConstruct == 3) {
+                        this.vertices[v].setX(vertex.getX()); 
+                        this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());                
+                    }
+                } else {
+                    this.vertices[v].setX(this.vertices[v].getX() - vertex.getX()); 
+                    this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
+                }   
+            }
         } else if(panel == 2) {
-            this.vertices.forEach(function (v) {
-                v.setX(v.getX() - vertex.getX());
-                v.setY(v.getY());
-                v.setZ(v.getZ() - vertex.getZ());            
-            });
+            for( let v = 0; v < this.vertices.length; v++){                
+                if(this.panelConstruct != panel) {
+                    if(this.panelConstruct == 1) {
+                        this.vertices[v].setX(this.vertices[v].getX() - vertex.getX()); 
+                        this.vertices[v].setZ(vertex.getZ());                
+                    } else if (this.panelConstruct == 3) {
+                        this.vertices[v].setX(vertex.getX()); 
+                        this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());                
+                    }
+                } else {
+                    this.vertices[v].setX(this.vertices[v].getX() - vertex.getX()); 
+                    this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
+                }   
+            }            
         } else if(panel == 3) {
-            this.vertices.forEach(function (v) {                
-                v.setX(v.getX());
-                v.setY(v.getY() - vertex.getY());            
-                v.setZ(v.getZ() - vertex.getZ());
-            });
+            for( let v = 0; v < this.vertices.length; v++){                
+                if(this.panelConstruct != panel) {
+                    if(this.panelConstruct == 1) {
+                        this.vertices[v].setY(this.vertices[v].getY() - vertex.getY()); 
+                        this.vertices[v].setZ(vertex.getZ());                
+                    } else if (this.panelConstruct == 2) {
+                        this.vertices[v].setY(vertex.getY()); 
+                        this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());                
+                    }
+                } else {
+                    this.vertices[v].setY(this.vertices[v].getY() - vertex.getY()); 
+                    this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
+                }   
+            }
         }
     };
 
     this.translate = function (vertex) {
-        let currentCenter = this.getCenter();   
-        let panel;  
+        let panel, currentCenter, vertexDiferent;  
         if(vertex.getX() == -1)
             panel = 3;
         else if(vertex.getY() == -1)
             panel = 2;
         else if(vertex.getZ() == -1)
             panel = 1;
-
-        this.translatePoint(new Vertex(currentCenter.getX() - vertex.getX(), currentCenter.getY() - vertex.getY(), currentCenter.getZ() - vertex.getZ()),panel);
+        currentCenter = this.getCenter();
+        if(currentCenter.getX() < 1) {
+            vertexDiferent = new Vertex(vertex.getX(), currentCenter.getY() - vertex.getY(), currentCenter.getZ() - vertex.getZ());
+        }
+        else if(currentCenter.getY() < 1) {
+            vertexDiferent = new Vertex(currentCenter.getX() - vertex.getX(), vertex.getY(), currentCenter.getZ() - vertex.getZ());           
+        }
+        else if(currentCenter.getZ() < 1) {
+            vertexDiferent = new Vertex(currentCenter.getX() - vertex.getX(), currentCenter.getY() - vertex.getY(), vertex.getZ());
+        }
+        this.translatePoint(vertexDiferent, panel);
+        this.center = this.setCenter();
         this.boundaries = this.setBoundaries();
     };
 

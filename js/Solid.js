@@ -94,4 +94,11 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
             this.boundaries = this.setBoundaries();
         }
     }
+
+    this.rotate = function (vertex, rotationSolid) {
+        for(let i = 0; i < this.polygons.length; i++) {
+            polygons[i].rotation(vertex, rotationSolid);
+            this.boundaries = this.setBoundaries();
+        }
+    }
 }
