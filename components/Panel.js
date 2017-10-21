@@ -222,10 +222,10 @@ Vue.component('panel', {
             let minY = polygon.getBoundaries().minY;
             let maxY = polygon.getBoundaries().maxY;
             let intersections = [];
+            this.context.strokeStyle = color;
+            this.context.lineWidth = 1;
             for (let y = minY; y <= maxY; y++) {
                 polygon.intersections(intersections, y);
-                this.context.strokeStyle = color;
-                this.context.lineWidth = 1;
                 this.context.beginPath();
                 for (let d = 0; d < intersections.length - 1; d += 2) {
                     this.context.moveTo(intersections[ d ].getX(), y);
@@ -279,7 +279,7 @@ Vue.component('panel', {
             toggleReset();
             vue.$refs.elementRightClick.hide();
             vue.$refs.panelRightClick.hide();
-            drawInterface.selectionClick(x, y);
+            this.selectionClick(x, y);
             if (!drawInterface.isSomethingSelected()) {
                 vue.$refs.panelRightClick.show(e.clientX, e.clientY);
             } else {
