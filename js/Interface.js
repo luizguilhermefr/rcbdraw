@@ -18,11 +18,11 @@ function Interface () {
         for (let i = 0; i < solids.length; i++) {
             let polygons = solids[i].getPolygons();
             for (let j = 0; j < polygons.length; j++) {
-                if (polygons[j].mustFill) {
-                    this.fillPoly(polygons[j]);
+                if (solids[i].shouldFill()) {
+                    this.fillPoly(polygons[j], solids[i].getFillColor());
                 }
-                if (polygons[j].mustStroke) {
-                    this.strokePoly(polygons[j]);
+                if (solids[i].shouldStroke()) {
+                    this.strokePoly(polygons[j], solids[i].getStrokeColor());
                 }
             }
         }
@@ -98,10 +98,9 @@ function Interface () {
         return false;
     };
 
-    this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, z, h, v) {
-        let panel;        
+    this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, h, v) {
         let dotX;
-        let dotY;        
+        let dotY;
         let temp;
         let tempVertices = [];
         let teta = ((2 * Math.PI) / sides);
@@ -120,21 +119,16 @@ function Interface () {
         }
         let tempX = 100;
         let tempY = 100;
-        let tempZ = 100;        
-        if (z === -1) { // front
-            panel = 1;
+        let tempZ = 100;
+        if (h === 'x' && v === 'y') { // front
             tempX = dotX + x;
             tempY = (dotY * (-1)) + y;
-        } else if (y === -1) { // top
-            panel = 2;
+        } else if (h === 'x' && v === 'z') { // top
             tempX = dotX + x;
-            tempZ = (dotY * (-1)) + y + z;
-        } else if (x === -1) { // left
-            panel = 3;
-            tempZ = dotX + x + z;
+            tempZ = (dotY * (-1)) + y;
+        } else { // left
+            tempZ = dotX + x;
             tempY = (dotY * (-1)) + y;
-        } else {
-            console.log('problemas');
         }
         let tempVertex = new Vertex(tempX, tempY, tempZ);
         tempVertices.push(tempVertex);
@@ -142,26 +136,23 @@ function Interface () {
             temp = dotX;
             dotX = this.getNewDotX(dotX, dotY, teta);
             dotY = this.getNewDotY(temp, dotY, teta);
-            if (z === -1) { // front
+            if (h === 'x' && v === 'y') { // front
                 tempX = dotX + x;
                 tempY = (dotY * (-1)) + y;
                 tempZ = 100;
-            } else if (y === -1) { // top
+            } else if (h === 'x' && v === 'z') { // top
                 tempX = dotX + x;
-                tempZ = (dotY * (-1)) + y + z;
+                tempZ = (dotY * (-1)) + y;
                 tempY = 100;
-            } else if (x === -1) { // left
-                tempZ = dotX + x + z;
+            } else { // left
+                tempZ = dotX + x;
                 tempY = (dotY * (-1)) + y;
                 tempX = 100;
-            } else {
-                console.log('problemas');
-            }            
-            
+            }
             tempVertices.push(new Vertex(tempX, tempY, tempZ));
         }
-        let polygon = new Polygon(tempVertices, stroke, fill, mustStroke, mustFill, panel);
-        this.scene.addSolid(new Solid([polygon]));        
+        let polygon = new Polygon(tempVertices);
+        this.scene.addSolid(new Solid([polygon], stroke, fill, mustStroke, mustFill));
         this.scene.makeDirty();
         this.redraw();
     };
@@ -329,7 +320,8 @@ function Interface () {
         } else {
             alert('problemas');
         }  
-    }
+    };
+
     this.selectionClick = function (x, y, z) {            
         let solids = this.scene.getSolids();
         let lowestDistance = {
