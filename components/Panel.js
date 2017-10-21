@@ -157,7 +157,7 @@ Vue.component('panel', {
             drawInterface.selectionClick(x, y, this.h, this.v);
         },
         freehandClick (x, y) {
-            drawInterface.clearSelectedPolygon(true);
+            drawInterface.clearSelectedSolid(true);
             if (!this.pushFreeHandDot(x, y)) {
                 this.clearFreeHandDots();
                 this.reset();
@@ -266,20 +266,6 @@ Vue.component('panel', {
             }
             return this.freeHandDots[ 0 ].distanceTo(this.freeHandDots[ this.freeHandDots.length -
             1 ]) < 20;
-        },
-        drawSelectedPolygon (polygon) {
-            this.context.strokeStyle = Colors.DEFAULT;
-            this.context.lineWidth = 1;
-            this.context.setLineDash([ 5, 3 ]);
-            this.context.beginPath();
-            let boundaries = polygon.getBoundaries();
-            this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
-            this.context.lineTo(boundaries.minX - 5, boundaries.maxY + 5);
-            this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);
-            this.context.lineTo(boundaries.maxX + 5, boundaries.minY - 5);
-            this.context.lineTo(boundaries.minX - 5, boundaries.minY - 5);
-            this.context.stroke();
-            this.context.setLineDash([]);
         },
         drawSelectedSolid (solid) {
             let polygons = solid.getPolygons();
