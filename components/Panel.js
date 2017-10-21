@@ -90,7 +90,7 @@ Vue.component('panel', {
                     this.putPoly(x, y);
                     break;
                 case 2:
-                    this.selectionClick(x, y, z);
+                    this.selectionClick(x, y);
                     break;
                 case 3:
                     this.freehandClick(x, y);

@@ -309,7 +309,7 @@ function Interface() {
         }
     };
 
-    this.selectionClick = function(x, y) {
+    this.selectionClick = function(x, y, h, v) {
         let solids = this.scene.getSolids();
         let lowestDistance = {
             solid: -1,
