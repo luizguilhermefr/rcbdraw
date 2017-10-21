@@ -218,31 +218,18 @@ function Interface () {
 
     this.isInsideBoundaryTolerance = function (point, boundary) {
         let tolerance = 20;
-        if( point.x != -1) {
-            if (point.x > boundary.maxX + tolerance) {
-                return false;
-            }
-            if (point.x < boundary.minX - tolerance) {
-                return false;
-            }
+
+        if (point.getX() > boundary.maxX + tolerance) {
+            return false;
         }
-        if( point.y != -1) {
-            if (point.y > boundary.maxY + tolerance) {
-                return false;
-            }
-            if (point.y < boundary.minY - tolerance) {
-                return false;
-            }
+        if (point.getX() < boundary.minX - tolerance) {
+            return false;
         }
-        if( point.z != -1) {
-            if (point.z > boundary.maxZ + tolerance) {
-                return false;
-            }
-            if (point.z < boundary.minZ - tolerance) {
-                return false;
-            }
+        if (point.getY() > boundary.maxY + tolerance) {
+            return false;
         }
-        return true;
+
+        return point.getY() >= boundary.minY - tolerance;
     };
 
     this.translateClick = function (x, y, z) {               
@@ -322,52 +309,46 @@ function Interface () {
         }  
     };
 
-    this.selectionClick = function (x, y, z) {            
+    this.selectionClick = function (x, y) {
         let solids = this.scene.getSolids();
         let lowestDistance = {
             solid: -1,
+            poly: -1,
             distance: Number.POSITIVE_INFINITY
         };
-        let point = {
-            x: x,
-            y: y,
-            z: z
-        };
-        for (let z = 0; z < solids.length; z++) {            
-            let polygons = solids[z].getPolygons();
-            for (let i = 0; i < polygons.length; i++) {                
-                if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries())) {                    
+        let point = new Vertex(x, y);
+
+        for (let n = 0; n < solids.length; n++) {
+            let polygons = solids[n].getPolygons();
+            for (let i = 0; i < polygons.length; i++) {
+                if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries())) {
                     for (let j = 0; j < polygons[ i ].countVertices() - 1; j++) {
                         let from = polygons[ i ].vertexAt(j);
                         let to = polygons[ i ].vertexAt(j + 1);
-                        let edge = {
-                            x1: from.getX(),
-                            y1: from.getY(),
-                            z1: from.getZ(),
-                            x2: to.getX(),
-                            y2: to.getY(),
-                            z2: to.getZ(),
-                        };
-                        let currentDistance = this.distanceBetweenPointAndEdge(this.edgePanel(edge, point));                        
+                        let edge = new Edge(from, to);
+                        let currentDistance = point.distanceToEdge(edge);
                         if (currentDistance < lowestDistance.distance) {
                             lowestDistance = {
-                                solid: z,
+                                solid: n,
+                                poly: i,
                                 distance: currentDistance
                             };
                         }
                     }
                 }
-            }                
-            if (lowestDistance.distance < 10) {
-                this.selectedSolid = {
-                    index: lowestDistance.solid,
-                    solid: solids[lowestDistance.solid]
-                };                
-            }else {
-                this.selectedSolid = null;                
             }
-            this.redraw();            
-        }        
+        }
+
+        if (lowestDistance.distance < 10) {
+            this.selectedSolid = {
+                index: lowestDistance.solid,
+                solid: solids[ lowestDistance.solid ]
+            };
+        } else {
+            this.clearSelectedSolid();
+        }
+
+        this.redraw();
     };
 
     this.distanceBetweenTwoPoints = function (first, second) {
