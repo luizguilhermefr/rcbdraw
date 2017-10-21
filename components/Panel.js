@@ -279,7 +279,7 @@ Vue.component('panel', {
             toggleReset();
             vue.$refs.elementRightClick.hide();
             vue.$refs.panelRightClick.hide();
-            drawInterface.selectionClick(x, y);
+            this.selectionClick(x, y);
             if (!drawInterface.isSomethingSelected()) {
                 vue.$refs.panelRightClick.show(e.clientX, e.clientY);
             } else {
