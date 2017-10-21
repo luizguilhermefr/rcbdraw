@@ -185,8 +185,8 @@ Vue.component('panel', {
         getRelativeY (y) {
             return Math.round(y - this.canvas.offsetTop);
         },
-        strokePoly (polygon) {
-            this.context.strokeStyle = polygon.strokeColor;
+        strokePoly (polygon, color) {
+            this.context.strokeStyle = color;
             this.context.beginPath();
             let coordX, coordY;
             if (this.h === 'x' && this.v === 'y') { // front
@@ -217,14 +217,14 @@ Vue.component('panel', {
             this.context.closePath();
             this.context.stroke();
         },
-        fillPoly (polygon) {
+        fillPoly (polygon, color) {
             polygon.createEdges();
             let minY = polygon.getBoundaries().minY;
             let maxY = polygon.getBoundaries().maxY;
             let intersections = [];
             for (let y = minY; y <= maxY; y++) {
                 polygon.intersections(intersections, y);
-                this.context.strokeStyle = polygon.fillColor;
+                this.context.strokeStyle = color;
                 this.context.lineWidth = 1;
                 this.context.beginPath();
                 for (let d = 0; d < intersections.length - 1; d += 2) {

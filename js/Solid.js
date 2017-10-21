@@ -1,8 +1,9 @@
 function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false){
     this.polygons = polygons;
+    this.strokeColor = strokeColor;
+    this.fillColor = fillColor;
     this.mustStroke = mustStroke;
-    this.mustFill = mustStroke;
-    this.boundaries;
+    this.mustFill = mustFill;
 
     this.getPolygons = function (){
         return this.polygons;
@@ -93,12 +94,12 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
             polygons[i].translate(vertex);
             this.boundaries = this.setBoundaries();
         }
-    }
+    };
 
     this.rotate = function (vertex, rotationSolid) {
         for(let i = 0; i < this.polygons.length; i++) {
             polygons[i].rotation(vertex, rotationSolid);
             this.boundaries = this.setBoundaries();
         }
-    }
+    };
 }

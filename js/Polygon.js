@@ -1,11 +1,5 @@
-function Polygon (vertices, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false, panel, edges = []) {
+function Polygon (vertices) {
     this.vertices = vertices;
-    this.strokeColor = strokeColor;
-    this.fillColor = fillColor;
-    this.mustStroke = mustStroke;
-    this.mustFill = mustFill;
-    this.edges = edges;    
-    this.panelConstruct = panel;
 
     this.setBoundaries = function () {
         let maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE, minX = Number.MAX_VALUE, minY = Number.MAX_VALUE;

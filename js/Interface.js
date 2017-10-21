@@ -18,11 +18,11 @@ function Interface () {
         for (let i = 0; i < solids.length; i++) {
             let polygons = solids[i].getPolygons();
             for (let j = 0; j < polygons.length; j++) {
-                if (polygons[j].mustFill) {
-                    this.fillPoly(polygons[j]);
+                if (solids[i].shouldFill()) {
+                    this.fillPoly(polygons[j], solids[i].getFillColor());
                 }
-                if (polygons[j].mustStroke) {
-                    this.strokePoly(polygons[j]);
+                if (solids[i].shouldStroke()) {
+                    this.strokePoly(polygons[j], solids[i].getStrokeColor());
                 }
             }
         }
@@ -151,8 +151,8 @@ function Interface () {
             }
             tempVertices.push(new Vertex(tempX, tempY, tempZ));
         }
-        let polygon = new Polygon(tempVertices, stroke, fill, mustStroke, mustFill);
-        this.scene.addSolid(new Solid([polygon]));
+        let polygon = new Polygon(tempVertices);
+        this.scene.addSolid(new Solid([polygon], stroke, fill, mustStroke, mustFill));
         this.scene.makeDirty();
         this.redraw();
     };
