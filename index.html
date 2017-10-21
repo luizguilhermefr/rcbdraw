@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <!--suppress ALL -->
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>Computação Gráfica :: RCBDraw</title>
@@ -10,224 +11,205 @@
     <link rel="stylesheet" type="text/css" href="libs/vue/bootstrap-vue.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
 </head>
+
 <body>
-<div id="rcb">
-    <rcb-navbar></rcb-navbar>
-    <open-modal></open-modal>
-    <save-modal></save-modal>
-    <export-modal></export-modal>
-    <regular-polygon-modal></regular-polygon-modal>
-    <properties-modal></properties-modal>
-    <about-modal></about-modal>
-    <toolbar></toolbar>
+    <div id="rcb">
+        <rcb-navbar></rcb-navbar>
+        <open-modal></open-modal>
+        <save-modal></save-modal>
+        <export-modal></export-modal>
+        <regular-polygon-modal></regular-polygon-modal>
+        <properties-modal></properties-modal>
+        <about-modal></about-modal>
+        <toolbar></toolbar>
 
-    <panel
-            ref="panelFront"
-            identifier="panelFront"
-            title="front"
-            h="x"
-            v="y"
-    ></panel>
+        <panel ref="panelFront" identifier="panelFront" title="front" h="x" v="y">
+        </panel>
 
-    <panel
-            ref="panelTop"
-            identifier="panelTop"
-            title="top"
-            h="x"
-            v="z"
-    ></panel>
+        <panel ref="panelTop" identifier="panelTop" title="top" h="x" v="z">
+        </panel>
 
-    <panel
-            ref="panelLeft"
-            identifier="panelLeft"
-            title="left"
-            h="z"
-            v="y"
-    ></panel>
+        <panel ref="panelLeft" identifier="panelLeft" title="left" h="z" v="y">
+        </panel>
 
-    <panel
-            ref="panelPerspective"
-            identifier="panelPerspective"
-            readonly="true"
-            title="perspective"
-    ></panel>
+        <panel ref="panelPerspective" identifier="panelPerspective" readonly="true" title="perspective"></panel>
 
-    <element-right-click ref="elementRightClick"></element-right-click>
-    <panel-right-click ref="panelRightClick"></panel-right-click>
-</div>
+        <element-right-click ref="elementRightClick"></element-right-click>
+        <panel-right-click ref="panelRightClick"></panel-right-click>
+    </div>
 
-<script type="text/javascript" src="libs/vue/vue.js"></script>
-<script type="text/javascript" src="libs/tether/tether.min.js"></script>
-<script type="text/javascript" src="libs/vue/bootstrap-vue.js"></script>
+    <script type="text/javascript" src="libs/vue/vue.js"></script>
+    <script type="text/javascript" src="libs/tether/tether.min.js"></script>
+    <script type="text/javascript" src="libs/vue/bootstrap-vue.js"></script>
 
-<script type="text/javascript" src="components/OpenModal.js"></script>
-<script type="text/javascript" src="components/PropertiesModal.js"></script>
-<script type="text/javascript" src="components/SaveModal.js"></script>
-<script type="text/javascript" src="components/ExportModal.js"></script>
-<script type="text/javascript" src="components/RegularPolygonModal.js"></script>
-<script type="text/javascript" src="components/AboutModal.js"></script>
-<script type="text/javascript" src="components/RcbNavbar.js"></script>
-<script type="text/javascript" src="components/Panel.js"></script>
-<script type="text/javascript" src="components/Toolbar.js"></script>
-<script type="text/javascript" src="components/ElementRightClick.js"></script>
-<script type="text/javascript" src="components/PanelRightClick.js"></script>
+    <script type="text/javascript" src="components/OpenModal.js"></script>
+    <script type="text/javascript" src="components/PropertiesModal.js"></script>
+    <script type="text/javascript" src="components/SaveModal.js"></script>
+    <script type="text/javascript" src="components/ExportModal.js"></script>
+    <script type="text/javascript" src="components/RegularPolygonModal.js"></script>
+    <script type="text/javascript" src="components/AboutModal.js"></script>
+    <script type="text/javascript" src="components/RcbNavbar.js"></script>
+    <script type="text/javascript" src="components/Panel.js"></script>
+    <script type="text/javascript" src="components/Toolbar.js"></script>
+    <script type="text/javascript" src="components/ElementRightClick.js"></script>
+    <script type="text/javascript" src="components/PanelRightClick.js"></script>
 
-<script type="text/javascript" src="js/Colors.js"></script>
-<script type="text/javascript" src="js/Vertex.js"></script>
-<script type="text/javascript" src="js/Polygon.js"></script>
-<script type="text/javascript" src="js/Solid.js"></script>
-<script type="text/javascript" src="js/Scene.js"></script>
-<script type="text/javascript" src="js/Interface.js"></script>
-<script type="text/javascript" src="js/Edge.js"></script>
+    <script type="text/javascript" src="js/Colors.js"></script>
+    <script type="text/javascript" src="js/Vertex.js"></script>
+    <script type="text/javascript" src="js/Polygon.js"></script>
+    <script type="text/javascript" src="js/Solid.js"></script>
+    <script type="text/javascript" src="js/Scene.js"></script>
+    <script type="text/javascript" src="js/Interface.js"></script>
+    <script type="text/javascript" src="js/Edge.js"></script>
 
-<script type="text/javascript">
-    window.onload = function () {
-        vue = new Vue({
-            el: '#rcb'
-        });
+    <script type="text/javascript">
+        window.onload = function() {
+            vue = new Vue({
+                el: '#rcb'
+            });
 
-        drawInterface = new Interface();
+            drawInterface = new Interface();
 
-        dimensions = {
-            width: (window.innerWidth - 310) / 2,
-            height: (window.innerHeight * 0.92) / 2
+            dimensions = {
+                width: (window.innerWidth - 310) * 0.5,
+                height: (window.innerHeight * 0.92) * 0.5
+            };
+
+            Array.from(document.getElementsByClassName('canvas')).forEach(function(panel) {
+                panel.width = dimensions.width;
+                panel.height = dimensions.height;
+            });
+
+            window.addEventListener('keyup', function(event) {
+                if (event.keyCode === 27) { // esc
+                    escape();
+                } else if (event.keyCode === 46) {
+                    drawInterface.deletePolygon(); // delete
+                }
+            }, false);
         };
 
-        Array.from(document.getElementsByClassName('canvas')).forEach(function (panel) {
-            panel.width = dimensions.width;
-            panel.height = dimensions.height;
-        });
+        function escape() {
+            toggleReset();
+            vue.$refs.elementRightClick.hide();
+            vue.$refs.panelRightClick.hide();
+        }
 
-        window.addEventListener('keyup', function (event) {
-            if (event.keyCode === 27) { // esc
-                escape();
-            } else if (event.keyCode === 46) {
-                drawInterface.deletePolygon(); // delete
+        function definePolygon(sides, size, stroke, fill, mustStroke, mustFill) {
+            toggleReset();
+            vue.$refs.panelFront.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
+            vue.$refs.panelTop.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
+            vue.$refs.panelLeft.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
+        }
+
+        function expectSelection() {
+            toggleReset();
+            vue.$refs.panelFront.expectSelection();
+            vue.$refs.panelTop.expectSelection();
+            vue.$refs.panelLeft.expectSelection();
+        }
+
+        function expectFreehand() {
+            toggleReset();
+            vue.$refs.panelFront.expectFreehand();
+            vue.$refs.panelTop.expectFreehand();
+            vue.$refs.panelLeft.expectFreehand();
+        }
+
+        function toggleReset() {
+            vue.$refs.panelFront.reset();
+            vue.$refs.panelTop.reset();
+            vue.$refs.panelLeft.reset();
+        }
+
+        function duplicateSelected() {
+            if (!drawInterface.isSomethingSelected()) {
+                alert('Nenhum objeto selecionado.');
+                return;
             }
-        }, false);
-    };
-
-    function escape () {
-        toggleReset();
-        vue.$refs.elementRightClick.hide();
-        vue.$refs.panelRightClick.hide();
-    }
-
-    function definePolygon (sides, size, stroke, fill, mustStroke, mustFill) {
-        toggleReset();
-        vue.$refs.panelFront.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
-        vue.$refs.panelTop.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
-        vue.$refs.panelLeft.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
-    }
-
-    function expectSelection () {
-        toggleReset();
-        vue.$refs.panelFront.expectSelection();
-        vue.$refs.panelTop.expectSelection();
-        vue.$refs.panelLeft.expectSelection();
-    }
-
-    function expectFreehand () {
-        toggleReset();
-        vue.$refs.panelFront.expectFreehand();
-        vue.$refs.panelTop.expectFreehand();
-        vue.$refs.panelLeft.expectFreehand();
-    }
-
-    function toggleReset () {
-        vue.$refs.panelFront.reset();
-        vue.$refs.panelTop.reset();
-        vue.$refs.panelLeft.reset();
-    }
-
-    function duplicateSelected () {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
+            drawInterface.duplicateSelected();
         }
-        drawInterface.duplicateSelected();
-    }
 
-    function openRegularPolygonModal () {
-        vue.$emit('show::modal', 'regular-polygon-modal');
-    }
-
-    function openPropertiesModal () {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
+        function openRegularPolygonModal() {
+            vue.$emit('show::modal', 'regular-polygon-modal');
         }
-        vue.$emit('show::modal', 'properties-modal');
-    }
 
-    function expectRotation () {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
+        function openPropertiesModal() {
+            if (!drawInterface.isSomethingSelected()) {
+                alert('Nenhum objeto selecionado.');
+                return;
+            }
+            vue.$emit('show::modal', 'properties-modal');
         }
-        toggleReset();
-        vue.$refs.panelFront.expectRotation();
-        vue.$refs.panelTop.expectRotation();
-        vue.$refs.panelLeft.expectRotation();
-    }
 
-    function expectTranslate () {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
+        function expectRotation() {
+            if (!drawInterface.isSomethingSelected()) {
+                alert('Nenhum objeto selecionado.');
+                return;
+            }
+            toggleReset();
+            vue.$refs.panelFront.expectRotation();
+            vue.$refs.panelTop.expectRotation();
+            vue.$refs.panelLeft.expectRotation();
         }
-        toggleReset();
-        vue.$refs.panelFront.expectTranslate();
-        vue.$refs.panelTop.expectTranslate();
-        vue.$refs.panelLeft.expectTranslate();
-    }
 
-    function expectScale () {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
+        function expectTranslate() {
+            if (!drawInterface.isSomethingSelected()) {
+                alert('Nenhum objeto selecionado.');
+                return;
+            }
+            toggleReset();
+            vue.$refs.panelFront.expectTranslate();
+            vue.$refs.panelTop.expectTranslate();
+            vue.$refs.panelLeft.expectTranslate();
         }
-        toggleReset();
-        vue.$refs.panelFront.expectScale();
-        vue.$refs.panelTop.expectScale();
-        vue.$refs.panelLeft.expectScale();
-    }
 
-    function expectShear (direction) {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
+        function expectScale() {
+            if (!drawInterface.isSomethingSelected()) {
+                alert('Nenhum objeto selecionado.');
+                return;
+            }
+            toggleReset();
+            vue.$refs.panelFront.expectScale();
+            vue.$refs.panelTop.expectScale();
+            vue.$refs.panelLeft.expectScale();
         }
-        toggleReset();
-        vue.$refs.panelFront.expectShear(direction);
-        vue.$refs.panelTop.expectShear(direction);
-        vue.$refs.panelLeft.expectShear(direction);
-    }
 
-    function deletePolygon () {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
+        function expectShear(direction) {
+            if (!drawInterface.isSomethingSelected()) {
+                alert('Nenhum objeto selecionado.');
+                return;
+            }
+            toggleReset();
+            vue.$refs.panelFront.expectShear(direction);
+            vue.$refs.panelTop.expectShear(direction);
+            vue.$refs.panelLeft.expectShear(direction);
         }
-        drawInterface.deletePolygon();
-    }
 
-    function bringForward () {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
+        function deletePolygon() {
+            if (!drawInterface.isSomethingSelected()) {
+                alert('Nenhum objeto selecionado.');
+                return;
+            }
+            drawInterface.deletePolygon();
         }
-        drawInterface.bringForward();
-    }
 
-    function bringBackward () {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
+        function bringForward() {
+            if (!drawInterface.isSomethingSelected()) {
+                alert('Nenhum objeto selecionado.');
+                return;
+            }
+            drawInterface.bringForward();
         }
-        drawInterface.bringBackward();
-    }
 
-</script>
+        function bringBackward() {
+            if (!drawInterface.isSomethingSelected()) {
+                alert('Nenhum objeto selecionado.');
+                return;
+            }
+            drawInterface.bringBackward();
+        }
+    </script>
 </body>
+
 </html>

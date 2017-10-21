@@ -20,9 +20,9 @@ Vue.component('panel', {
          </div>
         `,
 
-    props: [ 'identifier', 'readonly', 'title', 'h', 'v'],
+    props: ['identifier', 'readonly', 'title', 'h', 'v'],
 
-    data: function () {
+    data: function() {
         return {
             canvas: null,
             context: null,
@@ -44,7 +44,7 @@ Vue.component('panel', {
         };
     },
     methods: {
-        expectPolygon (sides, size, stroke, fill, mustStroke, mustFill) {
+        expectPolygon(sides, size, stroke, fill, mustStroke, mustFill) {
             this.size = size;
             this.sides = sides;
             this.stroke = stroke;
@@ -54,27 +54,27 @@ Vue.component('panel', {
             this.mode = 1;
             this.cursor = 'copy';
         },
-        expectSelection () {
+        expectSelection() {
             this.mode = 2;
             this.cursor = 'pointer';
         },
-        expectFreehand () {
+        expectFreehand() {
             this.mode = 3;
             this.cursor = 'crosshair';
         },
-        expectTranslate () {
+        expectTranslate() {
             this.mode = 4;
             this.cursor = 'move';
         },
-        expectScale () {
+        expectScale() {
             this.mode = 5;
             this.cursor = 'w-resize';
         },
-        expectRotation () {
+        expectRotation() {
             this.mode = 8;
             this.cursor = 'move';
         },
-        expectShear (direction) {
+        expectShear(direction) {
             if (direction === 'x') {
                 this.mode = 6;
             } else if (direction === 'y') {
@@ -82,41 +82,43 @@ Vue.component('panel', {
             }
             this.cursor = 'pointer';
         },
-        defineXYZ (clientX, clientY, clientZ) {
+        defineXYZ(clientX, clientY, clientZ) {
             switch (this.identifier) {
                 case 'panelFront':
                     return {
                         x: this.getRelativeX(clientX),
-                        y: this.getRelativeY(clientY),     
-                        z: -1
+                        y: this.getRelativeY(clientY),
+                        z: 0
                     }
                     break;
                 case 'panelTop':
                     return {
                         x: this.getRelativeX(clientX),
-                        y: -1,
+                        y: 0,
                         z: this.getRelativeY(clientY)
                     }
                     break;
                 case 'panelLeft':
                     return {
-                        x: -1,
+                        x: 0,
                         z: this.getRelativeX(clientX),
                         y: this.getRelativeY(clientY)
                     }
                     break;
                 case 'panelPerspective':
                     return {
-                        x: -1,
+                        x: 0,
                         z: this.getRelativeX(clientX),
                         y: this.getRelativeY(clientY)
                     }
                     break;
             }
         },
-        onClick (e) {            
+        onClick(e) {
             let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
-            let x = temp.x, y = temp.y, z = temp.z;     
+            let x = temp.x,
+                y = temp.y,
+                z = temp.z;
 
             switch (this.mode) {
                 case 1:
@@ -136,17 +138,20 @@ Vue.component('panel', {
                     break;
             }
         },
-        mouseDown (e) {
+        mouseDown(e) {
             if (this.mode >= 4 && this.mode <= 5 || this.mode === 8) {
                 this.dragging = true;
             }
 
             return false;
         },
-        mouseMove (e) {            
-            if (this.dragging) {                
+        mouseMove(e) {
+            console.log(this.getRelativeX(e.clientX) + " " + this.getRelativeY(e.clientY));
+            if (this.dragging) {
                 let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
-                let x = temp.x, y = temp.y, z = temp.z;
+                let x = temp.x,
+                    y = temp.y,
+                    z = temp.z;
                 switch (this.mode) {
                     case 4:
                         drawInterface.translateClick(x, y, z);
@@ -160,10 +165,12 @@ Vue.component('panel', {
                 }
             }
         },
-        mouseUp (e) {
+        mouseUp(e) {
             if (this.dragging) {
                 let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
-                let x = temp.x, y = temp.y, z = temp.z;                
+                let x = temp.x,
+                    y = temp.y,
+                    z = temp.z;
                 switch (this.mode) {
                     case 4:
                         drawInterface.translateClick(x, y, z);
@@ -180,20 +187,20 @@ Vue.component('panel', {
                 this.dragging = false;
             }
         },
-        putPoly (x, y, z) {
+        putPoly(x, y, z) {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, z, this.h, this.v);
         },
-        selectionClick (x, y, z) {
+        selectionClick(x, y, z) {
             drawInterface.selectionClick(x, y, z);
         },
-        freehandClick (x, y) {
+        freehandClick(x, y) {
             drawInterface.clearSelectedPolygon(true);
             if (!this.pushFreeHandDot(x, y)) {
                 this.clearFreeHandDots();
                 this.reset();
             }
         },
-        reset () {
+        reset() {
             this.clearFreeHandDots();
             this.mode = this.readonly ? -1 : 2;
             this.size = 0;
@@ -206,16 +213,16 @@ Vue.component('panel', {
             this.mustFill = false;
             this.prevScaleFactor = 0;
         },
-        clearPanel () {
+        clearPanel() {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         },
-        getRelativeX (x) {
-            return Math.round(x - this.canvas.offsetLeft);
+        getRelativeX(x) {
+            return Math.round(x - this.canvas.offsetLeft - (this.canvas.width * 0.5));
         },
-        getRelativeY (y) {
-            return Math.round(y - this.canvas.offsetTop);
+        getRelativeY(y) {
+            return Math.round(y - this.canvas.offsetTop - (this.canvas.height * 0.5));
         },
-        strokePoly (polygon) {
+        strokePoly(polygon) {
             this.context.strokeStyle = polygon.strokeColor;
             this.context.beginPath();
             let coordX, coordY;
@@ -233,7 +240,7 @@ Vue.component('panel', {
             for (let j = 1; j < polygon.countVertices(); j++) {
                 let vertex = polygon.vertexAt(j);
                 if (this.h === 'x' && this.v === 'y') { // front
-                    coordX =vertex.getX();
+                    coordX = vertex.getX();
                     coordY = vertex.getY();
                 } else if (this.h === 'x' && this.v === 'z') { // top
                     coordX = vertex.getX();
@@ -247,7 +254,7 @@ Vue.component('panel', {
             this.context.closePath();
             this.context.stroke();
         },
-        fillPoly (polygon) {
+        fillPoly(polygon) {
             polygon.createEdges();
             let minY = polygon.getBoundaries().minY;
             let maxY = polygon.getBoundaries().maxY;
@@ -258,25 +265,25 @@ Vue.component('panel', {
                 this.context.lineWidth = 1;
                 this.context.beginPath();
                 for (let d = 0; d < intersections.length - 1; d += 2) {
-                    this.context.moveTo(intersections[ d ].getX(), y);
-                    this.context.lineTo(intersections[ d + 1 ].getX(), y);
+                    this.context.moveTo(intersections[d].getX(), y);
+                    this.context.lineTo(intersections[d + 1].getX(), y);
                 }
                 this.context.stroke();
                 intersections = polygon.addValueM(intersections);
             }
         },
-        drawTemporaryPolygon () {
+        drawTemporaryPolygon() {
             this.context.strokeStyle = Colors.TEMPORARY;
             this.context.beginPath();
             if (this.freeHandDots.length > 1) {
-                this.context.moveTo(this.freeHandDots[ 0 ].getX(), this.freeHandDots[ 0 ].getY());
+                this.context.moveTo(this.freeHandDots[0].getX(), this.freeHandDots[0].getY());
                 for (let n = 1; n < this.freeHandDots.length; n++) {
-                    this.context.lineTo(this.freeHandDots[ n ].getX(), this.freeHandDots[ n ].getY());
+                    this.context.lineTo(this.freeHandDots[n].getX(), this.freeHandDots[n].getY());
                 }
                 this.context.stroke();
             }
         },
-        pushFreeHandDot (x, y) {
+        pushFreeHandDot(x, y) {
             this.freeHandDots.push(new Vertex(x, y, 0));
             drawInterface.redraw();
             let mustContinue = !this.mustEndFreeHand();
@@ -286,21 +293,21 @@ Vue.component('panel', {
 
             return mustContinue;
         },
-        clearFreeHandDots () {
+        clearFreeHandDots() {
             this.freeHandDots = [];
             drawInterface.redraw();
         },
-        mustEndFreeHand () {
+        mustEndFreeHand() {
             if (this.freeHandDots.length < 3) {
                 return false;
             }
-            return this.freeHandDots[ 0 ].distanceTo(this.freeHandDots[ this.freeHandDots.length -
-            1 ]) < 20;
+            return this.freeHandDots[0].distanceTo(this.freeHandDots[this.freeHandDots.length -
+                1]) < 20;
         },
-        drawSelectedPolygon (polygon) {
+        drawSelectedPolygon(polygon) {
             this.context.strokeStyle = Colors.DEFAULT;
             this.context.lineWidth = 1;
-            this.context.setLineDash([ 5, 3 ]);
+            this.context.setLineDash([5, 3]);
             this.context.beginPath();
             let boundaries = polygon.getBoundaries();
             this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
@@ -311,21 +318,21 @@ Vue.component('panel', {
             this.context.stroke();
             this.context.setLineDash([]);
         },
-        drawSelectedSolid (solid) {
+        drawSelectedSolid(solid) {
             this.context.strokeStyle = Colors.DEFAULT;
             this.context.lineWidth = 1;
-            this.context.setLineDash([ 5, 3 ]);
+            this.context.setLineDash([5, 3]);
             this.context.beginPath();
-            let boundaries = solid.getBoundaries();            
+            let boundaries = solid.getBoundaries();
             switch (this.identifier) {
                 case 'panelFront':
                     this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
                     this.context.lineTo(boundaries.minX - 5, boundaries.maxY + 5);
                     this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);
                     this.context.lineTo(boundaries.maxX + 5, boundaries.minY - 5);
-                    this.context.lineTo(boundaries.minX - 5, boundaries.minY - 5);              
+                    this.context.lineTo(boundaries.minX - 5, boundaries.minY - 5);
                     break;
-                case 'panelTop':                                        
+                case 'panelTop':
                     this.context.moveTo(boundaries.minX - 5, boundaries.minZ - 5);
                     this.context.lineTo(boundaries.minX - 5, boundaries.maxZ + 5);
                     this.context.lineTo(boundaries.maxX + 5, boundaries.maxZ + 5);
@@ -346,11 +353,11 @@ Vue.component('panel', {
                     this.context.lineTo(boundaries.maxZ + 5, boundaries.minY - 5);
                     this.context.lineTo(boundaries.minZ - 5, boundaries.minY - 5);
                     break;
-            }            
+            }
             this.context.stroke();
             this.context.setLineDash([]);
         },
-        contextMenu (e) {
+        contextMenu(e) {
             let x = this.getRelativeX(e.clientX);
             let y = this.getRelativeY(e.clientY);
             toggleReset();
@@ -386,7 +393,7 @@ Vue.component('panel', {
             }
         }
     },
-    mounted () {
+    mounted() {
         this.canvas = document.getElementById(this.identifier);
         this.context = this.canvas.getContext('2d');
         this.rect = this.canvas.getBoundingClientRect();
