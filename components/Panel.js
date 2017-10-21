@@ -82,47 +82,12 @@ Vue.component('panel', {
             }
             this.cursor = 'pointer';
         },
-        defineXYZ(clientX, clientY, clientZ) {
-            switch (this.identifier) {
-                case 'panelFront':
-                    return {
-                        x: this.getRelativeX(clientX),
-                        y: this.getRelativeY(clientY),
-                        z: 0
-                    }
-                    break;
-                case 'panelTop':
-                    return {
-                        x: this.getRelativeX(clientX),
-                        y: 0,
-                        z: this.getRelativeY(clientY)
-                    }
-                    break;
-                case 'panelLeft':
-                    return {
-                        x: 0,
-                        z: this.getRelativeX(clientX),
-                        y: this.getRelativeY(clientY)
-                    }
-                    break;
-                case 'panelPerspective':
-                    return {
-                        x: 0,
-                        z: this.getRelativeX(clientX),
-                        y: this.getRelativeY(clientY)
-                    }
-                    break;
-            }
-        },
         onClick(e) {
-            let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
-            let x = temp.x,
-                y = temp.y,
-                z = temp.z;
-
+            let x = this.getRelativeX(e.clientX);
+            let y = this.getRelativeY(e.clientY);
             switch (this.mode) {
                 case 1:
-                    this.putPoly(x, y, z);
+                    this.putPoly(x, y);
                     break;
                 case 2:
                     this.selectionClick(x, y, z);
@@ -147,10 +112,6 @@ Vue.component('panel', {
         },
         mouseMove(e) {
             if (this.dragging) {
-                let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
-                let x = temp.x,
-                    y = temp.y,
-                    z = temp.z;
                 switch (this.mode) {
                     case 4:
                         drawInterface.translateClick(x, y, z);
@@ -166,10 +127,6 @@ Vue.component('panel', {
         },
         mouseUp(e) {
             if (this.dragging) {
-                let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
-                let x = temp.x,
-                    y = temp.y,
-                    z = temp.z;
                 switch (this.mode) {
                     case 4:
                         drawInterface.translateClick(x, y, z);
@@ -186,8 +143,8 @@ Vue.component('panel', {
                 this.dragging = false;
             }
         },
-        putPoly(x, y, z) {
-            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, z, this.h, this.v);
+        putPoly(x, y) {
+            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
         },
         selectionClick(x, y, z) {
             drawInterface.selectionClick(x, y, z);
@@ -221,8 +178,8 @@ Vue.component('panel', {
         getRelativeY(y) {
             return Math.round(y - this.canvas.offsetTop - (this.canvas.height * 0.5));
         },
-        strokePoly(polygon) {
-            this.context.strokeStyle = polygon.strokeColor;
+        strokePoly(polygon, color) {
+            this.context.strokeStyle = color;
             this.context.beginPath();
             let coordX, coordY;
             if (this.h === 'x' && this.v === 'y') { // front
@@ -235,7 +192,7 @@ Vue.component('panel', {
                 coordX = polygon.vertexAt(0).getZ();
                 coordY = polygon.vertexAt(0).getY();
             }
-            this.context.moveTo(coordX, coordY);
+            this.context.moveTo(coordX + this.canvas.width * 0.5, coordY + this.canvas.height * 0.5);
             for (let j = 1; j < polygon.countVertices(); j++) {
                 let vertex = polygon.vertexAt(j);
                 if (this.h === 'x' && this.v === 'y') { // front
@@ -248,7 +205,7 @@ Vue.component('panel', {
                     coordX = vertex.getZ();
                     coordY = vertex.getY();
                 }
-                this.context.lineTo(coordX, coordY);
+                this.context.lineTo(coordX + this.canvas.width * 0.5, coordY + this.canvas.height * 0.5);
             }
             this.context.closePath();
             this.context.stroke();

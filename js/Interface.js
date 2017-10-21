@@ -46,11 +46,11 @@ function Interface() {
         vue.$refs.panelPerspective.clearPanel();
     };
 
-    this.strokePoly = function(polygon) {
-        vue.$refs.panelFront.strokePoly(polygon);
-        vue.$refs.panelTop.strokePoly(polygon);
-        vue.$refs.panelLeft.strokePoly(polygon);
-        vue.$refs.panelPerspective.strokePoly(polygon);
+    this.strokePoly = function(polygon, color) {
+        vue.$refs.panelFront.strokePoly(polygon, color);
+        vue.$refs.panelTop.strokePoly(polygon, color);
+        vue.$refs.panelLeft.strokePoly(polygon, color);
+        vue.$refs.panelPerspective.strokePoly(polygon, color);
     };
 
     this.fillPoly = function(polygon) {
@@ -117,9 +117,9 @@ function Interface() {
             dotX = this.getNewDotX(dotX, dotY, angle);
             dotY = this.getNewDotY(temp, dotY, angle);
         }
-        let tempX = 100;
-        let tempY = 100;
-        let tempZ = 100;
+        let tempX = 0;
+        let tempY = 0;
+        let tempZ = 0;
         if (h === 'x' && v === 'y') { // front
             tempX = dotX + x;
             tempY = (dotY * (-1)) + y;
@@ -139,15 +139,15 @@ function Interface() {
             if (h === 'x' && v === 'y') { // front
                 tempX = dotX + x;
                 tempY = (dotY * (-1)) + y;
-                tempZ = 100;
+                tempZ = 0;
             } else if (h === 'x' && v === 'z') { // top
                 tempX = dotX + x;
                 tempZ = (dotY * (-1)) + y;
-                tempY = 100;
+                tempY = 0;
             } else { // left
                 tempZ = dotX + x;
                 tempY = (dotY * (-1)) + y;
-                tempX = 100;
+                tempX = 0;
             }
             tempVertices.push(new Vertex(tempX, tempY, tempZ));
         }
