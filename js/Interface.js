@@ -232,8 +232,16 @@ function Interface() {
         return point.getY() >= boundary.minY - tolerance;
     };
 
-    this.translateClick = function(x, y, z) {
-        this.selectedSolid.solid.translate(new Vertex(x, y, z));
+    this.translateClick = function(x, y, h, v) {
+        let newPoint;
+        if (h == 'x' && v == 'y')
+            newPoint = new Vertex(x, y, 0);
+        else if (h == 'x' && v == 'z')
+            newPoint = new Vertex(x, 0, y);
+        else
+            newPoint = new Vertex(0, x, y);
+
+        this.selectedSolid.solid.translate(newPoint);
         this.scene.makeDirty();
         this.redraw();
     };
@@ -309,87 +317,77 @@ function Interface() {
         }
     };
 
-    <<
-    <<
-    <<
-    < HEAD
-    this.selectionClick = function(x, y, h, v) { ===
-        ===
-        =
-        this.selectionClick = function(x, y, h, v) { >>>
-            >>>
-            >
-            3 d
-            let solids = this.scene.getSolids();
-            let lowestDistance = {
-                solid: -1,
-                poly: -1,
-                distance: Number.POSITIVE_INFINITY
-            };
-            let point = new Vertex(x, y);
+    this.selectionClick = function(x, y, h, v) {
+        let solids = this.scene.getSolids();
+        let lowestDistance = {
+            solid: -1,
+            poly: -1,
+            distance: Number.POSITIVE_INFINITY
+        };
+        let point = new Vertex(x, y);
 
-            for (let n = 0; n < solids.length; n++) {
-                let polygons = solids[n].getPolygons();
-                for (let i = 0; i < polygons.length; i++) {
-                    if (this.isInsideBoundaryTolerance(point, polygons[i].getBoundaries())) {
-                        for (let j = 0; j < polygons[i].countVertices() - 1; j++) {
-                            let from = polygons[i].vertexAt(j);
-                            let to = polygons[i].vertexAt(j + 1);
-                            let edge = new Edge(from, to);
-                            let currentDistance = point.distanceToEdge(edge);
-                            if (currentDistance < lowestDistance.distance) {
-                                lowestDistance = {
-                                    solid: n,
-                                    poly: i,
-                                    distance: currentDistance
-                                };
-                            }
+        for (let n = 0; n < solids.length; n++) {
+            let polygons = solids[n].getPolygons();
+            for (let i = 0; i < polygons.length; i++) {
+                if (this.isInsideBoundaryTolerance(point, polygons[i].getBoundaries())) {
+                    for (let j = 0; j < polygons[i].countVertices() - 1; j++) {
+                        let from = polygons[i].vertexAt(j);
+                        let to = polygons[i].vertexAt(j + 1);
+                        let edge = new Edge(from, to);
+                        let currentDistance = point.distanceToEdge(edge);
+                        if (currentDistance < lowestDistance.distance) {
+                            lowestDistance = {
+                                solid: n,
+                                poly: i,
+                                distance: currentDistance
+                            };
                         }
                     }
                 }
             }
+        }
 
-            if (lowestDistance.distance < 10) {
-                this.selectedSolid = {
-                    index: lowestDistance.solid,
-                    solid: solids[lowestDistance.solid]
-                };
-            } else {
-                this.clearSelectedSolid();
-            }
+        if (lowestDistance.distance < 10) {
+            this.selectedSolid = {
+                index: lowestDistance.solid,
+                solid: solids[lowestDistance.solid]
+            };
+        } else {
+            this.clearSelectedSolid();
+        }
 
-            this.redraw();
-        };
+        this.redraw();
+    };
 
-        this.distanceBetweenTwoPoints = function(first, second) {
-            return Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2));
-        };
+    this.distanceBetweenTwoPoints = function(first, second) {
+        return Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2));
+    };
 
-        this.distanceBetweenPointAndEdge = function(data) {
-            let r = data.y2 - data.y1;
-            let s = -(data.x2 - data.x1);
-            let t = data.x2 * data.y1 - data.x1 * data.y2;
-            return Math.abs(r * data.pointX + s * data.pointY + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
-        };
+    this.distanceBetweenPointAndEdge = function(data) {
+        let r = data.y2 - data.y1;
+        let s = -(data.x2 - data.x1);
+        let t = data.x2 * data.y1 - data.x1 * data.y2;
+        return Math.abs(r * data.pointX + s * data.pointY + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
+    };
 
-        this.duplicateSelected = function() {
-            this.scene.addSolid(this.selectedSolid.solid.clone(20));
-            this.redraw();
-        };
+    this.duplicateSelected = function() {
+        this.scene.addSolid(this.selectedSolid.solid.clone(20));
+        this.redraw();
+    };
 
-        this.bringForward = function() {
-            let forward = this.scene.bringForward(this.selectedSolid.index);
-            if (forward) {
-                this.selectedSolid = forward;
-            }
-            this.redraw();
-        };
+    this.bringForward = function() {
+        let forward = this.scene.bringForward(this.selectedSolid.index);
+        if (forward) {
+            this.selectedSolid = forward;
+        }
+        this.redraw();
+    };
 
-        this.bringBackward = function() {
-            let backward = this.scene.bringBackward(this.selectedSolid.index);
-            if (backward) {
-                this.selectedSolid = backward;
-            }
-            this.redraw();
-        };
-    }
+    this.bringBackward = function() {
+        let backward = this.scene.bringBackward(this.selectedSolid.index);
+        if (backward) {
+            this.selectedSolid = backward;
+        }
+        this.redraw();
+    };
+}

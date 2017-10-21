@@ -93,13 +93,13 @@ Vue.component('panel', {
                     this.selectionClick(x, y);
                     break;
                 case 3:
-                    this.freehandClick(x, y);
+                    this.freehandClick(x, y, this.h, this.v);
                     break;
                 case 6:
-                    drawInterface.shearHorizontalClick(x, y);
+                    drawInterface.shearHorizontalClick(x, y, this.h, this.v);
                     break;
                 case 7:
-                    drawInterface.shearVerticalClick(x, y);
+                    drawInterface.shearVerticalClick(x, y, this.h, this.v);
                     break;
             }
         },
@@ -111,32 +111,36 @@ Vue.component('panel', {
             return false;
         },
         mouseMove(e) {
+            let x = this.getRelativeX(e.clientX);
+            let y = this.getRelativeY(e.clientY);
             if (this.dragging) {
                 switch (this.mode) {
                     case 4:
-                        drawInterface.translateClick(x, y, z);
+                        drawInterface.translateClick(x, y, this.h, this.v);
                         break;
                     case 5:
-                        drawInterface.scaleClick(x, y, z);
+                        drawInterface.scaleClick(x, y, this.h, this.v);
                         break;
                     case 8:
-                        drawInterface.rotationClick(x, y, z);
+                        drawInterface.rotationClick(x, y, this.h, this.v);
                         break;
                 }
             }
         },
         mouseUp(e) {
+            let x = this.getRelativeX(e.clientX);
+            let y = this.getRelativeY(e.clientY);
             if (this.dragging) {
                 switch (this.mode) {
                     case 4:
-                        drawInterface.translateClick(x, y, z);
+                        drawInterface.translateClick(x, y, this.h, this.v);
                         break;
                     case 5:
-                        drawInterface.scaleClick(x, y, z);
+                        drawInterface.scaleClick(x, y, this.h, this.v);
                         drawInterface.resetScaleClick();
                         break;
                     case 8:
-                        drawInterface.rotationClick(x, y, z);
+                        drawInterface.rotationClick(x, y, this.h, this.v);
                         drawInterface.resetRotationClick();
                         break;
                 }
