@@ -146,7 +146,6 @@ Vue.component('panel', {
             return false;
         },
         mouseMove(e) {
-            console.log(this.getRelativeX(e.clientX) + " " + this.getRelativeY(e.clientY));
             if (this.dragging) {
                 let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
                 let x = temp.x,
