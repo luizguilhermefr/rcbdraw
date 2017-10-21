@@ -121,13 +121,40 @@ function Polygon (vertices) {
             vertex: null
         };
         this.vertices.forEach(function (v) {
-            let distance = v.distanceTo(vertex);
+            let distance = v.distanceToVertex(vertex);
             if (distance < closestPoint.distance) {
                 closestPoint.distance = distance;
                 closestPoint.vertex = v;
             }
         });
         return closestPoint.vertex;
+    };
+
+    this.closestEdge = function (vertex, h, v) {
+        let closestEdge = {
+            distance: Number.POSITIVE_INFINITY,
+            index: -1
+        };
+        for (let i = 0; i < this.countVertices() - 1; i++) {
+            let from = this.vertexAt(i);
+            let to = this.vertexAt(i + 1);
+            let currentDistance;
+            if (h === 'x' && v === 'y') { // front
+                currentDistance = vertex.distanceToEdgeXY(new Edge(from, to));
+            } else if (h === 'x' && v === 'z') { // top
+                currentDistance = vertex.distanceToEdgeXZ(new Edge(from, to));
+            } else { // left
+                currentDistance = vertex.distanceToEdgeZY(new Edge(from, to));
+            }
+            if (currentDistance < closestEdge.distance) {
+                closestEdge = {
+                    distance: currentDistance,
+                    index: i
+                };
+            }
+        }
+
+        return closestEdge;
     };
 
     this.translatePoint = function (vertex, panel) {                

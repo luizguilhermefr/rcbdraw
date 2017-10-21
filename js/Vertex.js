@@ -49,7 +49,38 @@ function Vertex(x, y, z) {
         return Math.sqrt(Math.pow(vertex.getX() - this.getX(), 2) + Math.pow(vertex.getY() - this.getY(), 2));
     };
 
+    this.distanceToEdgeXY = function (edge) {
+        let from = edge.getFrom();
+        let to = edge.getTo();
+
+        let r = to.getY() - from.getY();
+        let s = -(to.getX() - from.getX());
+        let t = to.getX() * from.getY() - from.getX() * to.getY();
+        return Math.abs(r * this.x + s * this.y + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
+    };
+
+    this.distanceToEdgeXZ = function (edge) {
+        let from = edge.getFrom();
+        let to = edge.getTo();
+
+        let r = to.getZ() - from.getZ();
+        let s = -(to.getX() - from.getX());
+        let t = to.getX() * from.getZ() - from.getX() * to.getZ();
+        return Math.abs(r * this.x + s * this.z + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
+    };
+
+    this.distanceToEdgeZY = function (edge) {
+        let from = edge.getFrom();
+        let to = edge.getTo();
+
+        let r = to.getY() - from.getY();
+        let s = -(to.getZ() - from.getZ());
+        let t = to.getZ() * from.getY() - from.getZ() * to.getY();
+        return Math.abs(r * this.z + s * this.y + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
+    };
+
     this.distanceToEdge = function (edge) {
+        // TODO: Include Z comparison
         let from = edge.getFrom();
         let to = edge.getTo();
 
