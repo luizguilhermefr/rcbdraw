@@ -45,7 +45,14 @@ function Vertex(x, y, z) {
         return this;
     };
 
-    this.distanceTo = function (vertex) {
+    this.distanceToVertex = function (vertex) {
         return Math.sqrt(Math.pow(vertex.getX() - this.getX(), 2) + Math.pow(vertex.getY() - this.getY(), 2));
+    };
+
+    this.distanceToEdge = function (edge) {
+        let r = edge.y2 - edge.y1;
+        let s = -(edge.x2 - edge.x1);
+        let t = edge.x2 * edge.y1 - edge.x1 * edge.y2;
+        return Math.abs(r * this.x + s * this.y + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
     };
 }

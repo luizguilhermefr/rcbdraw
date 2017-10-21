@@ -27,7 +27,7 @@ function Edge (from, to) {
     }
 
     this.getX = function () {
-      return this.x;
+        return this.x;
     };
 
     this.next = function () {
