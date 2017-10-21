@@ -7,6 +7,7 @@ function Polygon (vertices) {
 
     this.setBoundaries = function () {
         let maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE, minX = Number.MAX_VALUE, minY = Number.MAX_VALUE;
+
         for (let i = 0; i < this.vertices.length; i++) {
             let v = this.vertexAt(i);
             let vx = v.getX(), vy = v.getY();

@@ -50,9 +50,12 @@ function Vertex(x, y, z) {
     };
 
     this.distanceToEdge = function (edge) {
-        let r = edge.y2 - edge.y1;
-        let s = -(edge.x2 - edge.x1);
-        let t = edge.x2 * edge.y1 - edge.x1 * edge.y2;
+        let from = edge.getFrom();
+        let to = edge.getTo();
+
+        let r = to.getY() - from.getY();
+        let s = -(to.getX() - from.getX());
+        let t = to.getX() * from.getY() - from.getX() * to.getY();
         return Math.abs(r * this.x + s * this.y + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
     };
 }

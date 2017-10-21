@@ -6,6 +6,7 @@ function Edge (from, to) {
     this.m =  this.dx / this.dy;
     this.x = setX(this.from, this.dx, this.dy);
     this.y = Math.ceil(this.from.getY());
+
     this.getFrom = function () {
         return this.from;
     };

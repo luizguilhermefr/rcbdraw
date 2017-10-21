@@ -153,8 +153,8 @@ Vue.component('panel', {
         putPoly (x, y) {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
         },
-        selectionClick (x, y, z) {
-            drawInterface.selectionClick(x, y, z);
+        selectionClick (x, y) {
+            drawInterface.selectionClick(x, y, this.h, this.v);
         },
         freehandClick (x, y) {
             drawInterface.clearSelectedPolygon(true);
@@ -282,43 +282,10 @@ Vue.component('panel', {
             this.context.setLineDash([]);
         },
         drawSelectedSolid (solid) {
-            this.context.strokeStyle = Colors.DEFAULT;
-            this.context.lineWidth = 1;
-            this.context.setLineDash([ 5, 3 ]);
-            this.context.beginPath();
-            let boundaries = solid.getBoundaries();            
-            switch (this.identifier) {
-                case 'panelFront':
-                    this.context.moveTo(boundaries.minX - 5, boundaries.minY - 5);
-                    this.context.lineTo(boundaries.minX - 5, boundaries.maxY + 5);
-                    this.context.lineTo(boundaries.maxX + 5, boundaries.maxY + 5);
-                    this.context.lineTo(boundaries.maxX + 5, boundaries.minY - 5);
-                    this.context.lineTo(boundaries.minX - 5, boundaries.minY - 5);              
-                    break;
-                case 'panelTop':                                        
-                    this.context.moveTo(boundaries.minX - 5, boundaries.minZ - 5);
-                    this.context.lineTo(boundaries.minX - 5, boundaries.maxZ + 5);
-                    this.context.lineTo(boundaries.maxX + 5, boundaries.maxZ + 5);
-                    this.context.lineTo(boundaries.maxX + 5, boundaries.minZ - 5);
-                    this.context.lineTo(boundaries.minX - 5, boundaries.minZ - 5);
-                    break;
-                case 'panelLeft':
-                    this.context.moveTo(boundaries.minZ - 5, boundaries.minY - 5);
-                    this.context.lineTo(boundaries.minZ - 5, boundaries.maxY + 5);
-                    this.context.lineTo(boundaries.maxZ + 5, boundaries.maxY + 5);
-                    this.context.lineTo(boundaries.maxZ + 5, boundaries.minY - 5);
-                    this.context.lineTo(boundaries.minZ - 5, boundaries.minY - 5);
-                    break;
-                case 'panelPerspective':
-                    this.context.moveTo(boundaries.minZ - 5, boundaries.minY - 5);
-                    this.context.lineTo(boundaries.minZ - 5, boundaries.maxY + 5);
-                    this.context.lineTo(boundaries.maxZ + 5, boundaries.maxY + 5);
-                    this.context.lineTo(boundaries.maxZ + 5, boundaries.minY - 5);
-                    this.context.lineTo(boundaries.minZ - 5, boundaries.minY - 5);
-                    break;
-            }            
-            this.context.stroke();
-            this.context.setLineDash([]);
+            let polygons = solid.getPolygons();
+            for (let i = 0; i < polygons.length; i++) {
+                this.strokePoly(polygons[i], Colors.SELECTED);
+            }
         },
         contextMenu (e) {
             let x = this.getRelativeX(e.clientX);
