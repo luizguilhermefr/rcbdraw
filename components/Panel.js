@@ -82,48 +82,18 @@ Vue.component('panel', {
             }
             this.cursor = 'pointer';
         },
-        defineXYZ (clientX, clientY, clientZ) {
-            switch (this.identifier) {
-                case 'panelFront':
-                    return {
-                        x: this.getRelativeX(clientX),
-                        y: this.getRelativeY(clientY),     
-                        z: -1
-                    }
-                    break;
-                case 'panelTop':
-                    return {
-                        x: this.getRelativeX(clientX),
-                        y: -1,
-                        z: this.getRelativeY(clientY)
-                    }
-                    break;
-                case 'panelLeft':
-                    return {
-                        x: -1,
-                        z: this.getRelativeX(clientX),
-                        y: this.getRelativeY(clientY)
-                    }
-                    break;
-                case 'panelPerspective':
-                    return {
-                        x: -1,
-                        z: this.getRelativeX(clientX),
-                        y: this.getRelativeY(clientY)
-                    }
-                    break;
-            }
-        },
-        onClick (e) {            
-            let temp = this.defineXYZ(e.clientX, e.clientY, e.clientZ);
-            let x = temp.x, y = temp.y, z = temp.z;     
+        onClick (e) {
+            let x, y;
+
+            x = this.getRelativeX(e.clientX);
+            y = this.getRelativeY(e.clientY);
 
             switch (this.mode) {
                 case 1:
-                    this.putPoly(x, y, z);
+                    this.putPoly(x, y);
                     break;
                 case 2:
-                    this.selectionClick(x, y, z);
+                    this.selectionClick(x, y);
                     break;
                 case 3:
                     this.freehandClick(x, y);
@@ -180,8 +150,8 @@ Vue.component('panel', {
                 this.dragging = false;
             }
         },
-        putPoly (x, y, z) {
-            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, z, this.h, this.v);
+        putPoly (x, y) {
+            drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
         },
         selectionClick (x, y, z) {
             drawInterface.selectionClick(x, y, z);
@@ -233,7 +203,7 @@ Vue.component('panel', {
             for (let j = 1; j < polygon.countVertices(); j++) {
                 let vertex = polygon.vertexAt(j);
                 if (this.h === 'x' && this.v === 'y') { // front
-                    coordX =vertex.getX();
+                    coordX = vertex.getX();
                     coordY = vertex.getY();
                 } else if (this.h === 'x' && this.v === 'z') { // top
                     coordX = vertex.getX();
