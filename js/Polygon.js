@@ -1,5 +1,6 @@
 function Polygon (vertices) {
     this.vertices = vertices;
+    this.edges = [];
 
     this.getVertices = function () {
         return this.vertices;
@@ -7,6 +8,7 @@ function Polygon (vertices) {
 
     this.setBoundaries = function () {
         let maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE, minX = Number.MAX_VALUE, minY = Number.MAX_VALUE;
+
         for (let i = 0; i < this.vertices.length; i++) {
             let v = this.vertexAt(i);
             let vx = v.getX(), vy = v.getY();
@@ -105,7 +107,7 @@ function Polygon (vertices) {
         center.z /= area;       
 
         return new Vertex(center.x, center.y, center.z);        
-    }
+    };
     
     this.center = this.setCenter();
 
@@ -295,6 +297,7 @@ function Polygon (vertices) {
     };
 
     this.createEdges = function () {
+        this.edges = [];
         for (let i = 0; i < this.vertices.length - 1; i++) {
             if(this.vertices[i].getY() < this.vertices[i + 1].getY()) {
                 this.edges.push(new Edge(this.vertices[i], this.vertices[i + 1]));

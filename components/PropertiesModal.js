@@ -36,17 +36,17 @@ Vue.component('properties-modal', {
             this.mustStroke = true;
         },
         submit () {
-            drawInterface.selectedPolygon.polygon.setStrokeColor(this.stroke);
-            drawInterface.selectedPolygon.polygon.setFillColor(this.fill);
-            drawInterface.selectedPolygon.polygon.setMustStroke(this.mustStroke);
-            drawInterface.selectedPolygon.polygon.setMustFill(this.mustFill);
+            drawInterface.selectedSolid.solid.setStrokeColor(this.stroke);
+            drawInterface.selectedSolid.solid.setFillColor(this.fill);
+            drawInterface.selectedSolid.solid.setMustStroke(this.mustStroke);
+            drawInterface.selectedSolid.solid.setMustFill(this.mustFill);
             drawInterface.redraw();
         },
         setValues () {
-            this.stroke = drawInterface.selectedPolygon.polygon.getStrokeColor();
-            this.fill = drawInterface.selectedPolygon.polygon.getFillColor();
-            this.mustStroke = drawInterface.selectedPolygon.polygon.shouldStroke();
-            this.mustFill = drawInterface.selectedPolygon.polygon.shouldFill();
+            this.stroke = drawInterface.selectedSolid.solid.getStrokeColor();
+            this.fill = drawInterface.selectedSolid.solid.getFillColor();
+            this.mustStroke = drawInterface.selectedSolid.solid.shouldStroke();
+            this.mustFill = drawInterface.selectedSolid.solid.shouldFill();
         }
     }
 });
