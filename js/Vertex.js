@@ -34,7 +34,7 @@ function Vertex(x, y, z) {
     };
 
     this.clone = function () {
-        return new Vertex(this.x, this.y);
+        return new Vertex(this.x, this.y, this.z);
     };
 
     this.invert = function () {
@@ -45,7 +45,20 @@ function Vertex(x, y, z) {
         return this;
     };
 
+    this.distanceToVertexXY = function (vertex) {
+        return Math.sqrt(Math.pow(vertex.getX() - this.getX(), 2) + Math.pow(vertex.getY() - this.getY(), 2));
+    };
+
+    this.distanceToVertexXZ = function (vertex) {
+        return Math.sqrt(Math.pow(vertex.getX() - this.getX(), 2) + Math.pow(vertex.getZ() - this.getZ(), 2));
+    };
+
+    this.distanceToVertexZY = function (vertex) {
+        return Math.sqrt(Math.pow(vertex.getZ() - this.getZ(), 2) + Math.pow(vertex.getY() - this.getY(), 2));
+    };
+
     this.distanceToVertex = function (vertex) {
+        // TODO: Include Z comparison
         return Math.sqrt(Math.pow(vertex.getX() - this.getX(), 2) + Math.pow(vertex.getY() - this.getY(), 2));
     };
 
