@@ -23,14 +23,11 @@
         <about-modal></about-modal>
         <toolbar></toolbar>
 
-        <panel ref="panelFront" identifier="panelFront" title="front" h="x" v="y">
-        </panel>
+        <panel ref="panelFront" identifier="panelFront" title="front" h="x" v="y"></panel>
 
-        <panel ref="panelTop" identifier="panelTop" title="top" h="x" v="z">
-        </panel>
+        <panel ref="panelTop" identifier="panelTop" title="top" h="x" v="z"></panel>
 
-        <panel ref="panelLeft" identifier="panelLeft" title="left" h="z" v="y">
-        </panel>
+        <panel ref="panelLeft" identifier="panelLeft" title="left" h="z" v="y"></panel>
 
         <panel ref="panelPerspective" identifier="panelPerspective" readonly="true" title="perspective"></panel>
 
@@ -71,8 +68,8 @@
             drawInterface = new Interface();
 
             dimensions = {
-                width: (window.innerWidth - 310) * 0.5,
-                height: (window.innerHeight * 0.92) * 0.5
+                width: (window.innerWidth - 310) / 2,
+                height: (window.innerHeight * 0.92) / 2
             };
 
             Array.from(document.getElementsByClassName('canvas')).forEach(function(panel) {
@@ -84,7 +81,7 @@
                 if (event.keyCode === 27) { // esc
                     escape();
                 } else if (event.keyCode === 46) {
-                    drawInterface.deletePolygon(); // delete
+                    drawInterface.deleteSolid(); // delete
                 }
             }, false);
         };
@@ -186,12 +183,12 @@
             vue.$refs.panelLeft.expectShear(direction);
         }
 
-        function deletePolygon() {
+        function deleteSolid() {
             if (!drawInterface.isSomethingSelected()) {
                 alert('Nenhum objeto selecionado.');
                 return;
             }
-            drawInterface.deletePolygon();
+            drawInterface.deleteSolid();
         }
 
         function bringForward() {
