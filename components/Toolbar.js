@@ -33,7 +33,7 @@ Vue.component('toolbar', {
                     icon: 'icons/delete.png',
                     enabled: true,
                     action () {
-                        deletePolygon();
+                        deleteSolid();
                     }
                 },
                 {

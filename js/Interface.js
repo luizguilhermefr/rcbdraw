@@ -216,12 +216,12 @@ function Interface () {
         this.redraw();
     };
 
-    this.isInsideBoundaryTolerance = function (point, boundary, h, v) {
+    this.isInsideBoundaryTolerance = function (vertex, boundary, h, v) {
         let tolerance = 20;
 
-        let insideX = !((point.getX() > boundary.maxX + tolerance) && (point.getX() < boundary.minX - tolerance));
-        let insideY = !((point.getY() > boundary.maxY + tolerance) && (point.getY() < boundary.minY - tolerance));
-        let insideZ = !((point.getZ() > boundary.maxZ + tolerance) && (point.getZ() < boundary.minZ - tolerance));
+        let insideX = (vertex.getX() < (boundary.maxX + tolerance)) && (vertex.getX() > (boundary.minX - tolerance));
+        let insideY = (vertex.getY() < (boundary.maxY + tolerance)) && (vertex.getY() > (boundary.minY - tolerance));
+        let insideZ = (vertex.getZ() < (boundary.maxZ + tolerance)) && (vertex.getZ() > (boundary.minZ - tolerance));
 
         if (h === 'x' && v === 'y') { // front
             return insideX && insideY;
@@ -316,8 +316,8 @@ function Interface () {
             poly: -1,
             distance: Number.POSITIVE_INFINITY
         };
-
         let point;
+
         if (h === 'x' && v === 'y') { // front
             point = new Vertex(x, y, 0);
         } else if (h === 'x' && v === 'z') { // top
@@ -341,6 +341,7 @@ function Interface () {
         }
 
         if (lowestDistance.distance < 10) {
+            console.log('changed');
             this.selectedSolid = {
                 index: lowestDistance.solid,
                 solid: solids[ lowestDistance.solid ]

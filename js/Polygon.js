@@ -7,31 +7,30 @@ function Polygon (vertices) {
     };
 
     this.setBoundaries = function () {
-        let maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE, minX = Number.MAX_VALUE, minY = Number.MAX_VALUE;
+        let maxX = Number.MIN_VALUE;
+        let minX = Number.MAX_VALUE;
+        let maxY = Number.MIN_VALUE;
+        let minY = Number.MAX_VALUE;
+        let maxZ = Number.MIN_VALUE;
+        let minZ = Number.MAX_VALUE;
 
         for (let i = 0; i < this.vertices.length; i++) {
             let v = this.vertexAt(i);
-            let vx = v.getX(), vy = v.getY();
-            if (vx > maxX) {
-                maxX = vx;
-            }
-            if (vx < minX) {
-                minX = vx;
-            }
-            if (vy > maxY) {
-                maxY = vy;
-            }
-            if (vy < minY) {
-                minY = vy;
-            }
+            let vx = v.getX()
+            let vy = v.getY();
+            let vz = v.getZ();
+
+            maxX = vx > maxX ? vx : maxX;
+            minX = vx < minX ? vx : minX;
+
+            maxY = vy > maxY ? vy : maxY;
+            minY = vy < minY ? vy : minY;
+
+            maxZ = vz > maxZ ? vz : maxZ;
+            minZ = vz < minZ ? vz : minZ;
         }
 
-        return {
-            maxX: maxX,
-            minX: minX,
-            maxY: maxY,
-            minY: minY
-        };
+        return { maxX, minX, maxY, minY, maxZ, minZ };
     };
 
     this.getBoundaries = function () {
