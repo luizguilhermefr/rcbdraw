@@ -1,6 +1,7 @@
 function Polygon(vertices) {
     this.vertices = vertices;
     this.edges = [];
+    this.boundaries = null;
 
     this.getVertices = function() {
         return this.vertices;
@@ -30,8 +31,10 @@ function Polygon(vertices) {
             minZ = vz < minZ ? vz : minZ;
         }
 
-        return { maxX, minX, maxY, minY, maxZ, minZ };
+        this.boundaries = { maxX, minX, maxY, minY, maxZ, minZ };
     };
+    
+    this.setBoundaries();
 
     this.getBoundaries = function() {
         return this.boundaries;
@@ -44,8 +47,6 @@ function Polygon(vertices) {
     this.vertexAt = function(index) {
         return this.vertices[index];
     };
-
-    this.boundaries = this.setBoundaries();
 
     this.closestPoint = function(vertex) {
         let closestPoint = {
@@ -203,50 +204,5 @@ function Polygon(vertices) {
             nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement));
         });
         return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
-    };
-
-    this.createEdges = function() {
-        edges = [];
-        for (let i = 0; i < this.vertices.length - 1; i++) {
-            if (this.vertices[i].getY() < this.vertices[i + 1].getY()) {
-                edges.push(new Edge(this.vertices[i], this.vertices[i + 1]));
-            } else {
-                edges.push(new Edge(this.vertices[i + 1], this.vertices[i]));
-            }
-        }
-
-        return edges;
-    };
-
-    this.edges = this.createEdges();
-
-    this.getIntersections = function(active, value, h, v) {
-        for (let j = this.edges.length - 1; j >= 0; j--) {
-            let currentEdge = this.edges[j];
-            valid = v === 'y' ? currentEdge.isValidY(value) : currentEdge.isValidZ(value);
-            if (valid) {
-                this.edges.splice(j, 1);
-                active.push(currentEdge);
-            }
-        }
-
-        active.sort(function(a, b) {
-            return h === 'x' ? a.x - b.x : a.z - b.z;
-        });
-
-        return active;
-    };
-
-    this.addValueM = function(intersections, h, v) {
-        intersections = intersections.filter(function(a) {
-            if (h === 'x' && v === 'y') { // front
-                return a.nextXY();
-            } else if (h === 'x' && v === 'z') { // top
-                return a.nextXZ();
-            } else { // left
-                return a.nextZY();
-            }
-        });
-        return intersections;
     };
 }

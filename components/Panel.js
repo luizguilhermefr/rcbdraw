@@ -222,39 +222,8 @@ Vue.component('panel', {
             this.context.stroke();
         },
         fillPoly(polygon, color) {
-            let intersections = [];
-            this.context.strokeStyle = color;
-            this.context.lineWidth = 1;
-            let boundaries = polygon.getBoundaries();
-            let max, min;
-
-            if (this.h === 'x' && this.v === 'y') { // front
-                max = boundaries.maxY;
-                min = boundaries.minY;
-            } else if (this.h === 'x' && this.v === 'z') { // top
-                max = boundaries.maxZ;
-                min = boundaries.minZ;
-            } else { // left
-                max = boundaries.maxY;
-                min = boundaries.minY;
-            }
-
-            for (let value = min; value <= max; value++) {
-                intersections = polygon.getIntersections(intersections, value, this.h, this.v);
-                this.context.beginPath();
-                for (let d = 0; d < intersections.length - 1; d += 2) {
-                    if (this.h === 'x') { // front / top
-                        this.context.moveTo(intersections[d].getX() + this.canvas.width * 0.5, value + this.canvas.height * 0.5);
-                        this.context.lineTo(intersections[d + 1].getX() + this.canvas.width * 0.5, value + this.canvas.height * 0.5);
-                    } else { // left
-                        this.context.moveTo(intersections[d].getZ() + this.canvas.width * 0.5, value + this.canvas.height * 0.5);
-                        this.context.lineTo(intersections[d + 1].getZ() + this.canvas.width * 0.5, value + this.canvas.height * 0.5);
-                    }
-                }
-                
-                this.context.stroke();
-                intersections = polygon.addValueM(intersections, this.h, this.v);
-            }
+            let filler = new PolyFill(polygon, this.h, this.v);
+            filler.run(this.context, color);
         },
         drawTemporaryPolygon() {
             if (this.freeHandDots.length > 1) {

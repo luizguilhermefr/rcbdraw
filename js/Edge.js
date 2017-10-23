@@ -3,7 +3,11 @@ function Edge (from, to) {
     this.to = to;
     this.dx = (this.from.getX() - this.to.getX());
     this.dy = (this.from.getY() - this.to.getY());
-    this.m =  this.dx / this.dy;
+    this.dz = (this.from.getZ() - this.to.getZ());
+    this.mxy =  this.dx / this.dy;
+    this.mxz =  this.dx / this.dz;
+    this.mzy =  this.dz / this.dy;
+
     this.x = setX(this.from, this.dx, this.dy);
     this.y = Math.ceil(this.from.getY());
 
@@ -22,6 +26,8 @@ function Edge (from, to) {
     this.setTo = function (vertex) {
         this.to = vertex;
     };
+
+    /* -- */
 
     function setX (from,dx,dy) {
         return from.getX() + (dx * (Math.ceil(from.getY()) - from.getY()) / dy);
@@ -48,6 +54,8 @@ function Edge (from, to) {
         this.y++;
         return this.y < this.to.getY();
     };
+
+    /* -- */
 
     this.isValidY = function (y) {
         return (y >= this.from.getY() && y < this.to.getY());
