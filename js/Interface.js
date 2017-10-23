@@ -341,7 +341,6 @@ function Interface () {
         }
 
         if (lowestDistance.distance < 10) {
-            console.log('changed');
             this.selectedSolid = {
                 index: lowestDistance.solid,
                 solid: solids[ lowestDistance.solid ]
