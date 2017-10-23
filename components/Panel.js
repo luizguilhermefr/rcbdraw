@@ -183,9 +183,8 @@ Vue.component('panel', {
             return Math.round(y - this.canvas.offsetTop - (this.canvas.height * 0.5));
         },
         strokePoly(polygon, color, autoClose = true) {
-            this.context.strokeStyle = color;
-            this.context.beginPath();
             let coordX, coordY;
+
             if (this.h === 'x' && this.v === 'y') { // front
                 coordX = polygon.vertexAt(0).getX();
                 coordY = polygon.vertexAt(0).getY();
@@ -196,7 +195,11 @@ Vue.component('panel', {
                 coordX = polygon.vertexAt(0).getZ();
                 coordY = polygon.vertexAt(0).getY();
             }
+
+            this.context.strokeStyle = color;
+            this.context.beginPath();
             this.context.moveTo(coordX + this.canvas.width * 0.5, coordY + this.canvas.height * 0.5);
+            
             for (let j = 1; j < polygon.countVertices(); j++) {
                 let vertex = polygon.vertexAt(j);
                 if (this.h === 'x' && this.v === 'y') { // front
@@ -211,12 +214,14 @@ Vue.component('panel', {
                 }
                 this.context.lineTo(coordX + this.canvas.width * 0.5, coordY + this.canvas.height * 0.5);
             }
+
             if (autoClose) {
                 this.context.closePath();
             }
+            
             this.context.stroke();
         },
-        fillPoly(polygon) {
+        fillPoly(polygon, color) {
             polygon.createEdges();
             let minY = polygon.getBoundaries().minY;
             let maxY = polygon.getBoundaries().maxY;
