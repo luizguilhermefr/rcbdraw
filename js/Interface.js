@@ -206,12 +206,8 @@ function Interface() {
     };
 
     this.convertTemporaryToPolygon = function(freeHandDots) {
-        let tempVertices = [];
-        for (let i = 0; i < freeHandDots.length - 1; i++) {
-            tempVertices.push(new Vertex(freeHandDots[i].x, freeHandDots[i].y));
-        }
-        tempVertices.push(new Vertex(freeHandDots[0].x, freeHandDots[0].y));
-        this.scene.addSolid(new Solid([new Polygon(tempVertices)]));
+        freeHandDots.push(freeHandDots[0].clone());
+        this.scene.addSolid(new Solid([new Polygon(freeHandDots)]));
         this.scene.makeDirty();
         this.redraw();
     };
@@ -349,7 +345,6 @@ function Interface() {
         }
 
         if (lowestDistance.distance < 10) {
-            console.log('changed');
             this.selectedSolid = {
                 index: lowestDistance.solid,
                 solid: solids[lowestDistance.solid]
