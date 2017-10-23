@@ -49,9 +49,53 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         return this.mustStroke;
     };
 
-    this.translate = function(vertex, h, v) {
+    this.setCenter = function() {
+        let values = {
+            minX: Number.MAX_VALUE,
+            minY: Number.MAX_VALUE,
+            minZ: Number.MAX_VALUE,
+            maxX: Number.MIN_VALUE,
+            maxY: Number.MIN_VALUE,
+            maxZ: Number.MIN_VALUE
+        };
         for (let i = 0; i < this.polygons.length; i++) {
-            polygons[i].translate(vertex, h, v);
+            let boundaries = polygons[i].getBoundaries();
+            values.maxX = boundaries.maxX > values.maxX ? boundaries.maxX : values.maxX;
+            values.minX = boundaries.minX < values.minX ? boundaries.minX : values.minX;
+
+            values.maxY = boundaries.maxY > values.maxY ? boundaries.maxY : values.maxY;
+            values.minY = boundaries.minY < values.minY ? boundaries.minY : values.minY;
+
+            values.maxZ = boundaries.maxZ > values.maxZ ? boundaries.maxZ : values.maxZ;
+            values.minZ = boundaries.minZ < values.minZ ? boundaries.minZ : values.minZ;
+        }
+
+        let center = {
+            x: (values.maxX - values.minX) / 2,
+            y: (values.maxY - values.minY) / 2,
+            z: (values.maxZ - values.minZ) / 2
+        };
+
+        return center;
+    };
+
+    this.center = this.setCenter();
+
+    this.getCenter = function() {
+        return this.center;
+    };
+
+    this.getDistance = function(vertex, center) {
+        return new Vertex(center.x - vertex.getX(), center.y - vertex.getY(), center.z - vertex.getZ());
+    };
+
+    this.translate = function(vertex, h, v) {
+        let center = this.getCenter();
+
+        let distanceMove = this.getDistance(vertex, center);
+
+        for (let i = 0; i < this.polygons.length; i++) {
+            polygons[i].translate(distanceMove);
         }
     };
 
