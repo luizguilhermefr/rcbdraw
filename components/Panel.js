@@ -223,8 +223,17 @@ Vue.component('panel', {
         },
         fillPoly(polygon, color) {
             polygon.createEdges();
-            let minY = polygon.getBoundaries().minY;
-            let maxY = polygon.getBoundaries().maxY;
+            let boundaries = polygon.getBoundaries();
+            if (this.h === 'x' && this.v === 'y') { // front
+                maxY = boundaries.maxY;
+                minY = boundaries.minY;
+            } else if (this.h === 'x' && this.v === 'z') { // top
+                maxY = boundaries.maxZ;
+                minY = boundaries.minZ;
+            } else { // left
+                maxY = boundaries.maxY;
+                minY = boundaries.minY;
+            }
             let intersections = [];
             this.context.strokeStyle = color;
             this.context.lineWidth = 1;
@@ -232,8 +241,8 @@ Vue.component('panel', {
                 polygon.intersections(intersections, y);
                 this.context.beginPath();
                 for (let d = 0; d < intersections.length - 1; d += 2) {
-                    this.context.moveTo(intersections[d].getX(), y);
-                    this.context.lineTo(intersections[d + 1].getX(), y);
+                    this.context.moveTo(intersections[d].getX() + this.canvas.width * 0.5, y + this.canvas.height * 0.5);
+                    this.context.lineTo(intersections[d + 1].getX() + this.canvas.width * 0.5, y + this.canvas.height * 0.5);
                 }
                 this.context.stroke();
                 intersections = polygon.addValueM(intersections);

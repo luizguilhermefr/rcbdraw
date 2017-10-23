@@ -46,18 +46,18 @@ function Interface() {
         vue.$refs.panelPerspective.clearPanel();
     };
 
-    this.strokePoly = function(polygon) {
-        vue.$refs.panelFront.strokePoly(polygon);
-        vue.$refs.panelTop.strokePoly(polygon);
-        vue.$refs.panelLeft.strokePoly(polygon);
-        vue.$refs.panelPerspective.strokePoly(polygon);
+    this.strokePoly = function(polygon, color) {
+        vue.$refs.panelFront.strokePoly(polygon, color);
+        vue.$refs.panelTop.strokePoly(polygon, color);
+        vue.$refs.panelLeft.strokePoly(polygon, color);
+        vue.$refs.panelPerspective.strokePoly(polygon, color);
     };
 
-    this.fillPoly = function(polygon) {
-        vue.$refs.panelFront.fillPoly(polygon);
-        vue.$refs.panelTop.fillPoly(polygon);
-        vue.$refs.panelLeft.fillPoly(polygon);
-        vue.$refs.panelPerspective.fillPoly(polygon);
+    this.fillPoly = function(polygon, color) {
+        vue.$refs.panelFront.fillPoly(polygon, color);
+        vue.$refs.panelTop.fillPoly(polygon, color);
+        vue.$refs.panelLeft.fillPoly(polygon, color);
+        vue.$refs.panelPerspective.fillPoly(polygon, color);
     };
 
     this.drawTemporaryPolygon = function() {
