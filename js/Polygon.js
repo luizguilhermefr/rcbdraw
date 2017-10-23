@@ -66,6 +66,7 @@ function Polygon(vertices) {
             area.left += (this.vertices[i].getZ() * this.vertices[i + 1].getY()) -
                 (this.vertices[i + 1].getZ() * this.vertices[i].getY());
         }
+
         area.front /= 2;
         area.top /= 2;
         area.left /= 2;
@@ -73,24 +74,16 @@ function Polygon(vertices) {
         return area;
     };
 
-    this.setCenter = function() {
-        let area = this.getArea() * 6;
+    this.setCenter = function(h, v) {
+        let area = this.getArea();
+        area.front *= 6;
+        area.top *= 6;
+        area.left *= 6;
+
         let center = {
-            front: {
-                x: 0,
-                y: 0,
-                z: 0
-            },
-            top: {
-                x: 0,
-                y: 0,
-                z: 0
-            },
-            left: {
-                x: 0,
-                y: 0,
-                z: 0
-            }
+            front: { x: 0, y: 0, z: 0 },
+            top: { x: 0, y: 0, z: 0 },
+            left: { x: 0, y: 0, z: 0 }
         };
 
         for (let i = 0; i < this.vertices.length - 1; i++) {
@@ -101,9 +94,17 @@ function Polygon(vertices) {
             let temp3 = (this.vertices[i].getZ() * this.vertices[i + 1].getY()) -
                 (this.vertices[i + 1].getZ() * this.vertices[i].getY());
 
-            center.x += (this.vertices[i].getX() + this.vertices[i + 1].getX()) * temp1;
-            center.y += (this.vertices[i].getY() + this.vertices[i + 1].getY()) * temp2;
-            center.z += (this.vertices[i].getZ() + this.vertices[i + 1].getZ()) * temp3;
+            center.front.x += (this.vertices[i].getX() + this.vertices[i + 1].getX()) * temp1;
+            center.front.y += (this.vertices[i].getY() + this.vertices[i + 1].getY()) * temp1;
+            center.front.z += (this.vertices[i].getZ() + this.vertices[i + 1].getZ()) * temp1;
+
+            center.top.x += (this.vertices[i].getX() + this.vertices[i + 1].getX()) * temp2;
+            center.top.y += (this.vertices[i].getY() + this.vertices[i + 1].getY()) * temp2;
+            center.top.z += (this.vertices[i].getZ() + this.vertices[i + 1].getZ()) * temp2;
+
+            center.left.x += (this.vertices[i].getX() + this.vertices[i + 1].getX()) * temp3;
+            center.left.y += (this.vertices[i].getY() + this.vertices[i + 1].getY()) * temp3;
+            center.left.z += (this.vertices[i].getZ() + this.vertices[i + 1].getZ()) * temp3;
         }
 
         center.front.x /= area.front;
@@ -154,10 +155,16 @@ function Polygon(vertices) {
         }
     };
 
-    this.translate = function(vertex) {
+    this.translate = function(vertex, h, v) {
         let currentCenter, vertexDiferent;
 
-        currentCenter = this.getCenter();
+        if (h === 'x' && v === 'y') { // front
+            currentCenter = this.getCenter().front;
+        } else if (h === 'x' && v === 'z') { // top
+            currentCenter = this.getCenter().top;
+        } else { // left
+            currentCenter = this.getCenter().left;
+        }
 
         this.translatePoint(new Vertex(currentCenter.getX() - vertex.getX(), currentCenter.getY() - vertex.getY(), currentCenter.getZ() - vertex.getZ()));
         this.center = this.setCenter();

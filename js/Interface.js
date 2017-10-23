@@ -241,7 +241,7 @@ function Interface() {
         else
             newPoint = new Vertex(0, x, y);
 
-        this.selectedSolid.solid.translate(newPoint);
+        this.selectedSolid.solid.translate(newPoint, h, v);
         this.scene.makeDirty();
         this.redraw();
     };

@@ -49,9 +49,9 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         return this.mustStroke;
     };
 
-    this.translate = function(vertex) {
+    this.translate = function(vertex, h, v) {
         for (let i = 0; i < this.polygons.length; i++) {
-            polygons[i].translate(vertex);
+            polygons[i].translate(vertex, h, v);
         }
     };
 
