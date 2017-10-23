@@ -27,8 +27,8 @@ function Interface () {
             }
         }
         this.drawTemporaryPolygon();
-        this.drawSelectedSolid();
         this.drawAxis();
+        this.drawSelectedSolid();
     };
 
     this.resetRotationClick = function () {
@@ -216,20 +216,20 @@ function Interface () {
         this.redraw();
     };
 
-    this.isInsideBoundaryTolerance = function (point, boundary) {
+    this.isInsideBoundaryTolerance = function (vertex, boundary, h, v) {
         let tolerance = 20;
 
-        if (point.getX() > boundary.maxX + tolerance) {
-            return false;
-        }
-        if (point.getX() < boundary.minX - tolerance) {
-            return false;
-        }
-        if (point.getY() > boundary.maxY + tolerance) {
-            return false;
-        }
+        let insideX = (vertex.getX() < (boundary.maxX + tolerance)) && (vertex.getX() > (boundary.minX - tolerance));
+        let insideY = (vertex.getY() < (boundary.maxY + tolerance)) && (vertex.getY() > (boundary.minY - tolerance));
+        let insideZ = (vertex.getZ() < (boundary.maxZ + tolerance)) && (vertex.getZ() > (boundary.minZ - tolerance));
 
-        return point.getY() >= boundary.minY - tolerance;
+        if (h === 'x' && v === 'y') { // front
+            return insideX && insideY;
+        } else if (h === 'x' && v === 'z') { // top
+            return insideX && insideZ;
+        } else { // left
+            return insideZ && insideY;
+        }
     };
 
     this.translateClick = function (x, y, z) {               
@@ -316,30 +316,32 @@ function Interface () {
             poly: -1,
             distance: Number.POSITIVE_INFINITY
         };
-        let point = new Vertex(x, y);
+        let point;
+
+        if (h === 'x' && v === 'y') { // front
+            point = new Vertex(x, y, 0);
+        } else if (h === 'x' && v === 'z') { // top
+            point = new Vertex(x, 0, y);
+        } else { // left
+            point = new Vertex(0,y,x);
+        }
 
         for (let n = 0; n < solids.length; n++) {
             let polygons = solids[n].getPolygons();
             for (let i = 0; i < polygons.length; i++) {
-                if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries())) {
-                    for (let j = 0; j < polygons[ i ].countVertices() - 1; j++) {
-                        let from = polygons[ i ].vertexAt(j);
-                        let to = polygons[ i ].vertexAt(j + 1);
-                        let edge = new Edge(from, to);
-                        let currentDistance = point.distanceToEdge(edge);
-                        if (currentDistance < lowestDistance.distance) {
-                            lowestDistance = {
-                                solid: n,
-                                poly: i,
-                                distance: currentDistance
-                            };
-                        }
+                if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries(), h, v)) {
+                    let distance = polygons[i].closestEdge(point, h, v);
+                    if (distance.distance < lowestDistance.distance) {
+                        lowestDistance.solid = n;
+                        lowestDistance.poly = polygons[i];
+                        lowestDistance.distance = distance.distance;
                     }
                 }
             }
         }
 
         if (lowestDistance.distance < 10) {
+            console.log('changed');
             this.selectedSolid = {
                 index: lowestDistance.solid,
                 solid: solids[ lowestDistance.solid ]

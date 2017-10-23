@@ -59,7 +59,7 @@ Vue.component('element-right-click', {
                     title: 'Excluir',
                     enabled: true,
                     action () {
-                        deletePolygon();
+                        deleteSolid();
                     }
                 },
                 {

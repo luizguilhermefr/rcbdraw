@@ -7,31 +7,30 @@ function Polygon (vertices) {
     };
 
     this.setBoundaries = function () {
-        let maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE, minX = Number.MAX_VALUE, minY = Number.MAX_VALUE;
+        let maxX = Number.MIN_VALUE;
+        let minX = Number.MAX_VALUE;
+        let maxY = Number.MIN_VALUE;
+        let minY = Number.MAX_VALUE;
+        let maxZ = Number.MIN_VALUE;
+        let minZ = Number.MAX_VALUE;
 
         for (let i = 0; i < this.vertices.length; i++) {
             let v = this.vertexAt(i);
-            let vx = v.getX(), vy = v.getY();
-            if (vx > maxX) {
-                maxX = vx;
-            }
-            if (vx < minX) {
-                minX = vx;
-            }
-            if (vy > maxY) {
-                maxY = vy;
-            }
-            if (vy < minY) {
-                minY = vy;
-            }
+            let vx = v.getX()
+            let vy = v.getY();
+            let vz = v.getZ();
+
+            maxX = vx > maxX ? vx : maxX;
+            minX = vx < minX ? vx : minX;
+
+            maxY = vy > maxY ? vy : maxY;
+            minY = vy < minY ? vy : minY;
+
+            maxZ = vz > maxZ ? vz : maxZ;
+            minZ = vz < minZ ? vz : minZ;
         }
 
-        return {
-            maxX: maxX,
-            minX: minX,
-            maxY: maxY,
-            minY: minY
-        };
+        return { maxX, minX, maxY, minY, maxZ, minZ };
     };
 
     this.getBoundaries = function () {
@@ -121,13 +120,40 @@ function Polygon (vertices) {
             vertex: null
         };
         this.vertices.forEach(function (v) {
-            let distance = v.distanceTo(vertex);
+            let distance = v.distanceToVertex(vertex);
             if (distance < closestPoint.distance) {
                 closestPoint.distance = distance;
                 closestPoint.vertex = v;
             }
         });
         return closestPoint.vertex;
+    };
+
+    this.closestEdge = function (vertex, h, v) {
+        let closestEdge = {
+            distance: Number.POSITIVE_INFINITY,
+            index: -1
+        };
+        for (let i = 0; i < this.countVertices() - 1; i++) {
+            let from = this.vertexAt(i);
+            let to = this.vertexAt(i + 1);
+            let currentDistance;
+            if (h === 'x' && v === 'y') { // front
+                currentDistance = vertex.distanceToEdgeXY(new Edge(from, to));
+            } else if (h === 'x' && v === 'z') { // top
+                currentDistance = vertex.distanceToEdgeXZ(new Edge(from, to));
+            } else { // left
+                currentDistance = vertex.distanceToEdgeZY(new Edge(from, to));
+            }
+            if (currentDistance < closestEdge.distance) {
+                closestEdge = {
+                    distance: currentDistance,
+                    index: i
+                };
+            }
+        }
+
+        return closestEdge;
     };
 
     this.translatePoint = function (vertex, panel) {                

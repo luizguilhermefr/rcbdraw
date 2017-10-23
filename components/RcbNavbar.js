@@ -173,7 +173,7 @@ Vue.component('rcb-navbar', {
                             enabled: true,
                             icon: 'fa fa-trash-o',
                             action () {
-                                deletePolygon();
+                                deleteSolid();
                             }
                         },
                         {

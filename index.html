@@ -102,7 +102,7 @@
             if (event.keyCode === 27) { // esc
                 escape();
             } else if (event.keyCode === 46) {
-                drawInterface.deletePolygon(); // delete
+                drawInterface.deleteSolid(); // delete
             }
         }, false);
     };
@@ -204,12 +204,12 @@
         vue.$refs.panelLeft.expectShear(direction);
     }
 
-    function deletePolygon () {
+    function deleteSolid () {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
             return;
         }
-        drawInterface.deletePolygon();
+        drawInterface.deleteSolid();
     }
 
     function bringForward () {

@@ -11,13 +11,12 @@ function Scene () {
     };
 
     this.removeSolid = function (index) {
-        for (let i = 0; i < this.solids.length; i++) {
-            if (i === id) {
-                this.solids.splice(index, 1);
-                this.dirty = true;
-                return true;
-            }
+        let removed = this.solids.splice(index, 1);
+        if (removed.length > 0) {
+            this.dirty = true;
+            return true;
         }
+
         return false;
     };
 
