@@ -31,12 +31,33 @@ function Edge (from, to) {
         return this.x;
     };
 
-    this.next = function () {
+    this.nextXY = function () {
         this.x += this.m;
         this.y++;
         return this.y < this.to.getY();
     };
+
+    this.nextXZ = function () {
+        this.x += this.m;
+        this.z++;
+        return this.z < this.to.getZ();
+    };
+
+    this.nextZY = function () {
+        this.z += this.m;
+        this.y++;
+        return this.y < this.to.getY();
+    };
+
     this.isValidY = function (y) {
         return (y >= this.from.getY() && y < this.to.getY());
+    }
+
+    this.isValidX = function (x) {
+        return (x >= this.from.getX() && x < this.to.getX());
+    }
+
+    this.isValidZ = function (z) {
+        return (z >= this.from.getZ() && z < this.to.getZ());
     }
 }

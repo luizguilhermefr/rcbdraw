@@ -222,30 +222,38 @@ Vue.component('panel', {
             this.context.stroke();
         },
         fillPoly(polygon, color) {
-            polygon.createEdges();
-            let boundaries = polygon.getBoundaries();
-            if (this.h === 'x' && this.v === 'y') { // front
-                maxY = boundaries.maxY;
-                minY = boundaries.minY;
-            } else if (this.h === 'x' && this.v === 'z') { // top
-                maxY = boundaries.maxZ;
-                minY = boundaries.minZ;
-            } else { // left
-                maxY = boundaries.maxY;
-                minY = boundaries.minY;
-            }
             let intersections = [];
             this.context.strokeStyle = color;
             this.context.lineWidth = 1;
-            for (let y = minY; y <= maxY; y++) {
-                polygon.intersections(intersections, y);
+            let boundaries = polygon.getBoundaries();
+            let max, min;
+
+            if (this.h === 'x' && this.v === 'y') { // front
+                max = boundaries.maxY;
+                min = boundaries.minY;
+            } else if (this.h === 'x' && this.v === 'z') { // top
+                max = boundaries.maxZ;
+                min = boundaries.minZ;
+            } else { // left
+                max = boundaries.maxY;
+                min = boundaries.minY;
+            }
+
+            for (let value = min; value <= max; value++) {
+                intersections = polygon.getIntersections(intersections, value, this.h, this.v);
                 this.context.beginPath();
                 for (let d = 0; d < intersections.length - 1; d += 2) {
-                    this.context.moveTo(intersections[d].getX() + this.canvas.width * 0.5, y + this.canvas.height * 0.5);
-                    this.context.lineTo(intersections[d + 1].getX() + this.canvas.width * 0.5, y + this.canvas.height * 0.5);
+                    if (this.h === 'x') { // front / top
+                        this.context.moveTo(intersections[d].getX() + this.canvas.width * 0.5, value + this.canvas.height * 0.5);
+                        this.context.lineTo(intersections[d + 1].getX() + this.canvas.width * 0.5, value + this.canvas.height * 0.5);
+                    } else { // left
+                        this.context.moveTo(intersections[d].getZ() + this.canvas.width * 0.5, value + this.canvas.height * 0.5);
+                        this.context.lineTo(intersections[d + 1].getZ() + this.canvas.width * 0.5, value + this.canvas.height * 0.5);
+                    }
                 }
+                
                 this.context.stroke();
-                intersections = polygon.addValueM(intersections);
+                intersections = polygon.addValueM(intersections, this.h, this.v);
             }
         },
         drawTemporaryPolygon() {
