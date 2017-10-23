@@ -4,6 +4,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
     this.fillColor = fillColor;
     this.mustStroke = mustStroke;
     this.mustFill = mustFill;
+    this.boundaries = null;
 
     this.getPolygons = function() {
         return this.polygons;
@@ -49,7 +50,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         return this.mustStroke;
     };
 
-    this.setCenter = function() {
+    this.setBoundaries = function() {
         let values = {
             minX: Number.MAX_VALUE,
             minY: Number.MAX_VALUE,
@@ -69,34 +70,49 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
             values.maxZ = boundaries.maxZ > values.maxZ ? boundaries.maxZ : values.maxZ;
             values.minZ = boundaries.minZ < values.minZ ? boundaries.minZ : values.minZ;
         }
-
-        let center = {
-            x: (values.maxX - values.minX) / 2,
-            y: (values.maxY - values.minY) / 2,
-            z: (values.maxZ - values.minZ) / 2
-        };
-
-        return center;
+        this.boundaries = values;
     };
 
-    this.center = this.setCenter();
+    this.getBoundaries = function() {
+        return this.boundaries;
+    };
+
+    this.setBoundaries();
+
+    this.setCenter = function() {
+        let values = this.getBoundaries();
+        let center = new Vertex((values.maxX - values.minX) / 2, (values.maxY - values.minY) / 2, (values.maxZ - values.minZ) / 2);
+        this.center = center;
+    };
 
     this.getCenter = function() {
         return this.center;
     };
 
+    this.setCenter();
+
     this.getDistance = function(vertex, center) {
-        return new Vertex(center.x - vertex.getX(), center.y - vertex.getY(), center.z - vertex.getZ());
+        console.log("Center x: " + center.x + " y: " + center.y);
+        console.log("Click x: " + vertex.x + " y: " + vertex.y);
+        let distance = new Vertex(Math.abs(center.x - vertex.getX()), Math.abs(center.y - vertex.getY()), Math.abs(center.z - vertex.getZ()));
+        console.log("Distancia em X: " + distance.x);
+        console.log("Distancia em Y: " + distance.y);
+        return distance;
     };
 
     this.translate = function(vertex, h, v) {
         let center = this.getCenter();
-
         let distanceMove = this.getDistance(vertex, center);
-
+        if (vertex.getX() < center.getX())
+            distanceMove.setX(distanceMove.getX() * -1);
+        if (vertex.getY() < center.getY())
+            distanceMove.setY(distanceMove.getY() * -1);
         for (let i = 0; i < this.polygons.length; i++) {
-            polygons[i].translate(distanceMove);
+            let temp = new Vertex(distanceMove.getX(), distanceMove.getY(), distanceMove.getZ());
+            polygons[i].translatePoint(temp);
         }
+        this.setBoundaries();
+        this.setCenter();
     };
 
     this.rotate = function(vertex, rotationSolid) {

@@ -91,10 +91,11 @@ function Polygon(vertices) {
 
     this.translatePoint = function(vertex) {
         for (let v = 0; v < this.vertices.length; v++) {
-            this.vertices[v].setX(this.vertices[v].getX() - vertex.getX());
-            this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
-            this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
+            this.vertices[v].setX(this.vertices[v].getX() + vertex.getX());
+            this.vertices[v].setY(this.vertices[v].getY() + vertex.getY());
+            this.vertices[v].setZ(this.vertices[v].getZ() + vertex.getZ());
         }
+        this.boundaries = this.setBoundaries();
     };
 
     this.setCenter = function() {};
@@ -103,14 +104,6 @@ function Polygon(vertices) {
 
     this.getCenter = function() {
         return this.center;
-    };
-
-    this.translate = function(distance) {
-        for (let i = 0; i < this.vertices.length; i++) {
-            vertices[i].setX(vertices[i].getX() + distance.getX());
-            vertices[i].setY(vertices[i].getY() + distance.getY());
-            vertices[i].setZ(vertices[i].getZ() + distance.getZ());
-        }
     };
 
     this.rotate = function(vertex, clone) {
