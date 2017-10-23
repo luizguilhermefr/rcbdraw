@@ -89,11 +89,10 @@ function Polygon(vertices) {
         return closestEdge;
     };
 
-    this.translatePoint = function(vertex) {
+    this.translatePoint = function(vertex, h, v) {
         for (let v = 0; v < this.vertices.length; v++) {
-            this.vertices[v].setX(this.vertices[v].getX() + vertex.getX());
-            this.vertices[v].setY(this.vertices[v].getY() + vertex.getY());
-            this.vertices[v].setZ(this.vertices[v].getZ() + vertex.getZ());
+            this.vertices[v].setX(this.vertices[v].getX() - vertex.getX());
+            this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
         }
         this.boundaries = this.setBoundaries();
     };

@@ -92,27 +92,27 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
     this.setCenter();
 
     this.getDistance = function(vertex, center) {
-        console.log("Center x: " + center.x + " y: " + center.y);
-        console.log("Click x: " + vertex.x + " y: " + vertex.y);
         let distance = new Vertex(Math.abs(center.x - vertex.getX()), Math.abs(center.y - vertex.getY()), Math.abs(center.z - vertex.getZ()));
-        console.log("Distancia em X: " + distance.x);
-        console.log("Distancia em Y: " + distance.y);
         return distance;
     };
 
     this.translate = function(vertex, h, v) {
         let center = this.getCenter();
-        let distanceMove = this.getDistance(vertex, center);
-        if (vertex.getX() < center.getX())
-            distanceMove.setX(distanceMove.getX() * -1);
-        if (vertex.getY() < center.getY())
-            distanceMove.setY(distanceMove.getY() * -1);
+
         for (let i = 0; i < this.polygons.length; i++) {
-            let temp = new Vertex(distanceMove.getX(), distanceMove.getY(), distanceMove.getZ());
-            polygons[i].translatePoint(temp);
+            let vertexMove;
+            if (h === 'x' && v === 'y') { // front
+                vertexMove = new Vertex(vertex.getX(), center.getY() - vertex.getY(), center.getZ() - vertex.getZ());
+            } else if (h === 'x' && v === 'z') { // top
+                vertexMove = new Vertex(center.getX() - vertex.getX(), vertex.getY(), center.getZ() - vertex.getZ());
+            } else { // left
+                vertexMove = new Vertex(center.getX() - vertex.getX(), center.getY() - vertex.getY(), vertex.getZ());
+            }
+            polygons[i].translatePoint(vertexMove, h, v);
+            this.setCenter();
+            this.setBoundaries();
         }
-        this.setBoundaries();
-        this.setCenter();
+
     };
 
     this.rotate = function(vertex, rotationSolid) {
