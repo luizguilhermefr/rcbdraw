@@ -183,8 +183,10 @@ Vue.component('panel', {
             return Math.round(y - this.canvas.offsetTop);
         },
         strokePoly(polygon, color, autoClose = true) {
+            this.context.lineWidth = 1;
+            this.context.strokeStyle = color;
+            this.context.beginPath();
             let coordX, coordY;
-
             if (this.h === 'x' && this.v === 'y') { // front
                 coordX = polygon.vertexAt(0).getX();
                 coordY = polygon.vertexAt(0).getY();
@@ -210,16 +212,17 @@ Vue.component('panel', {
                 }
                 this.context.lineTo(coordX, coordY);
             }
-
             if (autoClose) {
                 this.context.closePath();
             }
-
             this.context.stroke();
         },
         fillPoly(polygon, color) {
+            this.context.lineWidth = 1;
+            this.context.strokeStyle = color;
+            this.context.beginPath();
             let filler = new PolyFill(polygon, this.h, this.v);
-            filler.run(this.context, color);
+            filler.run(this.context);
         },
         drawTemporaryPolygon() {
             if (this.freeHandDots.length > 1) {
@@ -286,6 +289,7 @@ Vue.component('panel', {
         drawAxis() {
             this.context.strokeStyle = Colors.DEFAULT;
             this.context.lineWidth = 1;
+            this.context.beginPath();
             this.context.font = '12px Arial';
             this.context.fillText(this.title, 10, 30);
             // noinspection EqualityComparisonWithCoercionJS
@@ -302,8 +306,8 @@ Vue.component('panel', {
                 this.context.moveTo(50, 40);
                 this.context.lineTo(45, 45);
                 this.context.fillText(this.h, 55, 42);
-                this.context.stroke();
             }
+            this.context.stroke();
         }
     },
     mounted() {

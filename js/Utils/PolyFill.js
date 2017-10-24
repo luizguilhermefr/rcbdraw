@@ -69,15 +69,12 @@ function PolyFill (polygon, h, v) {
         return intersections;
     };
 
-    this.run = function (context, color) {
+    this.run = function (context) {
         this.createEdges();
         this.setMinMax();
         this.intersections = [];
         for (let i = this.minV; i <= this.maxV; i++) {
             this.setIntersections(i);
-            context.lineWidth = 1;
-            context.strokeStyle = color;
-            context.beginPath();
             for (let j = 0; j < this.intersections.length - 1; j += 2) {
                 if (this.h === 'x' && this.v === 'y') { // front
                     context.moveTo(this.intersections[ j ].getX0Y(), i);

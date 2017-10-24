@@ -1,8 +1,4 @@
 function Polygon(vertices) {
-    this.vertices = vertices;
-    this.edges = [];
-    this.boundaries = null;
-
     this.getVertices = function() {
         return this.vertices;
     };
@@ -16,7 +12,7 @@ function Polygon(vertices) {
         let minZ = Number.MAX_VALUE;
 
         for (let i = 0; i < this.vertices.length; i++) {
-            let v = this.vertices[i];
+            let v = this.vertexAt(i);
             let vx = v.getX();
             let vy = v.getY();
             let vz = v.getZ();
@@ -33,8 +29,6 @@ function Polygon(vertices) {
 
         this.boundaries = { maxX, minX, maxY, minY, maxZ, minZ };
     };
-    
-    this.setBoundaries();
 
     this.getBoundaries = function() {
         return this.boundaries;
@@ -191,4 +185,9 @@ function Polygon(vertices) {
         });
         return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
     };
+
+    this.vertices = vertices;
+    this.edges = [];
+    this.boundaries = null;
+    this.setBoundaries();
 }
