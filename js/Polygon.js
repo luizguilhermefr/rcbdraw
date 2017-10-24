@@ -89,10 +89,27 @@ function Polygon(vertices) {
         return closestEdge;
     };
 
-    this.translatePoint = function(vertex, h, v) {
+    this.translatePoint = function(vertex) {
+        // if (h === 'x' && v === 'y') {
+        //     for (let v = 0; v < this.vertices.length; v++) {
+        //         this.vertices[v].setX(this.vertices[v].getX() - vertex.getX());
+        //         this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
+        //     }
+        // } else if (h === 'x' && v === 'z') {
+        //     for (let v = 0; v < this.vertices.length; v++) {
+        //         this.vertices[v].setX(this.vertices[v].getX() - vertex.getX());
+        //         this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
+        //     }
+        // } else {
+        //     for (let v = 0; v < this.vertices.length; v++) {
+        //         this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
+        //         this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
+        //     }
+        // }
         for (let v = 0; v < this.vertices.length; v++) {
             this.vertices[v].setX(this.vertices[v].getX() - vertex.getX());
             this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
+            this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
         }
         this.boundaries = this.setBoundaries();
     };

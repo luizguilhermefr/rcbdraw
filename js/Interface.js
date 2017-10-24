@@ -235,7 +235,7 @@ function Interface() {
         else if (h == 'x' && v == 'z')
             newPoint = new Vertex(x, 0, y);
         else
-            newPoint = new Vertex(0, x, y);
+            newPoint = new Vertex(0, y, x);
 
         this.selectedSolid.solid.translate(newPoint, h, v);
         this.scene.makeDirty();

@@ -81,7 +81,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
 
     this.setCenter = function() {
         let values = this.getBoundaries();
-        let center = new Vertex((values.maxX - values.minX) / 2, (values.maxY - values.minY) / 2, (values.maxZ - values.minZ) / 2);
+        let center = new Vertex((values.maxX + values.minX) / 2, (values.maxY + values.minY) / 2, (values.maxZ + values.minZ) / 2);
         this.center = center;
     };
 
@@ -98,19 +98,18 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
 
     this.translate = function(vertex, h, v) {
         let center = this.getCenter();
-
         for (let i = 0; i < this.polygons.length; i++) {
             let vertexMove;
-            if (h === 'x' && v === 'y') { // front
-                vertexMove = new Vertex(vertex.getX(), center.getY() - vertex.getY(), center.getZ() - vertex.getZ());
-            } else if (h === 'x' && v === 'z') { // top
-                vertexMove = new Vertex(center.getX() - vertex.getX(), vertex.getY(), center.getZ() - vertex.getZ());
-            } else { // left
+            if (h === 'x' && v === 'y')
                 vertexMove = new Vertex(center.getX() - vertex.getX(), center.getY() - vertex.getY(), vertex.getZ());
+            else if (h === 'x' && v === 'z')
+                vertexMove = new Vertex(center.getX() - vertex.getX(), vertex.getY(), center.getZ() - vertex.getZ());
+            else {
+                vertexMove = new Vertex(vertex.getX(), center.getY() - vertex.getY(), center.getZ() - vertex.getZ());
             }
-            polygons[i].translatePoint(vertexMove, h, v);
-            this.setCenter();
+            polygons[i].translatePoint(vertexMove);
             this.setBoundaries();
+            this.setCenter();
         }
 
     };
