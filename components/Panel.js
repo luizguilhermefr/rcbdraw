@@ -12,8 +12,6 @@ Vue.component('panel', {
                 v-on:mousedown.prevent="mouseDown"
                 v-on:mouseup="mouseUp"
                 v-on:mousemove="mouseMove"
-                :width="width"
-                :height="height"
             >
                 Seu navegador não suporta o Canvas do HTML5. <br>
                 Procure atualizá-lo.
@@ -47,7 +45,11 @@ Vue.component('panel', {
                 X: 0,
                 Y: 0
             },
-            freeHandDots: []
+            freeHandDots: [],
+            expandStyles: {
+                top: '0',
+                left: '0'
+            }
         };
     },
     methods: {
@@ -325,9 +327,13 @@ Vue.component('panel', {
         collapse () {
             this.expanded = false;
         },
-        resize(width, height) {
+        resize (width, height) {
             this.width = width;
             this.height = height;
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.expandStyles.top = (this.canvas.offsetTop + 10) + 'px';
+            this.expandStyles.left = (this.canvas.offsetLeft + this.canvas.width - 40) + 'px';
             drawInterface.redraw();
         }
     },
@@ -338,13 +344,5 @@ Vue.component('panel', {
         this.context.strokeStyle = Colors.DEFAULT;
         this.cursor = this.readonly ? 'default' : 'pointer';
         this.mode = this.readonly ? -1 : 2;
-    },
-    computed: {
-        expandStyles: function () {
-            return {
-                'left': this.canvas === null ? '0px' : (this.canvas.offsetLeft + this.canvas.width - 40) + 'px',
-                'top': this.canvas === null ? '0px' : (this.canvas.offsetTop + 10) + 'px'
-            };
-        }
     }
 });
