@@ -336,9 +336,9 @@ Vue.component('panel', {
             collapseAll();
             makeEveryoneInvisible();
             this.makeVisible();
+            this.expanded = true;
             let dimensions = getScreenDimensions();
             this.resize(dimensions.width, dimensions.height);
-            this.expanded = true;
         },
         collapse () {
             this.expanded = false;
