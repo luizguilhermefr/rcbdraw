@@ -31,6 +31,7 @@ function Polygon(vertices) {
     };
 
     this.getBoundaries = function() {
+        this.setBoundaries();        
         return this.boundaries;
     };
 
@@ -188,6 +189,6 @@ function Polygon(vertices) {
 
     this.vertices = vertices;
     this.edges = [];
-    this.boundaries = null;
+    this.boundaries;
     this.setBoundaries();
 }
