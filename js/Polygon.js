@@ -1,6 +1,7 @@
 function Polygon(vertices) {
     this.vertices = vertices;
     this.edges = [];
+    this.boundaries = null;
 
     this.getVertices = function() {
         return this.vertices;
@@ -15,8 +16,8 @@ function Polygon(vertices) {
         let minZ = Number.MAX_VALUE;
 
         for (let i = 0; i < this.vertices.length; i++) {
-            let v = this.vertexAt(i);
-            let vx = v.getX()
+            let v = this.vertices[i];
+            let vx = v.getX();
             let vy = v.getY();
             let vz = v.getZ();
 
@@ -30,8 +31,10 @@ function Polygon(vertices) {
             minZ = vz < minZ ? vz : minZ;
         }
 
-        return { maxX, minX, maxY, minY, maxZ, minZ };
+        this.boundaries = { maxX, minX, maxY, minY, maxZ, minZ };
     };
+    
+    this.setBoundaries();
 
     this.getBoundaries = function() {
         return this.boundaries;
@@ -44,8 +47,6 @@ function Polygon(vertices) {
     this.vertexAt = function(index) {
         return this.vertices[index];
     };
-
-    this.boundaries = this.setBoundaries();
 
     this.closestPoint = function(vertex) {
         let closestPoint = {
@@ -189,41 +190,5 @@ function Polygon(vertices) {
             nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement));
         });
         return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
-    };
-
-    this.destroyClone = function() {
-        return new Polygon(null);
-    };
-
-    this.createEdges = function() {
-        this.edges = [];
-        for (let i = 0; i < this.vertices.length - 1; i++) {
-            if (this.vertices[i].getY() < this.vertices[i + 1].getY()) {
-                this.edges.push(new Edge(this.vertices[i], this.vertices[i + 1]));
-            } else {
-                this.edges.push(new Edge(this.vertices[i + 1], this.vertices[i]));
-            }
-        }
-    };
-
-    this.intersections = function(active, y) {
-        for (let j = this.edges.length - 1; j > -1; j--) {
-            let actualEdge = this.edges[j];
-
-            if (actualEdge.isValidY(y)) {
-                this.edges.splice(j, 1);
-                active.push(actualEdge);
-            }
-        }
-        active.sort(function(a, b) {
-            return a.x - b.x;
-        });
-    };
-
-    this.addValueM = function(intersections) {
-        intersections = intersections.filter(function(a) {
-            return a.next();
-        });
-        return intersections;
     };
 }

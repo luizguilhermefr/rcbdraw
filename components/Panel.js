@@ -183,9 +183,8 @@ Vue.component('panel', {
             return Math.round(y - this.canvas.offsetTop);
         },
         strokePoly(polygon, color, autoClose = true) {
-            this.context.strokeStyle = color;
-            this.context.beginPath();
             let coordX, coordY;
+
             if (this.h === 'x' && this.v === 'y') { // front
                 coordX = polygon.vertexAt(0).getX();
                 coordY = polygon.vertexAt(0).getY();
@@ -211,28 +210,16 @@ Vue.component('panel', {
                 }
                 this.context.lineTo(coordX, coordY);
             }
+
             if (autoClose) {
                 this.context.closePath();
             }
+
             this.context.stroke();
         },
-        fillPoly(polygon) {
-            polygon.createEdges();
-            let minY = polygon.getBoundaries().minY;
-            let maxY = polygon.getBoundaries().maxY;
-            let intersections = [];
-            this.context.strokeStyle = color;
-            this.context.lineWidth = 1;
-            for (let y = minY; y <= maxY; y++) {
-                polygon.intersections(intersections, y);
-                this.context.beginPath();
-                for (let d = 0; d < intersections.length - 1; d += 2) {
-                    this.context.moveTo(intersections[d].getX(), y);
-                    this.context.lineTo(intersections[d + 1].getX(), y);
-                }
-                this.context.stroke();
-                intersections = polygon.addValueM(intersections);
-            }
+        fillPoly(polygon, color) {
+            let filler = new PolyFill(polygon, this.h, this.v);
+            filler.run(this.context, color);
         },
         drawTemporaryPolygon() {
             if (this.freeHandDots.length > 1) {
