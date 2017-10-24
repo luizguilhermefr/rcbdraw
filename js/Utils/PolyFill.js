@@ -14,23 +14,22 @@ function PolyFill (polygon, h, v) {
 
     this.intersections = [];
 
-
-    this.createEdges = function() {
+    this.createEdges = function () {
         let vertices = this.polygon.getVertices();
         this.edges = [];
         for (let i = 0; i < this.vertices.length - 1; i++) {
             if (this.v === 'y') {
-                if (vertices[i].getY() < vertices[i + 1].getY()) {
-                    this.edges.push(new Edge(vertices[i], vertices[i + 1]));
+                if (vertices[ i ].getY() < vertices[ i + 1 ].getY()) {
+                    this.edges.push(new Edge(vertices[ i ], vertices[ i + 1 ]));
                 } else {
-                    this.edges.push(new Edge(vertices[i + 1], vertices[i]));
+                    this.edges.push(new Edge(vertices[ i + 1 ], vertices[ i ]));
                 }
             }
             else {
-                if (vertices[i].getZ() < vertices[i + 1].getZ()) {
-                    this.edges.push(new Edge(vertices[i], vertices[i + 1]));
+                if (vertices[ i ].getZ() < vertices[ i + 1 ].getZ()) {
+                    this.edges.push(new Edge(vertices[ i ], vertices[ i + 1 ]));
                 } else {
-                    this.edges.push(new Edge(vertices[i + 1], vertices[i]));
+                    this.edges.push(new Edge(vertices[ i + 1 ], vertices[ i ]));
                 }
             }
         }
@@ -39,76 +38,68 @@ function PolyFill (polygon, h, v) {
     this.setMinMax = function () {
         let boundaries = this.polygon.getBoundaries();
         if (this.v === 'y') {
-            this.min = boundaries.minY;
-            this.max = boundaries.maxY;
+            this.minV = boundaries.minY;
+            this.maxV = boundaries.maxY;
         }
         else {
-            this.min = boundaries.minZ;
-            this.max = boundaries.maxZ;
+            this.minV = boundaries.minZ;
+            this.maxV = boundaries.maxZ;
         }
     };
 
-    this.intersections = function (active, value) {
-        for(let i = this.edges.length - 1; i >= 0; i--){
-            let currentEdge = this.edges[i];
+    this.setIntersections = function (value) {
+        for (let i = this.edges.length - 1; i >= 0; i--) {
+            let currentEdge = this.edges[ i ];
             if (this.v === 'y') {
-                if(currentEdge.isValidY(value)){
+                if (currentEdge.isValidY(value)) {
                     this.edges.splice(i, 1);
-                    active.push(currentEdge);
+                    this.intersections.push(currentEdge);
                 }
             }
             else {
-                if(currentEdge.isValidZ(value)){
+                if (currentEdge.isValidZ(value)) {
                     this.edges.splice(i, 1);
-                    active.push(currentEdge);
+                    this.intersections.push(currentEdge);
                 }
             }
         }
-        active.sort(function(a,b){
+
+        this.intersections.sort(function (a, b) {
             return this.h === 'x' ? a.x - b.x : a.z - b.z;
-        });
+        }.bind(this));
     };
 
-    this.incrementM = function(intersections) {
-        intersections = intersections.filter(function(a) {
-            if (h === 'x' && v === 'y') { // front
-                return a.nextXY();
-            } else if (h === 'x' && v === 'z') { // top
-                return a.nextXZ();
+    this.incrementM = function (intersections) {
+        intersections = intersections.filter(function (edge) {
+            if (this.h === 'x' && this.v === 'y') { // front
+                return edge.nextXY();
+            } else if (this.h === 'x' && this.v === 'z') { // top
+                return edge.nextXZ();
             } else { // left
-                return a.nextZY();
+                return edge.nextZY();
             }
-        });
+        }.bind(this));
+
         return intersections;
-    };
-
-    this.getX = function (edge) {
-
-    };
-
-    this.getZ = function (edge) {
-
     };
 
     this.run = function (context, color) {
         this.createEdges();
         this.setMinMax();
-        for(let i = min; i <= max; i++) {
-            context.beginPath();
+        this.intersections = [];
+        for (let i = this.minV; i <= this.maxV; i++) {
+            this.setIntersections(i);
             context.lineWidth = 1;
             context.strokeStyle = color;
-            for(let j = 0; j < this.intersections.length - 1; j += 2) {
-                if (this.h === 'x') {
-                    context.moveTo(this.getX(this.intersections[j]), i);
-                    context.lineTo(this.getX(this.intersections[j+1]), i);
-                }
-                else {
-                    context.moveTo(this.getZ(this.intersections[j]), i);
-                    context.lineTo(this.getZ(this.intersections[j+1]), i);
+            context.beginPath();
+            for (let j = 0; j < this.intersections.length - 1; j += 2) {
+                if (this.h === 'x' && this.v === 'y') {
+                    context.moveTo(this.intersections[ j ].getX0Y(), i);
+                    context.lineTo(this.intersections[ j + 1 ].getX0Y(), i);
                 }
             }
             context.stroke();
-            intersections = incrementM(intersections);
+            this.intersections = this.incrementM(this.intersections);
         }
     };
 

@@ -16,8 +16,8 @@ function Polygon(vertices) {
         let minZ = Number.MAX_VALUE;
 
         for (let i = 0; i < this.vertices.length; i++) {
-            let v = this.vertexAt(i);
-            let vx = v.getX()
+            let v = this.vertices[i];
+            let vx = v.getX();
             let vy = v.getY();
             let vz = v.getZ();
 
