@@ -1,23 +1,9 @@
 function PolyFill (polygon, h, v) {
 
-    this.polygon = polygon;
-
-    this.h = h;
-
-    this.v = v;
-
-    this.edges = [];
-
-    this.minV = 0;
-
-    this.maxV = 0;
-
-    this.intersections = [];
-
     this.createEdges = function () {
         let vertices = this.polygon.getVertices();
         this.edges = [];
-        for (let i = 0; i < this.vertices.length - 1; i++) {
+        for (let i = 0; i < vertices.length - 1; i++) {
             if (this.v === 'y') {
                 if (vertices[ i ].getY() < vertices[ i + 1 ].getY()) {
                     this.edges.push(new Edge(vertices[ i ], vertices[ i + 1 ]));
@@ -93,9 +79,15 @@ function PolyFill (polygon, h, v) {
             context.strokeStyle = color;
             context.beginPath();
             for (let j = 0; j < this.intersections.length - 1; j += 2) {
-                if (this.h === 'x' && this.v === 'y') {
+                if (this.h === 'x' && this.v === 'y') { // front
                     context.moveTo(this.intersections[ j ].getX0Y(), i);
                     context.lineTo(this.intersections[ j + 1 ].getX0Y(), i);
+                } else if (this.h ==='x' && this.v === 'z') { // top
+                    context.moveTo(this.intersections[ j ].getX0Z(), i);
+                    context.lineTo(this.intersections[ j + 1 ].getX0Z(), i);
+                } else { // left
+                    context.moveTo(this.intersections[ j ].getZ0Y(), i);
+                    context.lineTo(this.intersections[ j + 1 ].getZ0Y(), i);
                 }
             }
             context.stroke();
@@ -103,4 +95,17 @@ function PolyFill (polygon, h, v) {
         }
     };
 
+    this.polygon = polygon;
+
+    this.h = h;
+
+    this.v = v;
+
+    this.edges = [];
+
+    this.minV = 0;
+
+    this.maxV = 0;
+
+    this.intersections = [];
 }
