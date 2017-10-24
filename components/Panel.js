@@ -12,6 +12,8 @@ Vue.component('panel', {
                 v-on:mousedown.prevent="mouseDown"
                 v-on:mouseup="mouseUp"
                 v-on:mousemove="mouseMove"
+                :width="width"
+                :height="height"
             >
                 Seu navegador não suporta o Canvas do HTML5. <br>
                 Procure atualizá-lo.
@@ -27,10 +29,11 @@ Vue.component('panel', {
 
     data: function () {
         return {
+            width: 0,
+            height: 0,
             expanded: false,
             canvas: null,
             context: null,
-            rect: null,
             mode: -1,
             size: 0,
             sides: 0,
@@ -314,13 +317,23 @@ Vue.component('panel', {
             this.context.stroke();
         },
         toggleExpand () {
+            if (!this.expanded) {
+                collapseAll();
+            }
             this.expanded = !this.expanded;
+        },
+        collapse () {
+            this.expanded = false;
+        },
+        resize(width, height) {
+            this.width = width;
+            this.height = height;
+            drawInterface.redraw();
         }
     },
     mounted () {
         this.canvas = document.getElementById(this.identifier);
         this.context = this.canvas.getContext('2d');
-        this.rect = this.canvas.getBoundingClientRect();
         this.context.lineWidth = 1;
         this.context.strokeStyle = Colors.DEFAULT;
         this.cursor = this.readonly ? 'default' : 'pointer';
