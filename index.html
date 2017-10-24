@@ -68,7 +68,7 @@
 
         drawInterface = new Interface();
 
-        resizeAll();
+        resizeAllToDefaultSize();
 
         window.addEventListener('keyup', function (event) {
             if (event.keyCode === 27) { // esc
@@ -78,16 +78,37 @@
             }
         }, false);
 
-        window.addEventListener('resize', resizeAll, false);
+        window.addEventListener('resize', resizeAllToDefaultSize, false);
     };
 
-    function resizeAll () {
+    function getScreenDimensions () {
+        return {
+            width: window.innerWidth - 310,
+            height: window.innerHeight * 0.92
+        };
+    }
+
+    function resizeAllToDefaultSize () {
         width = (window.innerWidth - 310) / 2;
         height = (window.innerHeight * 0.92) / 2;
         vue.$refs.panelFront.resize(width, height);
         vue.$refs.panelTop.resize(width, height);
         vue.$refs.panelLeft.resize(width, height);
         vue.$refs.panelPerspective.resize(width, height);
+    }
+
+    function makeEveryoneInvisible () {
+        vue.$refs.panelFront.makeInvisible();
+        vue.$refs.panelTop.makeInvisible();
+        vue.$refs.panelLeft.makeInvisible();
+        vue.$refs.panelPerspective.makeInvisible();
+    }
+
+    function makeEveryoneVisible () {
+        vue.$refs.panelFront.makeVisible();
+        vue.$refs.panelTop.makeVisible();
+        vue.$refs.panelLeft.makeVisible();
+        vue.$refs.panelPerspective.makeVisible();
     }
 
     function escape () {
@@ -217,6 +238,7 @@
         vue.$refs.panelLeft.collapse();
         vue.$refs.panelPerspective.collapse();
     }
+
 </script>
 </body>
 
