@@ -88,13 +88,19 @@
         };
     }
 
+    function getHalfScreenDimensions () {
+        return {
+            width: (window.innerWidth - 310) / 2,
+            height: (window.innerHeight * 0.92) / 2
+        };
+    }
+
     function resizeAllToDefaultSize () {
-        width = (window.innerWidth - 310) / 2;
-        height = (window.innerHeight * 0.92) / 2;
-        vue.$refs.panelFront.resize(width, height);
-        vue.$refs.panelTop.resize(width, height);
-        vue.$refs.panelLeft.resize(width, height);
-        vue.$refs.panelPerspective.resize(width, height);
+        let dimensions = getHalfScreenDimensions();
+        vue.$refs.panelFront.resize(dimensions.width, dimensions.height);
+        vue.$refs.panelTop.resize(dimensions.width, dimensions.height);
+        vue.$refs.panelLeft.resize(dimensions.width, dimensions.height);
+        vue.$refs.panelPerspective.resize(dimensions.width, dimensions.height);
     }
 
     function makeEveryoneInvisible () {

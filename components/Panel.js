@@ -333,7 +333,6 @@ Vue.component('panel', {
             this.visible = true;
         },
         maximize () {
-            collapseAll();
             makeEveryoneInvisible();
             this.makeVisible();
             this.expanded = true;
@@ -341,15 +340,16 @@ Vue.component('panel', {
             this.resize(dimensions.width, dimensions.height);
         },
         collapse () {
-            this.expanded = false;
             makeEveryoneVisible();
-            resizeAllToDefaultSize();
+            this.expanded = false;
+            let dimensions = getHalfScreenDimensions();
+            this.resize(dimensions.width, dimensions.height);
         },
         resize (width, height) {
-            this.width = width;
-            this.height = height;
             this.canvas.width = width;
             this.canvas.height = height;
+            this.width = width;
+            this.height = height;
             this.expandStyles.top = (this.canvas.offsetTop + 10) + 'px';
             this.expandStyles.left = (this.canvas.offsetLeft + this.canvas.width - 40) + 'px';
             drawInterface.redraw();
