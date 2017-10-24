@@ -4,6 +4,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
     this.fillColor = fillColor;
     this.mustStroke = mustStroke;
     this.mustFill = mustFill;
+    this.boundaries = null;
 
     this.getPolygons = function() {
         return this.polygons;
@@ -49,7 +50,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         return this.mustStroke;
     };
 
-    this.setCenter = function() {
+    this.setBoundaries = function() {
         let values = {
             minX: Number.MAX_VALUE,
             minY: Number.MAX_VALUE,
@@ -69,39 +70,74 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
             values.maxZ = boundaries.maxZ > values.maxZ ? boundaries.maxZ : values.maxZ;
             values.minZ = boundaries.minZ < values.minZ ? boundaries.minZ : values.minZ;
         }
-
-        let center = {
-            x: (values.maxX - values.minX) / 2,
-            y: (values.maxY - values.minY) / 2,
-            z: (values.maxZ - values.minZ) / 2
-        };
-
-        return center;
+        this.boundaries = values;
     };
 
-    this.center = this.setCenter();
+    this.getBoundaries = function() {
+        return this.boundaries;
+    };
+
+    this.setBoundaries();
+
+    this.setCenter = function() {
+        let values = this.getBoundaries();
+        let center = new Vertex((values.maxX + values.minX) / 2, (values.maxY + values.minY) / 2, (values.maxZ + values.minZ) / 2);
+        this.center = center;
+    };
 
     this.getCenter = function() {
         return this.center;
     };
 
+    this.setCenter();
+
     this.getDistance = function(vertex, center) {
-        return new Vertex(center.x - vertex.getX(), center.y - vertex.getY(), center.z - vertex.getZ());
+        let distance = new Vertex(Math.abs(center.x - vertex.getX()), Math.abs(center.y - vertex.getY()), Math.abs(center.z - vertex.getZ()));
+        return distance;
     };
 
     this.translate = function(vertex, h, v) {
         let center = this.getCenter();
-
-        let distanceMove = this.getDistance(vertex, center);
-
         for (let i = 0; i < this.polygons.length; i++) {
-            polygons[i].translate(distanceMove);
+            let vertexMove;
+            if (h === 'x' && v === 'y')
+                vertexMove = new Vertex(center.getX() - vertex.getX(), center.getY() - vertex.getY(), vertex.getZ());
+            else if (h === 'x' && v === 'z')
+                vertexMove = new Vertex(center.getX() - vertex.getX(), vertex.getY(), center.getZ() - vertex.getZ());
+            else {
+                vertexMove = new Vertex(vertex.getX(), center.getY() - vertex.getY(), center.getZ() - vertex.getZ());
+            }
+            polygons[i].translatePoint(vertexMove);
+            this.setBoundaries();
+            this.setCenter();
         }
     };
 
-    this.rotate = function(vertex, rotationSolid) {
+    this.rotate = function(vertex, rotationSolid, h, v) {
+        let center = this.getCenter();
+        let teta;
         for (let i = 0; i < this.polygons.length; i++) {
-            polygons[i].rotation(vertex, rotationSolid);
+            if (h === 'x' && v === 'y')
+                teta = Math.atan2(vertex.getX() - center.getX(), -(vertex.getY() - center.getY()));
+            else if (h === 'x' && v === 'z')
+                teta = Math.atan2(vertex.getX() - center.getX(), -(vertex.getZ() - center.getZ()));
+            else {
+                teta = Math.atan2(vertex.getZ() - center.getZ(), -(vertex.getY() - center.getY()));
+            }
+            polygons[i].translatePoint(center);
+            polygons[i].rotate();
         }
+        this.setBoundaries();
+        this.setCenter();
+
+
+    };
+
+    this.clone = function(displacement = 0) {
+        let nextPolygons = [];
+        this.polygons.forEach(function(p) {
+            nextPolygons.push(p.clone());
+        });
+        return new Solid(nextPolygons, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
     };
 }

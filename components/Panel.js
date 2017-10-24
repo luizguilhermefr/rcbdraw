@@ -177,10 +177,10 @@ Vue.component('panel', {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         },
         getRelativeX(x) {
-            return Math.round(x - this.canvas.offsetLeft - (this.canvas.width * 0.5) - 15);
+            return Math.round(x - this.canvas.offsetLeft - 15);
         },
         getRelativeY(y) {
-            return Math.round(y - this.canvas.offsetTop - (this.canvas.height * 0.5));
+            return Math.round(y - this.canvas.offsetTop);
         },
         strokePoly(polygon, color, autoClose = true) {
             let coordX, coordY;
@@ -195,11 +195,7 @@ Vue.component('panel', {
                 coordX = polygon.vertexAt(0).getZ();
                 coordY = polygon.vertexAt(0).getY();
             }
-
-            this.context.strokeStyle = color;
-            this.context.beginPath();
-            this.context.moveTo(coordX + this.canvas.width * 0.5, coordY + this.canvas.height * 0.5);
-            
+            this.context.moveTo(coordX, coordY);
             for (let j = 1; j < polygon.countVertices(); j++) {
                 let vertex = polygon.vertexAt(j);
                 if (this.h === 'x' && this.v === 'y') { // front
@@ -212,13 +208,13 @@ Vue.component('panel', {
                     coordX = vertex.getZ();
                     coordY = vertex.getY();
                 }
-                this.context.lineTo(coordX + this.canvas.width * 0.5, coordY + this.canvas.height * 0.5);
+                this.context.lineTo(coordX, coordY);
             }
 
             if (autoClose) {
                 this.context.closePath();
             }
-            
+
             this.context.stroke();
         },
         fillPoly(polygon, color) {

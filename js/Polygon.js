@@ -96,28 +96,14 @@ function Polygon(vertices) {
             this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
             this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
         }
+        this.boundaries = this.setBoundaries();
     };
-
-    this.setCenter = function() {};
-
-    this.center = this.setCenter();
 
     this.getCenter = function() {
         return this.center;
     };
 
-    this.translate = function(distance) {
-        for (let i = 0; i < this.vertices.length; i++) {
-            vertices[i].setX(vertices[i].getX() + distance.getX());
-            vertices[i].setY(vertices[i].getY() + distance.getY());
-            vertices[i].setZ(vertices[i].getZ() + distance.getZ());
-        }
-    };
-
     this.rotate = function(vertex, clone) {
-        let referenceCenter = this.getCenter();
-        let teta = Math.atan2(vertex.getX() - referenceCenter.getX(), -(vertex.getY() - referenceCenter.getY()));
-        this.translatePoint(this.getCenter().invert());
         for (let i = 0; i < this.vertices.length; i++) {
             vertices[i].setX(Math.round(this.getNewPointX(clone.vertexAt(i).getX(), clone.vertexAt(i).getY(), teta)));
             vertices[i].setY(Math.round(this.getNewPointY(clone.vertexAt(i).getX(), clone.vertexAt(i).getY(), teta)));
