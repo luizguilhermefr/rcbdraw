@@ -81,8 +81,8 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
 
     this.setCenter = function() {
         let values = this.getBoundaries();
-        let center = new Vertex((values.maxX + values.minX) / 2, (values.maxY + values.minY) / 2, (values.maxZ + values.minZ) / 2);
-        this.center = center;
+        this.center = new Vertex((values.maxX + values.minX) / 2, (values.maxY + values.minY) / 2, (values.maxZ +
+            values.minZ) / 2);
     };
 
     this.getCenter = function() {
@@ -92,8 +92,8 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
     this.setCenter();
 
     this.getDistance = function(vertex, center) {
-        let distance = new Vertex(Math.abs(center.x - vertex.getX()), Math.abs(center.y - vertex.getY()), Math.abs(center.z - vertex.getZ()));
-        return distance;
+        return new Vertex(Math.abs(center.x - vertex.getX()), Math.abs(center.y - vertex.getY()), Math.abs(center.z -
+            vertex.getZ()));
     };
 
     this.translate = function(vertex, h, v) {
@@ -129,8 +129,6 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         }
         this.setBoundaries();
         this.setCenter();
-
-
     };
 
     this.clone = function(displacement = 0) {

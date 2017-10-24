@@ -98,3 +98,7 @@ html, body {
 	height: 25px;
 	width: 25px;
 }
+
+.expand-btn {
+    position: absolute;
+}

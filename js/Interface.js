@@ -1,28 +1,28 @@
-function Interface() {
+function Interface () {
     this.scene = new Scene();
     this.selectedSolid = null;
     this.rotationSolid = null;
     this.scaleSolid = null;
 
-    this.getNewDotX = function(x, y, teta) {
+    this.getNewDotX = function (x, y, teta) {
         return (x * Math.cos(teta)) - (y * Math.sin(teta));
     };
 
-    this.getNewDotY = function(x, y, teta) {
+    this.getNewDotY = function (x, y, teta) {
         return (x * Math.sin(teta)) + (y * Math.cos(teta));
     };
 
-    this.redraw = function() {
+    this.redraw = function () {
         this.clearPanels();
         let solids = this.scene.getSolids();
         for (let i = 0; i < solids.length; i++) {
-            let polygons = solids[i].getPolygons();
+            let polygons = solids[ i ].getPolygons();
             for (let j = 0; j < polygons.length; j++) {
-                if (solids[i].shouldFill()) {
-                    this.fillPoly(polygons[j], solids[i].getFillColor());
+                if (solids[ i ].shouldFill()) {
+                    this.fillPoly(polygons[ j ], solids[ i ].getFillColor());
                 }
-                if (solids[i].shouldStroke()) {
-                    this.strokePoly(polygons[j], solids[i].getStrokeColor());
+                if (solids[ i ].shouldStroke()) {
+                    this.strokePoly(polygons[ j ], solids[ i ].getStrokeColor());
                 }
             }
         }
@@ -31,66 +31,66 @@ function Interface() {
         this.drawSelectedSolid();
     };
 
-    this.resetRotationClick = function() {
+    this.resetRotationClick = function () {
         this.rotationSolid = null;
     };
 
-    this.resetScaleClick = function() {
+    this.resetScaleClick = function () {
         this.scaleSolid = null;
     };
 
-    this.clearPanels = function() {
+    this.clearPanels = function () {
         vue.$refs.panelFront.clearPanel();
         vue.$refs.panelTop.clearPanel();
         vue.$refs.panelLeft.clearPanel();
         vue.$refs.panelPerspective.clearPanel();
     };
 
-    this.strokePoly = function(polygon, color) {
+    this.strokePoly = function (polygon, color) {
         vue.$refs.panelFront.strokePoly(polygon, color);
         vue.$refs.panelTop.strokePoly(polygon, color);
         vue.$refs.panelLeft.strokePoly(polygon, color);
         vue.$refs.panelPerspective.strokePoly(polygon, color);
     };
 
-    this.fillPoly = function(polygon, color) {
+    this.fillPoly = function (polygon, color) {
         vue.$refs.panelFront.fillPoly(polygon, color);
         vue.$refs.panelTop.fillPoly(polygon, color);
         vue.$refs.panelLeft.fillPoly(polygon, color);
         vue.$refs.panelPerspective.fillPoly(polygon, color);
     };
 
-    this.drawTemporaryPolygon = function() {
+    this.drawTemporaryPolygon = function () {
         vue.$refs.panelFront.drawTemporaryPolygon();
         vue.$refs.panelTop.drawTemporaryPolygon();
         vue.$refs.panelLeft.drawTemporaryPolygon();
         vue.$refs.panelPerspective.drawTemporaryPolygon();
     };
 
-    this.drawSelectedSolid = function() {
+    this.drawSelectedSolid = function () {
         if (this.selectedSolid !== null) {
-            vue.$refs.panelFront.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
-            vue.$refs.panelTop.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
-            vue.$refs.panelLeft.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
-            vue.$refs.panelPerspective.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
+            vue.$refs.panelFront.drawSelectedSolid(this.selectedSolid.solid);
+            vue.$refs.panelTop.drawSelectedSolid(this.selectedSolid.solid);
+            vue.$refs.panelLeft.drawSelectedSolid(this.selectedSolid.solid);
+            vue.$refs.panelPerspective.drawSelectedSolid(this.selectedSolid.solid);
         }
     };
 
-    this.drawAxis = function() {
+    this.drawAxis = function () {
         vue.$refs.panelFront.drawAxis();
         vue.$refs.panelTop.drawAxis();
         vue.$refs.panelLeft.drawAxis();
         vue.$refs.panelPerspective.drawAxis();
     };
 
-    this.clearSelectedSolid = function(redraw = false) {
+    this.clearSelectedSolid = function (redraw = false) {
         this.selectedSolid = null;
         if (redraw) {
             this.redraw();
         }
     };
 
-    this.deleteSolid = function() {
+    this.deleteSolid = function () {
         this.scene.removeSolid(this.selectedSolid.index);
         this.clearSelectedSolid();
         this.redraw();
@@ -98,7 +98,7 @@ function Interface() {
         return false;
     };
 
-    this.newRegularPolygon = function(sides, size, stroke, fill, mustStroke, mustFill, x, y, h, v) {
+    this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, h, v) {
         let dotX;
         let dotY;
         let temp;
@@ -152,22 +152,22 @@ function Interface() {
             tempVertices.push(new Vertex(tempX, tempY, tempZ));
         }
         let polygon = new Polygon(tempVertices);
-        this.scene.addSolid(new Solid([polygon], stroke, fill, mustStroke, mustFill));
+        this.scene.addSolid(new Solid([ polygon ], stroke, fill, mustStroke, mustFill));
         this.scene.makeDirty();
         this.redraw();
     };
 
-    this.shouldAskOnReset = function() {
+    this.shouldAskOnReset = function () {
         return this.scene.isDirty();
     };
 
-    this.resetScene = function() {
+    this.resetScene = function () {
         this.selectedSolid = null;
         this.scene = new Scene();
         this.redraw();
     };
 
-    this.openFile = function(opened) {
+    this.openFile = function (opened) {
         // this.resetScene();
         // let tempVertices = [];
         // for (let i = 0; i < opened.length; i++) {
@@ -180,7 +180,7 @@ function Interface() {
         // this.redraw();
     };
 
-    this.generateSave = function() {
+    this.generateSave = function () {
         // let polygons = this.scene.getPolygons();
         // let dump = [];
         // let current;
@@ -205,14 +205,14 @@ function Interface() {
         // return dump;
     };
 
-    this.convertTemporaryToPolygon = function(freeHandDots) {
-        freeHandDots.push(freeHandDots[0].clone());
-        this.scene.addSolid(new Solid([new Polygon(freeHandDots)]));
+    this.convertTemporaryToPolygon = function (freeHandDots) {
+        freeHandDots.push(freeHandDots[ 0 ].clone());
+        this.scene.addSolid(new Solid([ new Polygon(freeHandDots) ]));
         this.scene.makeDirty();
         this.redraw();
     };
 
-    this.isInsideBoundaryTolerance = function(vertex, boundary, h, v) {
+    this.isInsideBoundaryTolerance = function (vertex, boundary, h, v) {
         let tolerance = 20;
 
         let insideX = (vertex.getX() < (boundary.maxX + tolerance)) && (vertex.getX() > (boundary.minX - tolerance));
@@ -228,21 +228,22 @@ function Interface() {
         }
     };
 
-    this.translateClick = function(x, y, h, v) {
+    this.translateClick = function (x, y, h, v) {
         let newPoint;
-        if (h == 'x' && v == 'y')
+        if (h == 'x' && v == 'y') {
             newPoint = new Vertex(x, y, 0);
-        else if (h == 'x' && v == 'z')
+        } else if (h == 'x' && v == 'z') {
             newPoint = new Vertex(x, 0, y);
-        else
+        } else {
             newPoint = new Vertex(0, y, x);
+        }
 
         this.selectedSolid.solid.translate(newPoint, h, v);
         this.scene.makeDirty();
         this.redraw();
     };
 
-    this.scaleClick = function(x, y) {
+    this.scaleClick = function (x, y) {
         if (this.scaleSolid === null) {
             this.scaleSolid = this.selectedSolid.clone();
         } else {
@@ -253,7 +254,7 @@ function Interface() {
         this.redraw();
     };
 
-    this.rotationClick = function(x, y, h, v) {
+    this.rotationClick = function (x, y, h, v) {
         let mouseClick;
         if (this.rotationSolid === null) {
             this.rotationSolid = this.selectedSolid.solid.clone();
@@ -272,23 +273,23 @@ function Interface() {
         this.redraw();
     };
 
-    this.shearHorizontalClick = function(x, y) {
+    this.shearHorizontalClick = function (x, y) {
         this.selectedSolid.shearX(new Vertex(x, y));
         this.scene.makeDirty();
         this.redraw();
     };
 
-    this.shearVerticalClick = function(x, y) {
+    this.shearVerticalClick = function (x, y) {
         this.selectedSolid.shearY(new Vertex(x, y));
         this.scene.makeDirty();
         this.redraw();
     };
 
-    this.isSomethingSelected = function() {
+    this.isSomethingSelected = function () {
         return !(this.selectedSolid === null);
     };
 
-    this.edgePanel = function(edge, point) {
+    this.edgePanel = function (edge, point) {
         if (point.z == -1) {
             return {
                 x1: edge.x1,
@@ -297,7 +298,7 @@ function Interface() {
                 y2: edge.y2,
                 pointX: point.x,
                 pointY: point.y
-            }
+            };
         } else if (point.y == -1) {
             return {
                 x1: edge.x1,
@@ -306,7 +307,7 @@ function Interface() {
                 y2: edge.z2,
                 pointX: point.x,
                 pointY: point.z
-            }
+            };
         } else if (point.x == -1) {
             return {
                 x1: edge.z1,
@@ -315,13 +316,13 @@ function Interface() {
                 y2: edge.y2,
                 pointX: point.z,
                 pointY: point.y
-            }
+            };
         } else {
             alert('problemas');
         }
     };
 
-    this.selectionClick = function(x, y, h, v) {
+    this.selectionClick = function (x, y, h, v) {
         let solids = this.scene.getSolids();
         let lowestDistance = {
             solid: -1,
@@ -339,13 +340,13 @@ function Interface() {
         }
 
         for (let n = 0; n < solids.length; n++) {
-            let polygons = solids[n].getPolygons();
+            let polygons = solids[ n ].getPolygons();
             for (let i = 0; i < polygons.length; i++) {
-                if (this.isInsideBoundaryTolerance(point, polygons[i].getBoundaries(), h, v)) {
-                    let distance = polygons[i].closestEdge(point, h, v);
+                if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries(), h, v)) {
+                    let distance = polygons[ i ].closestEdge(point, h, v);
                     if (distance.distance < lowestDistance.distance) {
                         lowestDistance.solid = n;
-                        lowestDistance.poly = polygons[i];
+                        lowestDistance.poly = polygons[ i ];
                         lowestDistance.distance = distance.distance;
                     }
                 }
@@ -355,7 +356,7 @@ function Interface() {
         if (lowestDistance.distance < 10) {
             this.selectedSolid = {
                 index: lowestDistance.solid,
-                solid: solids[lowestDistance.solid]
+                solid: solids[ lowestDistance.solid ]
             };
         } else {
             this.clearSelectedSolid();
@@ -364,23 +365,23 @@ function Interface() {
         this.redraw();
     };
 
-    this.distanceBetweenTwoPoints = function(first, second) {
+    this.distanceBetweenTwoPoints = function (first, second) {
         return Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2));
     };
 
-    this.distanceBetweenPointAndEdge = function(data) {
+    this.distanceBetweenPointAndEdge = function (data) {
         let r = data.y2 - data.y1;
         let s = -(data.x2 - data.x1);
         let t = data.x2 * data.y1 - data.x1 * data.y2;
         return Math.abs(r * data.pointX + s * data.pointY + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
     };
 
-    this.duplicateSelected = function() {
+    this.duplicateSelected = function () {
         this.scene.addSolid(this.selectedSolid.solid.clone(20));
         this.redraw();
     };
 
-    this.bringForward = function() {
+    this.bringForward = function () {
         let forward = this.scene.bringForward(this.selectedSolid.index);
         if (forward) {
             this.selectedSolid = forward;
@@ -388,7 +389,7 @@ function Interface() {
         this.redraw();
     };
 
-    this.bringBackward = function() {
+    this.bringBackward = function () {
         let backward = this.scene.bringBackward(this.selectedSolid.index);
         if (backward) {
             this.selectedSolid = backward;

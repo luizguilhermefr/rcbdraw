@@ -17,16 +17,21 @@ Vue.component('panel', {
                 Procure atualizá-lo.
             </canvas>
             <div id="mouse"></div>
+            <b-button size="20" :variant="expanded ? 'primary' : 'outline-primary'" class="expand-btn" v-bind:style="expandStyles" @click="toggleExpand">
+                <i class="fa" v-bind:class="expanded ? 'fa-compress' : 'fa-expand'"></i>
+            </b-button>
          </div>
         `,
 
-    props: ['identifier', 'readonly', 'title', 'h', 'v'],
+    props: [ 'identifier', 'readonly', 'title', 'h', 'v' ],
 
-    data: function() {
+    data: function () {
         return {
+            width: 0,
+            height: 0,
+            expanded: false,
             canvas: null,
             context: null,
-            rect: null,
             mode: -1,
             size: 0,
             sides: 0,
@@ -40,11 +45,15 @@ Vue.component('panel', {
                 X: 0,
                 Y: 0
             },
-            freeHandDots: []
+            freeHandDots: [],
+            expandStyles: {
+                top: '0',
+                left: '0'
+            }
         };
     },
     methods: {
-        expectPolygon(sides, size, stroke, fill, mustStroke, mustFill) {
+        expectPolygon (sides, size, stroke, fill, mustStroke, mustFill) {
             this.size = size;
             this.sides = sides;
             this.stroke = stroke;
@@ -54,27 +63,27 @@ Vue.component('panel', {
             this.mode = 1;
             this.cursor = 'copy';
         },
-        expectSelection() {
+        expectSelection () {
             this.mode = 2;
             this.cursor = 'pointer';
         },
-        expectFreehand() {
+        expectFreehand () {
             this.mode = 3;
             this.cursor = 'crosshair';
         },
-        expectTranslate() {
+        expectTranslate () {
             this.mode = 4;
             this.cursor = 'move';
         },
-        expectScale() {
+        expectScale () {
             this.mode = 5;
             this.cursor = 'w-resize';
         },
-        expectRotation() {
+        expectRotation () {
             this.mode = 8;
             this.cursor = 'move';
         },
-        expectShear(direction) {
+        expectShear (direction) {
             if (direction === 'x') {
                 this.mode = 6;
             } else if (direction === 'y') {
@@ -82,7 +91,7 @@ Vue.component('panel', {
             }
             this.cursor = 'pointer';
         },
-        onClick(e) {
+        onClick (e) {
             let x = this.getRelativeX(e.clientX);
             let y = this.getRelativeY(e.clientY);
             switch (this.mode) {
@@ -103,14 +112,14 @@ Vue.component('panel', {
                     break;
             }
         },
-        mouseDown(e) {
+        mouseDown (e) {
             if (this.mode >= 4 && this.mode <= 5 || this.mode === 8) {
                 this.dragging = true;
             }
 
             return false;
         },
-        mouseMove(e) {
+        mouseMove (e) {
             let x = this.getRelativeX(e.clientX);
             let y = this.getRelativeY(e.clientY);
             if (this.dragging) {
@@ -127,7 +136,7 @@ Vue.component('panel', {
                 }
             }
         },
-        mouseUp(e) {
+        mouseUp (e) {
             let x = this.getRelativeX(e.clientX);
             let y = this.getRelativeY(e.clientY);
             if (this.dragging) {
@@ -147,20 +156,20 @@ Vue.component('panel', {
                 this.dragging = false;
             }
         },
-        putPoly(x, y) {
+        putPoly (x, y) {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
         },
-        selectionClick(x, y) {
+        selectionClick (x, y) {
             drawInterface.selectionClick(x, y, this.h, this.v);
         },
-        freehandClick(x, y) {
+        freehandClick (x, y) {
             drawInterface.clearSelectedSolid(true);
             if (!this.pushFreeHandDot(x, y)) {
                 this.clearFreeHandDots();
                 this.reset();
             }
         },
-        reset() {
+        reset () {
             this.clearFreeHandDots();
             this.mode = this.readonly ? -1 : 2;
             this.size = 0;
@@ -173,18 +182,20 @@ Vue.component('panel', {
             this.mustFill = false;
             this.prevScaleFactor = 0;
         },
-        clearPanel() {
+        clearPanel () {
             this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         },
-        getRelativeX(x) {
+        getRelativeX (x) {
             return Math.round(x - this.canvas.offsetLeft - 15);
         },
-        getRelativeY(y) {
+        getRelativeY (y) {
             return Math.round(y - this.canvas.offsetTop);
         },
-        strokePoly(polygon, color, autoClose = true) {
+        strokePoly (polygon, color, autoClose = true) {
+            this.context.lineWidth = 1;
+            this.context.strokeStyle = color;
+            this.context.beginPath();
             let coordX, coordY;
-
             if (this.h === 'x' && this.v === 'y') { // front
                 coordX = polygon.vertexAt(0).getX();
                 coordY = polygon.vertexAt(0).getY();
@@ -210,23 +221,24 @@ Vue.component('panel', {
                 }
                 this.context.lineTo(coordX, coordY);
             }
-
             if (autoClose) {
                 this.context.closePath();
             }
-
             this.context.stroke();
         },
-        fillPoly(polygon, color) {
+        fillPoly (polygon, color) {
+            this.context.lineWidth = 1;
+            this.context.strokeStyle = color;
+            this.context.beginPath();
             let filler = new PolyFill(polygon, this.h, this.v);
-            filler.run(this.context, color);
+            filler.run(this.context);
         },
-        drawTemporaryPolygon() {
+        drawTemporaryPolygon () {
             if (this.freeHandDots.length > 1) {
                 this.strokePoly(new Polygon(this.freeHandDots), Colors.TEMPORARY, false);
             }
         },
-        pushFreeHandDot(x, y) {
+        pushFreeHandDot (x, y) {
             let toPush;
             if (this.h === 'x' && this.v === 'y') { // front
                 toPush = new Vertex(x, y, 0);
@@ -244,33 +256,33 @@ Vue.component('panel', {
 
             return mustContinue;
         },
-        clearFreeHandDots() {
+        clearFreeHandDots () {
             this.freeHandDots = [];
             drawInterface.redraw();
         },
-        mustEndFreeHand() {
+        mustEndFreeHand () {
             if (this.freeHandDots.length < 3) {
                 return false;
             }
 
             if (this.h === 'x' && this.v === 'y') { // front
-                return this.freeHandDots[0].distanceToVertexXY(this.freeHandDots[this.freeHandDots.length -
-                    1]) < 20;
+                return this.freeHandDots[ 0 ].distanceToVertexXY(this.freeHandDots[ this.freeHandDots.length -
+                1 ]) < 20;
             } else if (this.h === 'x' && this.v === 'z') { // top
-                return this.freeHandDots[0].distanceToVertexXZ(this.freeHandDots[this.freeHandDots.length -
-                    1]) < 20;
+                return this.freeHandDots[ 0 ].distanceToVertexXZ(this.freeHandDots[ this.freeHandDots.length -
+                1 ]) < 20;
             } else { // left
-                return this.freeHandDots[0].distanceToVertexZY(this.freeHandDots[this.freeHandDots.length -
-                    1]) < 20;
+                return this.freeHandDots[ 0 ].distanceToVertexZY(this.freeHandDots[ this.freeHandDots.length -
+                1 ]) < 20;
             }
         },
-        drawSelectedSolid(solid) {
+        drawSelectedSolid (solid) {
             let polygons = solid.getPolygons();
             for (let i = 0; i < polygons.length; i++) {
-                this.strokePoly(polygons[i], Colors.SELECTED);
+                this.strokePoly(polygons[ i ], Colors.SELECTED);
             }
         },
-        contextMenu(e) {
+        contextMenu (e) {
             let x = this.getRelativeX(e.clientX);
             let y = this.getRelativeY(e.clientY);
             toggleReset();
@@ -283,9 +295,10 @@ Vue.component('panel', {
                 vue.$refs.elementRightClick.show(e.clientX, e.clientY);
             }
         },
-        drawAxis() {
+        drawAxis () {
             this.context.strokeStyle = Colors.DEFAULT;
             this.context.lineWidth = 1;
+            this.context.beginPath();
             this.context.font = '12px Arial';
             this.context.fillText(this.title, 10, 30);
             // noinspection EqualityComparisonWithCoercionJS
@@ -302,14 +315,31 @@ Vue.component('panel', {
                 this.context.moveTo(50, 40);
                 this.context.lineTo(45, 45);
                 this.context.fillText(this.h, 55, 42);
-                this.context.stroke();
             }
+            this.context.stroke();
+        },
+        toggleExpand () {
+            if (!this.expanded) {
+                collapseAll();
+            }
+            this.expanded = !this.expanded;
+        },
+        collapse () {
+            this.expanded = false;
+        },
+        resize (width, height) {
+            this.width = width;
+            this.height = height;
+            this.canvas.width = width;
+            this.canvas.height = height;
+            this.expandStyles.top = (this.canvas.offsetTop + 10) + 'px';
+            this.expandStyles.left = (this.canvas.offsetLeft + this.canvas.width - 40) + 'px';
+            drawInterface.redraw();
         }
     },
-    mounted() {
+    mounted () {
         this.canvas = document.getElementById(this.identifier);
         this.context = this.canvas.getContext('2d');
-        this.rect = this.canvas.getBoundingClientRect();
         this.context.lineWidth = 1;
         this.context.strokeStyle = Colors.DEFAULT;
         this.cursor = this.readonly ? 'default' : 'pointer';
