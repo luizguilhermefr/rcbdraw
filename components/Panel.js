@@ -2,7 +2,7 @@
 Vue.component('panel', {
 
     template: `
-        <div class="all-canvas">
+        <div class="all-canvas" v-show="visible">
             <canvas
                 :id="identifier"
                 class="canvas col-md-12"
@@ -27,6 +27,7 @@ Vue.component('panel', {
 
     data: function () {
         return {
+            visible: true,
             width: 0,
             height: 0,
             expanded: false,
@@ -319,13 +320,30 @@ Vue.component('panel', {
             this.context.stroke();
         },
         toggleExpand () {
-            if (!this.expanded) {
-                collapseAll();
+            if (this.expanded) {
+                this.collapse();
+            } else {
+                this.maximize();
             }
-            this.expanded = !this.expanded;
+        },
+        makeInvisible () {
+            this.visible = false;
+        },
+        makeVisible () {
+            this.visible = true;
+        },
+        maximize () {
+            collapseAll();
+            makeEveryoneInvisible();
+            this.makeVisible();
+            this.expanded = true;
+            let dimensions = getScreenDimensions();
+            this.resize(dimensions.width, dimensions.height);
         },
         collapse () {
             this.expanded = false;
+            makeEveryoneVisible();
+            resizeAllToDefaultSize();
         },
         resize (width, height) {
             this.width = width;
