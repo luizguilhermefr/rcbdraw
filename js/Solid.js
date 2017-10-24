@@ -61,6 +61,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         };
         for (let i = 0; i < this.polygons.length; i++) {
             let boundaries = polygons[i].getBoundaries();
+            console.log(boundaries);
             values.maxX = boundaries.maxX > values.maxX ? boundaries.maxX : values.maxX;
             values.minX = boundaries.minX < values.minX ? boundaries.minX : values.minX;
 
