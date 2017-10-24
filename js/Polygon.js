@@ -90,22 +90,6 @@ function Polygon(vertices) {
     };
 
     this.translatePoint = function(vertex) {
-        // if (h === 'x' && v === 'y') {
-        //     for (let v = 0; v < this.vertices.length; v++) {
-        //         this.vertices[v].setX(this.vertices[v].getX() - vertex.getX());
-        //         this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
-        //     }
-        // } else if (h === 'x' && v === 'z') {
-        //     for (let v = 0; v < this.vertices.length; v++) {
-        //         this.vertices[v].setX(this.vertices[v].getX() - vertex.getX());
-        //         this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
-        //     }
-        // } else {
-        //     for (let v = 0; v < this.vertices.length; v++) {
-        //         this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
-        //         this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
-        //     }
-        // }
         for (let v = 0; v < this.vertices.length; v++) {
             this.vertices[v].setX(this.vertices[v].getX() - vertex.getX());
             this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
@@ -114,18 +98,11 @@ function Polygon(vertices) {
         this.boundaries = this.setBoundaries();
     };
 
-    this.setCenter = function() {};
-
-    this.center = this.setCenter();
-
     this.getCenter = function() {
         return this.center;
     };
 
     this.rotate = function(vertex, clone) {
-        let referenceCenter = this.getCenter();
-        let teta = Math.atan2(vertex.getX() - referenceCenter.getX(), -(vertex.getY() - referenceCenter.getY()));
-        this.translatePoint(this.getCenter().invert());
         for (let i = 0; i < this.vertices.length; i++) {
             vertices[i].setX(Math.round(this.getNewPointX(clone.vertexAt(i).getX(), clone.vertexAt(i).getY(), teta)));
             vertices[i].setY(Math.round(this.getNewPointY(clone.vertexAt(i).getX(), clone.vertexAt(i).getY(), teta)));

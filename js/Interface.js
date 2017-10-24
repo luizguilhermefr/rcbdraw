@@ -253,13 +253,21 @@ function Interface() {
         this.redraw();
     };
 
-    this.rotationClick = function(x, y, z) {
+    this.rotationClick = function(x, y, h, v) {
+        let mouseClick;
         if (this.rotationSolid === null) {
             this.rotationSolid = this.selectedSolid.solid.clone();
         } else {
             this.scene.changeSolid(this.selectedSolid.index, this.rotationSolid.clone());
         }
-        this.selectedSolid.solid.rotate(new Vertex(x, y, z), this.rotationSolid);
+        if (h === 'x' && v === 'y') {
+            mouseClick = new Vertex(x, y, 0);
+        } else if (h === 'x' && v === 'z') {
+            mouseClick = new Vertex(x, 0, y);
+        } else {
+            mouseClick = new Vertex(0, y, x);
+        }
+        this.selectedSolid.solid.rotate(mouseClick, this.rotationSolid, h, v);
         this.scene.makeDirty();
         this.redraw();
     };
