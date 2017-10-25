@@ -102,4 +102,32 @@ function Vertex(x, y, z) {
         let t = to.getX() * from.getY() - from.getX() * to.getY();
         return Math.abs(r * this.x + s * this.y + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
     };
+
+    this.sub = function (vertex) {
+        this.x -= vertex.getX();
+        this.y -= vertex.getY();
+        this.z -= vertex.getZ();
+
+        return this;
+    };
+
+    this.mult = function (vertex) {
+        this.x *= vertex.getX();
+        this.y *= vertex.getY();
+        this.z *= vertex.getZ();
+
+        return this;
+    };
+
+    this.divScalar = function (value) {
+        this.x /= value;
+        this.y /= value;
+        this.z /= value;
+
+        return this;
+    };
+
+    this.getMagnitude = function () {
+        return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
+    };
 }
