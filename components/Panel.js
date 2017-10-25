@@ -28,8 +28,6 @@ Vue.component('panel', {
     data: function () {
         return {
             visible: true,
-            width: 0,
-            height: 0,
             expanded: false,
             canvas: null,
             context: null,
@@ -336,23 +334,28 @@ Vue.component('panel', {
             makeEveryoneInvisible();
             this.makeVisible();
             this.expanded = true;
-            let dimensions = getScreenDimensions();
-            this.resize(dimensions.width, dimensions.height);
+            this.resizeDefault();
         },
         collapse () {
             makeEveryoneVisible();
             this.expanded = false;
-            let dimensions = getHalfScreenDimensions();
-            this.resize(dimensions.width, dimensions.height);
+            this.resizeDefault();
         },
         resize (width, height) {
             this.canvas.width = width;
             this.canvas.height = height;
-            this.width = width;
-            this.height = height;
             this.expandStyles.top = (this.canvas.offsetTop + 10) + 'px';
             this.expandStyles.left = (this.canvas.offsetLeft + this.canvas.width - 40) + 'px';
             drawInterface.redraw();
+        },
+        resizeDefault() {
+            let dimensions;
+            if (this.expanded) {
+                dimensions = getScreenDimensions();
+            } else {
+                dimensions = getHalfScreenDimensions();
+            }
+            this.resize(dimensions.width, dimensions.height);
         }
     },
     mounted () {
