@@ -28,8 +28,8 @@ function Pipeline (solid, width, height, vrp, viewUp, p = null) {
         ]
     };
 
-    this.sruToSrc = function () {
-
+    this.setPSrc = function () {
+        this.pSrc = math.multiply(this.sruSrc, this.solid.toMatrix());
     };
 
     this.run = function () {
@@ -37,6 +37,7 @@ function Pipeline (solid, width, height, vrp, viewUp, p = null) {
         this.setVectorV();
         this.setVectorU();
         this.setMatrixSruSrc();
+        this.setPSrc();
     };
 
     this.p = p === null ? new Vertex(0, 0, 0) : p;
@@ -56,6 +57,8 @@ function Pipeline (solid, width, height, vrp, viewUp, p = null) {
     this.u = null;
 
     this.sruSrc = [];
+
+    this.pSrc = [];
 
     this.viewUp = viewUp;
 }
