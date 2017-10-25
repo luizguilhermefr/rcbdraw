@@ -80,8 +80,17 @@ Vue.component('toolbar', {
                     action () {
                         expectFreehand();
                     }
+                },
+                {
+                    id: 9,
+                    title: 'Wireframe',
+                    icon: 'icons/wireframe.png',
+                    enabled: true,
+                    action () {
+                        toggleWireframe();
+                    }
                 }
-            ]
+            ],
         };
-    }
+    },
 });

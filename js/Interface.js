@@ -3,6 +3,12 @@ function Interface () {
     this.selectedSolid = null;
     this.rotationSolid = null;
     this.scaleSolid = null;
+    this.shouldWireframe = false;
+
+    this.toggleWireframe = function () {
+        this.shouldWireframe = !this.shouldWireframe;
+        this.redraw();
+    };
 
     this.getNewDotX = function (x, y, teta) {
         return (x * Math.cos(teta)) - (y * Math.sin(teta));
@@ -18,11 +24,11 @@ function Interface () {
         for (let i = 0; i < solids.length; i++) {
             let polygons = solids[ i ].getPolygons();
             for (let j = 0; j < polygons.length; j++) {
-                if (solids[ i ].shouldFill()) {
+                if (solids[ i ].shouldFill() && !this.shouldWireframe) {
                     this.fillPoly(polygons[ j ], solids[ i ].getFillColor());
                 }
-                if (solids[ i ].shouldStroke()) {
-                    this.strokePoly(polygons[ j ], solids[ i ].getStrokeColor());
+                if (solids[ i ].shouldStroke() || this.shouldWireframe) {
+                    this.strokePoly(polygons[ j ], this.shouldWireframe ? Colors.WIREFRAME : solids[ i ].getStrokeColor());
                 }
             }
         }

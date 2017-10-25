@@ -81,6 +81,10 @@
         window.addEventListener('resize', resizeAll, false);
     };
 
+    function toggleWireframe () {
+        drawInterface.toggleWireframe();
+    }
+
     function getScreenDimensions () {
         return {
             width: window.innerWidth - 310,
