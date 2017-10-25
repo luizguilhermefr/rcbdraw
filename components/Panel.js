@@ -356,7 +356,7 @@ Vue.component('panel', {
                 dimensions = getHalfScreenDimensions();
             }
             this.resize(dimensions.width, dimensions.height);
-        }
+        },
     },
     mounted () {
         this.canvas = document.getElementById(this.identifier);
