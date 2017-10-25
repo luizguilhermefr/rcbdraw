@@ -131,6 +131,21 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         this.setCenter();
     };
 
+
+    this.toMatrix = function() {
+        let vertices = [[], [], [], []];
+        this.polygons.forEach(function (p) {
+           p.getVertices().forEach(function (v) {
+               vertices[0].push(v.getX());
+               vertices[1].push(v.getY());
+               vertices[2].push(v.getZ());
+               vertices[3].push(1);
+           });
+        });
+
+        return vertices;
+    };
+
     this.clone = function(displacement = 0) {
         let nextPolygons = [];
         this.polygons.forEach(function(p) {

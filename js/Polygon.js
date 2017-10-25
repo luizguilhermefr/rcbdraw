@@ -189,6 +189,6 @@ function Polygon(vertices) {
 
     this.vertices = vertices;
     this.edges = [];
-    this.boundaries;
+    this.boundaries = null;
     this.setBoundaries();
 }

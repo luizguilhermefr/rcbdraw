@@ -1,29 +1,30 @@
-function Pipeline (polygon, width, height, vrp, viewUp, p = null) {
+function Pipeline (solid, width, height, vrp, viewUp, p = null) {
 
-    this.nVector = function () {
+    this.setVectorN = function () {
         let N = this.vrp.clone().sub(p);
         let magnitude = N.getMagnitude();
         this.n = N.divScalar(magnitude);
     };
 
-    this.vVector = function () {
+    this.setVectorV = function () {
         let V = this.viewUp.clone().sub((this.viewUp.clone().mult(this.n)).mult(this.n));
         let magnitude = V.getMagnitude();
         this.v = V.divScalar(magnitude);
     };
 
-    this.uVector = function () {
+    this.setVectorU = function () {
         let xu = this.v.getY() * this.n.getZ() - (this.n.getY() * this.v.getZ());
         let yu = this.v.getZ() * this.n.getX() - (this.n.getZ() * this.v.getX());
         let zu = this.v.getX() * this.n.getY() - (this.n.getX() * this.v.getY());
         this.u = new Vertex(xu, yu, zu);
     };
 
-    this.matrixSruSrc = function () {
-        this.sruSrcM = [
-            [this.u.getX(), this.u.getY(), this.u.getZ(), this.vrp.clone().invert().dotProduct(u)],
-            [this.v.getX(), this.v.getY(), this.v.getZ(), this.vrp.clone().invert().dotProduct(v)],
-            [this.n.getX(), this.n.getY(), this.n.getZ(), this.vrp.clone().invert().dotProduct(n)],
+    this.setMatrixSruSrc = function () {
+        this.sruSrc = [
+            [this.u.getX(), this.u.getY(), this.u.getZ(), this.vrp.clone().invert().dotProduct(this.u)],
+            [this.v.getX(), this.v.getY(), this.v.getZ(), this.vrp.clone().invert().dotProduct(this.v)],
+            [this.n.getX(), this.n.getY(), this.n.getZ(), this.vrp.clone().invert().dotProduct(this.n)],
+            [0, 0, 0, 1]
         ]
     };
 
@@ -31,9 +32,16 @@ function Pipeline (polygon, width, height, vrp, viewUp, p = null) {
 
     };
 
+    this.run = function () {
+        this.setVectorN();
+        this.setVectorV();
+        this.setVectorU();
+        this.setMatrixSruSrc();
+    };
+
     this.p = p === null ? new Vertex(0, 0, 0) : p;
 
-    this.polygon = polygon;
+    this.solid = solid;
 
     this.width = width;
 
@@ -47,7 +55,7 @@ function Pipeline (polygon, width, height, vrp, viewUp, p = null) {
 
     this.u = null;
 
-    this.sruSrcM = [];
+    this.sruSrc = [];
 
     this.viewUp = viewUp;
 }
