@@ -33,10 +33,17 @@ function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vr
         this.pSrc.splice(2, 1);
     };
 
+    this.setWorldCoordinates = function () {
+        this.wMaxX = this.worldWidth;//this.worldWidth / 2;
+        this.wMinX = 0;//this.worldWidth / -2;
+        this.wMaxY = this.worldHeight;//this.worldHeight / 2;
+        this.wMinY = 0;//this.worldHeight / -2;
+    };
+
     this.setMatrixMjp = function () {
         this.mJp = [
-            [this.screenWidth / this.worldWidth, 0, 0],
-            [0, (this.screenHeight * -1) / this.worldHeight, this.screenHeight],
+            [(this.screenWidth) / (this.wMaxX - this.wMinX), 0, (this.wMinX * -1) * (this.screenWidth / (this.wMaxX - this.wMinX))],
+            [0, (this.screenHeight * -1) / (this.wMaxY - this.wMinY), (this.wMinX * (this.screenHeight / (this.wMaxY - this.wMinY))) + this.screenHeight],
             [0, 0, 1]
         ];
     };
@@ -62,8 +69,8 @@ function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vr
         }
         let vertices = [];
         columns.forEach(function (c) {
-            vertices.push(new Vertex(c[0], c[1], 1));
-        });
+            vertices.push(new Vertex(c[0], this.worldHeight - c[1], 1));
+        }.bind(this));
         return vertices;
     };
 
@@ -73,6 +80,7 @@ function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vr
         this.setVectorU();
         this.setMatrixSruSrc();
         this.setPSrc();
+        this.setWorldCoordinates();
         this.setMatrixMjp();
         this.setMatrixPsrt();
         return this.to2DVertices()
@@ -89,6 +97,14 @@ function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vr
     this.worldWidth = worldWidth;
 
     this.worldHeight = worldHeight;
+
+    this.wMaxX = 0;
+
+    this.wMaxY = 0;
+
+    this.wMinX = 0;
+
+    this.wMinY = 0;
 
     this.vrp = vrp;
 

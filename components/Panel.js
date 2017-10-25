@@ -209,14 +209,9 @@ Vue.component('panel', {
             }
             let pipeline = new Pipeline(solid, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, vrp, viewUp);
             let vertices = pipeline.run();
-            let coordX, coordY;
-            coordX = vertices[0].getX();
-            coordY = vertices[0].getY();
-            this.context.moveTo(coordX, coordY);
+            this.context.moveTo(coordX = vertices[0].getX(), vertices[0].getY());
             for (let j = 1; j < vertices.length; j++) {
-                coordX = vertices[j].getX();
-                coordY = vertices[j].getY();
-                this.context.lineTo(coordX, coordY);
+                this.context.lineTo(vertices[j].getX(), vertices[j].getY());
             }
             if (autoClose) {
                 this.context.closePath();
