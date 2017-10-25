@@ -68,7 +68,7 @@
 
         drawInterface = new Interface();
 
-        resizeAllToDefaultSize();
+        resizeAll();
 
         window.addEventListener('keyup', function (event) {
             if (event.keyCode === 27) { // esc
@@ -78,7 +78,7 @@
             }
         }, false);
 
-        window.addEventListener('resize', resizeAllToDefaultSize, false);
+        window.addEventListener('resize', resizeAll, false);
     };
 
     function getScreenDimensions () {
@@ -88,13 +88,18 @@
         };
     }
 
-    function resizeAllToDefaultSize () {
-        width = (window.innerWidth - 310) / 2;
-        height = (window.innerHeight * 0.92) / 2;
-        vue.$refs.panelFront.resize(width, height);
-        vue.$refs.panelTop.resize(width, height);
-        vue.$refs.panelLeft.resize(width, height);
-        vue.$refs.panelPerspective.resize(width, height);
+    function getHalfScreenDimensions () {
+        return {
+            width: (window.innerWidth - 310) / 2,
+            height: (window.innerHeight * 0.92) / 2
+        };
+    }
+
+    function resizeAll () {
+        vue.$refs.panelFront.resizeDefault();
+        vue.$refs.panelTop.resizeDefault();
+        vue.$refs.panelLeft.resizeDefault();
+        vue.$refs.panelPerspective.resizeDefault();
     }
 
     function makeEveryoneInvisible () {
