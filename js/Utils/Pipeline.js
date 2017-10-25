@@ -1,4 +1,4 @@
-function Pipeline (solid, width, height, vrp, viewUp, p = null) {
+function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vrp, viewUp, p = null) {
 
     this.setVectorN = function () {
         let N = this.vrp.clone().sub(p);
@@ -32,21 +32,44 @@ function Pipeline (solid, width, height, vrp, viewUp, p = null) {
         this.pSrc = math.multiply(this.sruSrc, this.solid.toMatrix());
     };
 
+    this.setMatrixMjp = function () {
+        this.mJp = [
+            [this.screenWidth / this.worldWidth, 0, 0],
+            [0, this.screenHeight / this.worldHeight, this.screenHeight],
+            [0, 0, 1]
+        ];
+    };
+
+    this.setMatrixPsrt = function () {
+        this.psRt = math.multiply(this.mJp, this.pSrc);
+    };
+
+    this.print = function () {
+
+    };
+
     this.run = function () {
         this.setVectorN();
         this.setVectorV();
         this.setVectorU();
         this.setMatrixSruSrc();
         this.setPSrc();
+        this.setMatrixMjp();
+        this.setMatrixPsrt();
+        this.print();
     };
 
     this.p = p === null ? new Vertex(0, 0, 0) : p;
 
     this.solid = solid;
 
-    this.width = width;
+    this.screenWidth = screenWidth;
 
-    this.height = height;
+    this.screenHeight = screenHeight;
+
+    this.worldWidth = worldWidth;
+
+    this.worldHeight = worldHeight;
 
     this.vrp = vrp;
 
@@ -59,6 +82,10 @@ function Pipeline (solid, width, height, vrp, viewUp, p = null) {
     this.sruSrc = [];
 
     this.pSrc = [];
+
+    this.mJp = [];
+
+    this.pSrt = [];
 
     this.viewUp = viewUp;
 }

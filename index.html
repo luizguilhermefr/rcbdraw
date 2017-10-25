@@ -69,7 +69,7 @@
 
         drawInterface = new Interface();
 
-        resizeAll();
+        resizeAll(true);
 
         window.addEventListener('keyup', function (event) {
             if (event.keyCode === 27) { // esc
@@ -100,11 +100,11 @@
         };
     }
 
-    function resizeAll () {
-        vue.$refs.panelFront.resizeDefault();
-        vue.$refs.panelTop.resizeDefault();
-        vue.$refs.panelLeft.resizeDefault();
-        vue.$refs.panelPerspective.resizeDefault();
+    function resizeAll (isInitialResize) {
+        vue.$refs.panelFront.resizeDefault(isInitialResize);
+        vue.$refs.panelTop.resizeDefault(isInitialResize);
+        vue.$refs.panelLeft.resizeDefault(isInitialResize);
+        vue.$refs.panelPerspective.resizeDefault(isInitialResize);
     }
 
     function makeEveryoneInvisible () {

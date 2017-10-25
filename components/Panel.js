@@ -27,6 +27,8 @@ Vue.component('panel', {
 
     data: function () {
         return {
+            initialWidth: 0,
+            initialHeight: 0,
             visible: true,
             expanded: false,
             canvas: null,
@@ -348,7 +350,7 @@ Vue.component('panel', {
             this.expandStyles.left = (this.canvas.offsetLeft + this.canvas.width - 40) + 'px';
             drawInterface.redraw();
         },
-        resizeDefault() {
+        resizeDefault(isInitialResize) {
             let dimensions;
             if (this.expanded) {
                 dimensions = getScreenDimensions();
@@ -356,6 +358,10 @@ Vue.component('panel', {
                 dimensions = getHalfScreenDimensions();
             }
             this.resize(dimensions.width, dimensions.height);
+            if (isInitialResize) {
+                this.initialWidth = dimensions.width;
+                this.initialHeight = dimensions.height;
+            }
         },
     },
     mounted () {
