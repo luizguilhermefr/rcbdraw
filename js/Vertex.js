@@ -119,6 +119,15 @@ function Vertex(x, y, z) {
         return this;
     };
 
+    this.dotProduct = function (vertex) {
+        let value = 0;
+        value += this.x * vertex.getX();
+        value += this.y * vertex.getY();
+        value += this.z * vertex.getZ();
+
+        return value;
+    };
+
     this.divScalar = function (value) {
         this.x /= value;
         this.y /= value;

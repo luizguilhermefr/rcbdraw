@@ -19,6 +19,14 @@ function Pipeline (polygon, width, height, vrp, viewUp, p = null) {
         this.u = new Vertex(xu, yu, zu);
     };
 
+    this.matrixSruSrc = function () {
+        this.sruSrcM = [
+            [this.u.getX(), this.u.getY(), this.u.getZ(), this.vrp.clone().invert().dotProduct(u)],
+            [this.v.getX(), this.v.getY(), this.v.getZ(), this.vrp.clone().invert().dotProduct(v)],
+            [this.n.getX(), this.n.getY(), this.n.getZ(), this.vrp.clone().invert().dotProduct(n)],
+        ]
+    };
+
     this.sruToSrc = function () {
 
     };
@@ -38,6 +46,8 @@ function Pipeline (polygon, width, height, vrp, viewUp, p = null) {
     this.v = null;
 
     this.u = null;
+
+    this.sruSrcM = [];
 
     this.viewUp = viewUp;
 }
