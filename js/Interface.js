@@ -20,18 +20,14 @@ function Interface () {
 
     this.redraw = function () {
         this.clearPanels();
-        let solids = this.scene.getSolids();
-        for (let i = 0; i < solids.length; i++) {
-            let polygons = solids[ i ].getPolygons();
-            for (let j = 0; j < polygons.length; j++) {
-                if (solids[ i ].shouldFill() && !this.shouldWireframe) {
-                    this.fillPoly(polygons[ j ], solids[ i ].getFillColor());
-                }
-                if (solids[ i ].shouldStroke() || this.shouldWireframe) {
-                    this.strokePoly(polygons[ j ], this.shouldWireframe ? Colors.WIREFRAME : solids[ i ].getStrokeColor());
-                }
+        this.scene.getSolids().forEach(function (solid) {
+            if (solid.shouldFill() && !this.shouldWireframe) {
+                this.fillSolid(solid, solid.getFillColor());
             }
-        }
+            if (solid.shouldStroke() || this.shouldWireframe) {
+                this.strokeSolid(solid, this.shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor());
+            }
+        }.bind(this));
         this.drawTemporaryPolygon();
         this.drawAxis();
         this.drawSelectedSolid();
@@ -52,18 +48,18 @@ function Interface () {
         vue.$refs.panelPerspective.clearPanel();
     };
 
-    this.strokePoly = function (polygon, color) {
-        vue.$refs.panelFront.strokePoly(polygon, color);
-        vue.$refs.panelTop.strokePoly(polygon, color);
-        vue.$refs.panelLeft.strokePoly(polygon, color);
-        vue.$refs.panelPerspective.strokePoly(polygon, color);
+    this.strokeSolid = function (polygon, color) {
+        vue.$refs.panelFront.strokeSolid(polygon, color);
+        vue.$refs.panelTop.strokeSolid(polygon, color);
+        vue.$refs.panelLeft.strokeSolid(polygon, color);
+        vue.$refs.panelPerspective.strokeSolid(polygon, color);
     };
 
-    this.fillPoly = function (polygon, color) {
-        vue.$refs.panelFront.fillPoly(polygon, color);
-        vue.$refs.panelTop.fillPoly(polygon, color);
-        vue.$refs.panelLeft.fillPoly(polygon, color);
-        vue.$refs.panelPerspective.fillPoly(polygon, color);
+    this.fillSolid = function (polygon, color) {
+        vue.$refs.panelFront.fillSolid(polygon, color);
+        vue.$refs.panelTop.fillSolid(polygon, color);
+        vue.$refs.panelLeft.fillSolid(polygon, color);
+        vue.$refs.panelPerspective.fillSolid(polygon, color);
     };
 
     this.drawTemporaryPolygon = function () {

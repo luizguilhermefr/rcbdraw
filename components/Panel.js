@@ -192,34 +192,30 @@ Vue.component('panel', {
         getRelativeY (y) {
             return Math.round(y - this.canvas.offsetTop);
         },
-        strokePoly (polygon, color, autoClose = true) {
+        strokeSolid (solid, color, autoClose = true) {
             this.context.lineWidth = 1;
             this.context.strokeStyle = color;
             this.context.beginPath();
-            let coordX, coordY;
-            if (this.h === 'x' && this.v === 'y') { // front
-                coordX = polygon.vertexAt(0).getX();
-                coordY = polygon.vertexAt(0).getY();
-            } else if (this.h === 'x' && this.v === 'z') { // top
-                coordX = polygon.vertexAt(0).getX();
-                coordY = polygon.vertexAt(0).getZ();
-            } else { // left
-                coordX = polygon.vertexAt(0).getZ();
-                coordY = polygon.vertexAt(0).getY();
+            let vrp, viewUp;
+            if (this.h === 'x' && this.v === 'y') {
+                vrp = new Vertex(0, 0, 100);
+                viewUp = new Vertex(0, 1, 0);
+            } else if (this.h === 'x' && this.v === 'z') {
+                vrp = new Vertex(0, 100, 0);
+                viewUp = new Vertex(0, 0, 1);
+            } else {
+                vrp = new Vertex(100, 0, 0);
+                viewUp = new Vertex(0, 1, 0);
             }
+            let pipeline = new Pipeline(solid, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, vrp, viewUp);
+            let vertices = pipeline.run();
+            let coordX, coordY;
+            coordX = vertices[0].getX();
+            coordY = vertices[0].getY();
             this.context.moveTo(coordX, coordY);
-            for (let j = 1; j < polygon.countVertices(); j++) {
-                let vertex = polygon.vertexAt(j);
-                if (this.h === 'x' && this.v === 'y') { // front
-                    coordX = vertex.getX();
-                    coordY = vertex.getY();
-                } else if (this.h === 'x' && this.v === 'z') { // top
-                    coordX = vertex.getX();
-                    coordY = vertex.getZ();
-                } else { // left
-                    coordX = vertex.getZ();
-                    coordY = vertex.getY();
-                }
+            for (let j = 1; j < vertices.length; j++) {
+                coordX = vertices[j].getX();
+                coordY = vertices[j].getY();
                 this.context.lineTo(coordX, coordY);
             }
             if (autoClose) {

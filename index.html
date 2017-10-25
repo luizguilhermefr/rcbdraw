@@ -60,6 +60,7 @@
 <script type="text/javascript" src="js/Interface.js"></script>
 <script type="text/javascript" src="js/Edge.js"></script>
 <script type="text/javascript" src="js/Utils/PolyFill.js"></script>
+<script type="text/javascript" src="js/Utils/Pipeline.js"></script>
 
 <script type="text/javascript">
     window.onload = function () {
@@ -100,7 +101,7 @@
         };
     }
 
-    function resizeAll (isInitialResize) {
+    function resizeAll (isInitialResize = false) {
         vue.$refs.panelFront.resizeDefault(isInitialResize);
         vue.$refs.panelTop.resizeDefault(isInitialResize);
         vue.$refs.panelLeft.resizeDefault(isInitialResize);

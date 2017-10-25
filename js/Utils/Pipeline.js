@@ -1,7 +1,7 @@
 function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vrp, viewUp, p = null) {
 
     this.setVectorN = function () {
-        let N = this.vrp.clone().sub(p);
+        let N = this.vrp.clone().sub(this.p);
         let magnitude = N.getMagnitude();
         this.n = N.divScalar(magnitude);
     };
@@ -30,22 +30,41 @@ function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vr
 
     this.setPSrc = function () {
         this.pSrc = math.multiply(this.sruSrc, this.solid.toMatrix());
+        this.pSrc.splice(2, 1);
     };
 
     this.setMatrixMjp = function () {
         this.mJp = [
             [this.screenWidth / this.worldWidth, 0, 0],
-            [0, this.screenHeight / this.worldHeight, this.screenHeight],
+            [0, (this.screenHeight * -1) / this.worldHeight, this.screenHeight],
             [0, 0, 1]
         ];
     };
 
     this.setMatrixPsrt = function () {
-        this.psRt = math.multiply(this.mJp, this.pSrc);
+        this.pSrt = math.multiply(this.mJp, this.pSrc);
     };
 
-    this.print = function () {
+    this.getCol = function (matrix, col){
+        let column = [];
+        for (let i = 0; i < matrix.length; i++) {
+            column.push(matrix[i][col]);
+        }
 
+        return column;
+    };
+
+    this.to2DVertices = function () {
+        let columns = [];
+        let len = this.pSrt[0].length;
+        for (i = 0; i < len; i++) {
+            columns.push(this.getCol(this.pSrt, i));
+        }
+        let vertices = [];
+        columns.forEach(function (c) {
+            vertices.push(new Vertex(c[0], c[1], 1));
+        });
+        return vertices;
     };
 
     this.run = function () {
@@ -56,7 +75,7 @@ function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vr
         this.setPSrc();
         this.setMatrixMjp();
         this.setMatrixPsrt();
-        this.print();
+        return this.to2DVertices()
     };
 
     this.p = p === null ? new Vertex(0, 0, 0) : p;
