@@ -98,14 +98,20 @@ function Polygon(vertices) {
         return this.center;
     };
 
-    this.rotate = function(vertex, clone) {
-        for (let i = 0; i < this.vertices.length; i++) {
-            vertices[i].setX(Math.round(this.getNewPointX(clone.vertexAt(i).getX(), clone.vertexAt(i).getY(), teta)));
-            vertices[i].setY(Math.round(this.getNewPointY(clone.vertexAt(i).getX(), clone.vertexAt(i).getY(), teta)));
+    this.rotate = function(teta, axis) {
+        if( axis === 'x') {
+            for(let i = 0; i < vertices.length; i++) {
+                vertices[i].xRotation(teta);
+            }            
+        } else if( axis === 'y') {
+            for(let i = 0; i < vertices.length; i++) {
+                vertices[i].yRotation(teta);
+            }
+        } else {
+            for(let i = 0; i < vertices.length; i++) {
+                vertices[i].zRotation(teta);
+            }
         }
-        this.translate(referenceCenter);
-        this.boundaries = this.setBoundaries();
-        return this;
     };
 
     this.getNewPointX = function(x, y, teta) {

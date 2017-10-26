@@ -1,18 +1,51 @@
 Vue.component('revolution-modal', {
     
         template: `
-        <b-modal id="properties-modal" title="Propriedades..." @ok="submit" @shown="setValues" closeTitle="Cancelar"> 
+        <b-modal id="revolution-modal" title="Revolução do Sólido" @ok="submit" closeTitle="Cancelar" :ok-disabled="!canInsert()"> 
         <div class="modal-body">
             <div class="form-group">
-                <label>Borda</label>
+                <label>Quantidade em Graus</label>
                 <br>
-                <input type="color" v-model="stroke" @change="setMustStrokeSelected">
-                <input class="custom-checkbox form-control-lg" type="checkbox" v-model="mustStroke"/>
+                <b-input-group>
+                    <b-input-group-addon v-show="!degreeOk()">
+                        <strong class="text-danger">!</strong>
+                    </b-input-group-addon>
+                    <b-form-input placeholder="Graus" v-model.number="degree" disabled></b-form-input>
+                    <b-input-group-addon>px</b-input-group-addon>
+                    <b-input-group-button>
+                        <b-btn variant="danger" v-on:click="decreaseDegree()">-</b-btn>
+                    </b-input-group-button>
+                    <b-input-group-button>
+                        <b-btn variant="success" v-on:click="increaseDegree()">+</b-btn>
+                    </b-input-group-button>
+                </b-input-group>
                 <br>
-                <label>Preenchimento</label>
+                <label>Quantidade de faces</label>
                 <br>
-                <input type="color" v-model="fill" @change="setMustFillSelected">
-                <input class="custom-checkbox form-control-lg" type="checkbox" v-model="mustFill"/>
+                <b-input-group>
+                    <b-input-group-addon v-show="!facesOk()">
+                        <strong class="text-danger">!</strong>
+                    </b-input-group-addon>
+                    <b-form-input placeholder="Faces" v-model.number="faces" disabled></b-form-input>
+                    <b-input-group-addon>px</b-input-group-addon>
+                    <b-input-group-button>
+                        <b-btn variant="danger" v-on:click="decreaseFaces()">-</b-btn>
+                    </b-input-group-button>
+                    <b-input-group-button>
+                        <b-btn variant="success" v-on:click="increaseFaces()">+</b-btn>
+                    </b-input-group-button>
+                </b-input-group>
+                <br>
+                <label>Eixo de Rotação </label>
+                <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="X" id="Xaxis" v-model="axis" value="x">X
+                </label>
+                <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="Y" id="Yaxis" v-model="axis" value="y">Y
+                </label>
+                <label class="form-check-label">
+                    <input class="form-check-input" type="radio" name="Z" id="Zaxis" v-model="axis" value="z">Z
+                </label>
             </div>
         </div>
     </b-modal>
@@ -20,32 +53,43 @@ Vue.component('revolution-modal', {
     
         data: function () {
             return {
-                stroke: Colors.DEFAULT,
-                fill: '#ffffff',
-                mustStroke: true,
-                mustFill: false
+                degree: 90,
+                faces: 3,
+                axis: ""
             };
         },
     
         methods: {
-            setMustFillSelected() {
-                this.mustFill = true;
+            degreeOk() {
+                return this.degree >= 1;
             },
-            setMustStrokeSelected() {
-                this.mustStroke = true;
+            increaseDegree() {
+                this.degree++;
             },
-            submit () {
-                drawInterface.selectedSolid.solid.setStrokeColor(this.stroke);
-                drawInterface.selectedSolid.solid.setFillColor(this.fill);
-                drawInterface.selectedSolid.solid.setMustStroke(this.mustStroke);
-                drawInterface.selectedSolid.solid.setMustFill(this.mustFill);
+            decreaseDegree() {
+                this.degree--;
+            },
+            facesOk() {
+                return this.faces >= 3;
+            },
+            increaseFaces() {
+                this.faces++;
+            },
+            decreaseFaces() {
+                this.faces--;
+            },
+            axisOk () {
+                return this.axis.length;
+            },
+            canInsert () {
+                return this.degreeOk() && this.facesOk() && this.axisOk();
+            },
+            submit () {                
+                drawInterface.selectedSolid.solid.setDegree(this.degree);
+                drawInterface.selectedSolid.solid.setFaces(this.faces);
+                drawInterface.selectedSolid.solid.setAxis(this.axis);
+                drawInterface.selectedSolid.solid.runRevolution();
                 drawInterface.redraw();
-            },
-            setValues () {
-                this.stroke = drawInterface.selectedSolid.solid.getStrokeColor();
-                this.fill = drawInterface.selectedSolid.solid.getFillColor();
-                this.mustStroke = drawInterface.selectedSolid.solid.shouldStroke();
-                this.mustFill = drawInterface.selectedSolid.solid.shouldFill();
             }
         }
     });

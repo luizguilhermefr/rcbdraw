@@ -147,13 +147,11 @@ function Vertex(x, y, z) {
 
     this.yRotation = function(teta){
         this.setX((this.getX()* Math.cos(teta)) + (this.getZ() * Math.sin(teta)));
-        this.setZ((this.getX().invert()* Math.sin(teta)) + (this.getZ() * Math.cos(teta)));    
+        this.setZ(((this.getX() * -1 )* Math.sin(teta)) + (this.getZ() * Math.cos(teta)));    
     };
 
     this.zRotation = function(teta){
         this.setX((this.getX()* Math.cos(teta)) - (this.getY() * Math.sin(teta)));
         this.setY((this.getX()* Math.sin(teta)) + (this.getY() * Math.cos(teta)));    
     };
-    
-
 }

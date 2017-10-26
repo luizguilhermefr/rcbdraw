@@ -5,6 +5,9 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
     this.mustStroke = mustStroke;
     this.mustFill = mustFill;
     this.boundaries = null;
+    this.axis = null;
+    this.faces = null;
+    this.degree = null;
 
     this.getPolygons = function() {
         return this.polygons;
@@ -73,6 +76,30 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         this.boundaries = values;
     };
 
+    this.setDegree = function(degree) {
+        this.degree = degree;
+    };
+
+    this.setFaces = function(faces) {
+        this.faces = faces;
+    };
+
+    this.setAxis = function(axis) {
+        this.axis = axis;
+    };
+
+    this.getDegree = function() {
+        return this.degree;
+    };
+
+    this.getFaces = function() {
+        return this.faces;
+    };
+
+    this.getAxis = function() {
+        return this.axis;
+    };
+
     this.getBoundaries = function() {
         return this.boundaries;
     };
@@ -131,7 +158,6 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         this.setCenter();
     };
 
-
     this.toMatrix = function() {
         let vertices = [[], [], [], []];
         this.polygons.forEach(function (p) {
@@ -144,6 +170,20 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         });
 
         return vertices;
+    };    
+
+    this.runRevolution = function () {
+        let teta = this.degree/this.faces;
+        teta *= Math.PI/180;        
+        this.polygons.push(polygons[0].clone());
+        this.polygons[1].rotate(teta, this.axis);
+        this.dif = new Vertex(this.polygons[1].getVertices()[0].getX() - this.polygons[0].getVertices()[0].getX(),
+                            this.polygons[1].getVertices()[0].getY() - this.polygons[0].getVertices()[0].getY(),
+                            this.polygons[1].getVertices()[0].getZ() - this.polygons[0].getVertices()[0].getZ());
+        for(let i = 2; i < this.faces - 1; i++) {
+            this.polygons.push(polygons[i - 1].clone());
+            this.polygons[i].translatePoint(dif);
+        }
     };
 
     this.clone = function(displacement = 0) {
