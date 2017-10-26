@@ -196,19 +196,7 @@ Vue.component('panel', {
             this.context.lineWidth = 1;
             this.context.strokeStyle = color;
             this.context.beginPath();
-            let vrp, viewUp;
-            if (this.h === 'x' && this.v === 'y') {
-                vrp = new Vertex(0, 0, 100);
-                viewUp = new Vertex(0, 1, 0);
-            } else if (this.h === 'x' && this.v === 'z') {
-                vrp = new Vertex(0, 100, 0);
-                viewUp = new Vertex(0, 0, 1);
-            } else {
-                vrp = new Vertex(100, 0, 0);
-                viewUp = new Vertex(0, 1, 0);
-            }
-            let pipeline = new Pipeline(polygon, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, vrp, viewUp);
-            let vertices = pipeline.run();
+            let vertices = polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight).getDrawableVertices(this.h, this.v);
             this.context.moveTo(coordX = vertices[0].getX(), vertices[0].getY());
             for (let j = 1; j < vertices.length; j++) {
                 this.context.lineTo(vertices[j].getX(), vertices[j].getY());
