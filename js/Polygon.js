@@ -70,7 +70,7 @@ function Polygon (vertices) {
             return this.drawableVerticesXY;
         } else if (h === 'x' && v === 'z') {
             return this.drawableVerticesXZ;
-        } else {
+        } else  {
             return this.drawableVerticesZY;
         }
     };
@@ -80,9 +80,11 @@ function Polygon (vertices) {
             return this.drawableVerticesXY[ index ];
         } else if (h === 'x' && v === 'z') {
             return this.drawableVerticesXZ[ index ];
-        } else {
+        } else if (h === 'z' && v === 'y') {
             return this.drawableVerticesZY[ index ];
         }
+
+        return null;
     };
 
     this.updateDrawableBoundaries = function (h, v) {
@@ -91,9 +93,7 @@ function Polygon (vertices) {
         let maxY = Number.MIN_VALUE;
         let minY = Number.MAX_VALUE;
 
-        let vertices = this.getDrawableVertices(h, v);
-
-        vertices.forEach(function (v) {
+        this.getDrawableVertices(h, v).forEach(function (v) {
             let vx = v.getX();
             let vy = v.getY();
 
@@ -104,7 +104,7 @@ function Polygon (vertices) {
             minY = vy < minY ? vy : minY;
         });
 
-        this.setDrawableBoundaries({ maxX, minX, maxY, minY, maxZ, minZ }, h, v);
+        this.setDrawableBoundaries({ maxX, minX, maxY, minY }, h, v);
 
         return this;
     };
@@ -113,9 +113,9 @@ function Polygon (vertices) {
         if (h === 'x' && v === 'y') {
             return this.drawableBoundariesXY;
         } else if (h === 'x' && v === 'z') {
-            return this.drawableVerticesXZ;
+            return this.drawableBoundariesXZ;
         } else {
-            return this.drawableVerticesZY;
+            return this.drawableBoundariesZY;
         }
     };
 
@@ -123,10 +123,12 @@ function Polygon (vertices) {
         if (h === 'x' && v === 'y') {
             this.drawableBoundariesXY = boundary;
         } else if (h === 'x' && v === 'z') {
-            this.drawableVerticesXZ = boundary;
+            this.drawableBoundariesXZ = boundary;
         } else {
-            this.drawableVerticesZY = boundary;
+            this.drawableBoundariesZY = boundary;
         }
+
+        return this;
     };
 
     this.getVertices = function () {

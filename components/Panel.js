@@ -196,8 +196,8 @@ Vue.component('panel', {
             this.context.lineWidth = 1;
             this.context.strokeStyle = color;
             this.context.beginPath();
-            let vertices = polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight).getDrawableVertices(this.h, this.v);
-            this.context.moveTo(coordX = vertices[0].getX(), vertices[0].getY());
+            polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
+            let vertices = polygon.getDrawableVertices(this.h, this.v);
             for (let j = 1; j < vertices.length; j++) {
                 this.context.lineTo(vertices[j].getX(), vertices[j].getY());
             }
