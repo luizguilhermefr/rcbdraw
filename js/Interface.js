@@ -286,7 +286,6 @@ function Interface () {
         for (let n = 0; n < solids.length; n++) {
             let polygons = solids[ n ].getPolygons();
             for (let i = 0; i < polygons.length; i++) {
-                console.log(polygons[ i ].isInsideDrawableBoundaryTolerance(point, h, v));
                 if (polygons[ i ].isInsideDrawableBoundaryTolerance(point, h, v)) {
                     let distance = polygons[ i ].closestDrawedEdge(point, h, v);
                     if (distance.distance < lowestDistance.distance) {

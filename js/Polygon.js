@@ -109,7 +109,7 @@ function Polygon (vertices) {
         return this;
     };
 
-    this.getDrawableBoundaries = function (boundary, h, v) {
+    this.getDrawableBoundaries = function (h, v) {
         if (h === 'x' && v === 'y') {
             return this.drawableBoundariesXY;
         } else if (h === 'x' && v === 'z') {
@@ -155,6 +155,7 @@ function Polygon (vertices) {
                 closestPoint.vertex = v;
             }
         });
+
         return closestPoint.vertex;
     };
 
@@ -292,13 +293,12 @@ function Polygon (vertices) {
         return vertices;
     };
 
-    this.isInsideDrawableBoundaryTolerance = function (vertex, h, v) {
+    this.isInsideDrawableBoundaryTolerance = function (clickVertex, h, v) {
         let tolerance = 20;
-
         let boundary = this.getDrawableBoundaries(h, v);
 
-        let insideX = (vertex.getX() < (boundary.maxX + tolerance)) && (vertex.getX() > (boundary.minX - tolerance));
-        let insideY = (vertex.getY() < (boundary.maxY + tolerance)) && (vertex.getY() > (boundary.minY - tolerance));
+        let insideX = (clickVertex.getX() < (boundary.maxX + tolerance)) && (clickVertex.getX() > (boundary.minX - tolerance));
+        let insideY = (clickVertex.getY() < (boundary.maxY + tolerance)) && (clickVertex.getY() > (boundary.minY - tolerance));
 
         return insideX && insideY;
     };
