@@ -282,7 +282,7 @@ function Polygon (vertices) {
     this.clone = function (displacement = 0) {
         let nextVertices = [];
         this.vertices.forEach(function (v) {
-            nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement));
+            nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement, v.getZ() + displacement));
         });
         return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
     };
