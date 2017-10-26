@@ -27,6 +27,8 @@ Vue.component('panel', {
 
     data: function () {
         return {
+            initialWidth: 0,
+            initialHeight: 0,
             visible: true,
             expanded: false,
             canvas: null,
@@ -194,31 +196,22 @@ Vue.component('panel', {
             this.context.lineWidth = 1;
             this.context.strokeStyle = color;
             this.context.beginPath();
-            let coordX, coordY;
-            if (this.h === 'x' && this.v === 'y') { // front
-                coordX = polygon.vertexAt(0).getX();
-                coordY = polygon.vertexAt(0).getY();
-            } else if (this.h === 'x' && this.v === 'z') { // top
-                coordX = polygon.vertexAt(0).getX();
-                coordY = polygon.vertexAt(0).getZ();
-            } else { // left
-                coordX = polygon.vertexAt(0).getZ();
-                coordY = polygon.vertexAt(0).getY();
+            let vrp, viewUp;
+            if (this.h === 'x' && this.v === 'y') {
+                vrp = new Vertex(0, 0, 100);
+                viewUp = new Vertex(0, 1, 0);
+            } else if (this.h === 'x' && this.v === 'z') {
+                vrp = new Vertex(0, 100, 0);
+                viewUp = new Vertex(0, 0, 1);
+            } else {
+                vrp = new Vertex(100, 0, 0);
+                viewUp = new Vertex(0, 1, 0);
             }
-            this.context.moveTo(coordX, coordY);
-            for (let j = 1; j < polygon.countVertices(); j++) {
-                let vertex = polygon.vertexAt(j);
-                if (this.h === 'x' && this.v === 'y') { // front
-                    coordX = vertex.getX();
-                    coordY = vertex.getY();
-                } else if (this.h === 'x' && this.v === 'z') { // top
-                    coordX = vertex.getX();
-                    coordY = vertex.getZ();
-                } else { // left
-                    coordX = vertex.getZ();
-                    coordY = vertex.getY();
-                }
-                this.context.lineTo(coordX, coordY);
+            let pipeline = new Pipeline(polygon, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, vrp, viewUp);
+            let vertices = pipeline.run();
+            this.context.moveTo(coordX = vertices[0].getX(), vertices[0].getY());
+            for (let j = 1; j < vertices.length; j++) {
+                this.context.lineTo(vertices[j].getX(), vertices[j].getY());
             }
             if (autoClose) {
                 this.context.closePath();
@@ -348,7 +341,7 @@ Vue.component('panel', {
             this.expandStyles.left = (this.canvas.offsetLeft + this.canvas.width - 40) + 'px';
             drawInterface.redraw();
         },
-        resizeDefault() {
+        resizeDefault(isInitialResize = false) {
             let dimensions;
             if (this.expanded) {
                 dimensions = getScreenDimensions();
@@ -356,6 +349,10 @@ Vue.component('panel', {
                 dimensions = getHalfScreenDimensions();
             }
             this.resize(dimensions.width, dimensions.height);
+            if (isInitialResize) {
+                this.initialWidth = dimensions.width;
+                this.initialHeight = dimensions.height;
+            }
         },
     },
     mounted () {

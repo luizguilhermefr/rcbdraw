@@ -38,6 +38,7 @@
 <script type="text/javascript" src="libs/vue/vue.js"></script>
 <script type="text/javascript" src="libs/tether/tether.min.js"></script>
 <script type="text/javascript" src="libs/vue/bootstrap-vue.js"></script>
+<script type="text/javascript" src="libs/mathjs/math.min.js"></script>
 
 <script type="text/javascript" src="components/OpenModal.js"></script>
 <script type="text/javascript" src="components/PropertiesModal.js"></script>
@@ -59,6 +60,7 @@
 <script type="text/javascript" src="js/Interface.js"></script>
 <script type="text/javascript" src="js/Edge.js"></script>
 <script type="text/javascript" src="js/Utils/PolyFill.js"></script>
+<script type="text/javascript" src="js/Utils/Pipeline.js"></script>
 
 <script type="text/javascript">
     window.onload = function () {
@@ -68,7 +70,7 @@
 
         drawInterface = new Interface();
 
-        resizeAll();
+        resizeAll(true);
 
         window.addEventListener('keyup', function (event) {
             if (event.keyCode === 27) { // esc
@@ -99,11 +101,11 @@
         };
     }
 
-    function resizeAll () {
-        vue.$refs.panelFront.resizeDefault();
-        vue.$refs.panelTop.resizeDefault();
-        vue.$refs.panelLeft.resizeDefault();
-        vue.$refs.panelPerspective.resizeDefault();
+    function resizeAll (isInitialResize = false) {
+        vue.$refs.panelFront.resizeDefault(isInitialResize);
+        vue.$refs.panelTop.resizeDefault(isInitialResize);
+        vue.$refs.panelLeft.resizeDefault(isInitialResize);
+        vue.$refs.panelPerspective.resizeDefault(isInitialResize);
     }
 
     function makeEveryoneInvisible () {

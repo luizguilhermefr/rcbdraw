@@ -187,8 +187,20 @@ function Polygon(vertices) {
         return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
     };
 
+    this.toMatrix = function () {
+        let vertices = [[], [], [], []];
+        this.getVertices().forEach(function (v) {
+            vertices[0].push(v.getX());
+            vertices[1].push(v.getY());
+            vertices[2].push(v.getZ());
+            vertices[3].push(1);
+        });
+
+        return vertices;
+    };
+
     this.vertices = vertices;
     this.edges = [];
-    this.boundaries;
+    this.boundaries = null;
     this.setBoundaries();
 }

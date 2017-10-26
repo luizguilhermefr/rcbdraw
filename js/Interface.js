@@ -20,18 +20,16 @@ function Interface () {
 
     this.redraw = function () {
         this.clearPanels();
-        let solids = this.scene.getSolids();
-        for (let i = 0; i < solids.length; i++) {
-            let polygons = solids[ i ].getPolygons();
-            for (let j = 0; j < polygons.length; j++) {
-                if (solids[ i ].shouldFill() && !this.shouldWireframe) {
-                    this.fillPoly(polygons[ j ], solids[ i ].getFillColor());
+        this.scene.getSolids().forEach(function (solid) {
+            solid.getPolygons().forEach(function (polygon) {
+                if (solid.shouldFill() && !this.shouldWireframe) {
+                    this.fillSolid(polygon, solid.getFillColor());
                 }
-                if (solids[ i ].shouldStroke() || this.shouldWireframe) {
-                    this.strokePoly(polygons[ j ], this.shouldWireframe ? Colors.WIREFRAME : solids[ i ].getStrokeColor());
+                if (solid.shouldStroke() || this.shouldWireframe) {
+                    this.strokePoly(polygon, this.shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor());
                 }
-            }
-        }
+            }.bind(this));
+        }.bind(this));
         this.drawTemporaryPolygon();
         this.drawAxis();
         this.drawSelectedSolid();
@@ -59,11 +57,11 @@ function Interface () {
         vue.$refs.panelPerspective.strokePoly(polygon, color);
     };
 
-    this.fillPoly = function (polygon, color) {
-        vue.$refs.panelFront.fillPoly(polygon, color);
-        vue.$refs.panelTop.fillPoly(polygon, color);
-        vue.$refs.panelLeft.fillPoly(polygon, color);
-        vue.$refs.panelPerspective.fillPoly(polygon, color);
+    this.fillSolid = function (polygon, color) {
+        vue.$refs.panelFront.fillSolid(polygon, color);
+        vue.$refs.panelTop.fillSolid(polygon, color);
+        vue.$refs.panelLeft.fillSolid(polygon, color);
+        vue.$refs.panelPerspective.fillSolid(polygon, color);
     };
 
     this.drawTemporaryPolygon = function () {
