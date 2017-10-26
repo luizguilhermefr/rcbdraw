@@ -18,7 +18,7 @@ function Interface () {
         this.scene.getSolids().forEach(function (solid) {
             solid.getPolygons().forEach(function (polygon) {
                 if (solid.shouldFill() && !this.shouldWireframe) {
-                    this.fillSolid(polygon, solid.getFillColor());
+                    this.fillPoly(polygon, solid.getFillColor());
                 }
                 if (solid.shouldStroke() || this.shouldWireframe) {
                     this.strokePoly(polygon, this.shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor());
@@ -52,11 +52,11 @@ function Interface () {
         vue.$refs.panelPerspective.strokePoly(polygon, color);
     };
 
-    this.fillSolid = function (polygon, color) {
-        vue.$refs.panelFront.fillSolid(polygon, color);
-        vue.$refs.panelTop.fillSolid(polygon, color);
-        vue.$refs.panelLeft.fillSolid(polygon, color);
-        vue.$refs.panelPerspective.fillSolid(polygon, color);
+    this.fillPoly = function (polygon, color) {
+        vue.$refs.panelFront.fillPoly(polygon, color);
+        vue.$refs.panelTop.fillPoly(polygon, color);
+        vue.$refs.panelLeft.fillPoly(polygon, color);
+        vue.$refs.panelPerspective.fillPoly(polygon, color);
     };
 
     this.drawTemporaryPolygon = function () {
