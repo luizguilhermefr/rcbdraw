@@ -1,9 +1,4 @@
 function Interface () {
-    this.scene = new Scene();
-    this.selectedSolid = null;
-    this.rotationSolid = null;
-    this.scaleSolid = null;
-    this.shouldWireframe = false;
 
     this.toggleWireframe = function () {
         this.shouldWireframe = !this.shouldWireframe;
@@ -216,22 +211,6 @@ function Interface () {
         this.redraw();
     };
 
-    this.isInsideBoundaryTolerance = function (vertex, boundary, h, v) {
-        let tolerance = 20;
-
-        let insideX = (vertex.getX() < (boundary.maxX + tolerance)) && (vertex.getX() > (boundary.minX - tolerance));
-        let insideY = (vertex.getY() < (boundary.maxY + tolerance)) && (vertex.getY() > (boundary.minY - tolerance));
-        let insideZ = (vertex.getZ() < (boundary.maxZ + tolerance)) && (vertex.getZ() > (boundary.minZ - tolerance));
-
-        if (h === 'x' && v === 'y') { // front
-            return insideX && insideY;
-        } else if (h === 'x' && v === 'z') { // top
-            return insideX && insideZ;
-        } else { // left
-            return insideZ && insideY;
-        }
-    };
-
     this.translateClick = function (x, y, h, v) {
         let newPoint;
         if (h == 'x' && v == 'y') {
@@ -293,61 +272,22 @@ function Interface () {
         return !(this.selectedSolid === null);
     };
 
-    this.edgePanel = function (edge, point) {
-        if (point.z == -1) {
-            return {
-                x1: edge.x1,
-                y1: edge.y1,
-                x2: edge.x2,
-                y2: edge.y2,
-                pointX: point.x,
-                pointY: point.y
-            };
-        } else if (point.y == -1) {
-            return {
-                x1: edge.x1,
-                y1: edge.z1,
-                x2: edge.x2,
-                y2: edge.z2,
-                pointX: point.x,
-                pointY: point.z
-            };
-        } else if (point.x == -1) {
-            return {
-                x1: edge.z1,
-                y1: edge.y1,
-                x2: edge.z2,
-                y2: edge.y2,
-                pointX: point.z,
-                pointY: point.y
-            };
-        } else {
-            alert('problemas');
-        }
-    };
-
     this.selectionClick = function (x, y, h, v) {
         let solids = this.scene.getSolids();
+
         let lowestDistance = {
             solid: -1,
             poly: -1,
             distance: Number.POSITIVE_INFINITY
         };
-        let point;
 
-        if (h === 'x' && v === 'y') { // front
-            point = new Vertex(x, y, 0);
-        } else if (h === 'x' && v === 'z') { // top
-            point = new Vertex(x, 0, y);
-        } else { // left
-            point = new Vertex(0, y, x);
-        }
+        let point = new Vertex(x, y, 0);
 
         for (let n = 0; n < solids.length; n++) {
             let polygons = solids[ n ].getPolygons();
             for (let i = 0; i < polygons.length; i++) {
-                if (this.isInsideBoundaryTolerance(point, polygons[ i ].getBoundaries(), h, v)) {
-                    let distance = polygons[ i ].closestEdge(point, h, v);
+                if (polygons[ i ].isInsideDrawableBoundaryTolerance(point, h, v)) {
+                    let distance = polygons[ i ].closestDrawedEdge(point, h, v);
                     if (distance.distance < lowestDistance.distance) {
                         lowestDistance.solid = n;
                         lowestDistance.poly = polygons[ i ];
@@ -367,17 +307,6 @@ function Interface () {
         }
 
         this.redraw();
-    };
-
-    this.distanceBetweenTwoPoints = function (first, second) {
-        return Math.sqrt(Math.pow(first.x - second.x, 2) + Math.pow(first.y - second.y, 2));
-    };
-
-    this.distanceBetweenPointAndEdge = function (data) {
-        let r = data.y2 - data.y1;
-        let s = -(data.x2 - data.x1);
-        let t = data.x2 * data.y1 - data.x1 * data.y2;
-        return Math.abs(r * data.pointX + s * data.pointY + t) / Math.sqrt(Math.pow(r, 2) + Math.pow(s, 2));
     };
 
     this.duplicateSelected = function () {
@@ -400,4 +329,14 @@ function Interface () {
         }
         this.redraw();
     };
+
+    this.scene = new Scene();
+
+    this.selectedSolid = null;
+
+    this.rotationSolid = null;
+
+    this.scaleSolid = null;
+
+    this.shouldWireframe = false;
 }
