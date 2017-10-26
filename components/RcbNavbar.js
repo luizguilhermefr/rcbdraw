@@ -202,6 +202,15 @@ Vue.component('rcb-navbar', {
                             action () {
                                 openPropertiesModal();
                             }
+                        },
+                        {
+                            id: 11,
+                            title: 'Revolução',
+                            enabled: true,
+                            icon: 'fa fa-info',
+                            action () {
+                                openRevolutionModal();
+                            }
                         }
                     ]
                 },

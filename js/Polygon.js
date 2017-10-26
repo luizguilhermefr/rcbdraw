@@ -192,14 +192,20 @@ function Polygon (vertices) {
         return this.center;
     };
 
-    this.rotate = function (vertex, clone) {
-        for (let i = 0; i < this.vertices.length; i++) {
-            vertices[ i ].setX(Math.round(this.getNewPointX(clone.vertexAt(i).getX(), clone.vertexAt(i).getY(), teta)));
-            vertices[ i ].setY(Math.round(this.getNewPointY(clone.vertexAt(i).getX(), clone.vertexAt(i).getY(), teta)));
+    this.rotate = function(teta, axis) {
+        if( axis === 'x') {
+            for(let i = 0; i < vertices.length; i++) {
+                vertices[i].xRotation(teta);
+            }            
+        } else if( axis === 'y') {
+            for(let i = 0; i < vertices.length; i++) {
+                vertices[i].yRotation(teta);
+            }
+        } else {
+            for(let i = 0; i < vertices.length; i++) {
+                vertices[i].zRotation(teta);
+            }
         }
-        this.translate(referenceCenter);
-        this.updateBoundaries();
-        return this;
     };
 
     this.getNewPointX = function (x, y, teta) {
@@ -276,7 +282,7 @@ function Polygon (vertices) {
     this.clone = function (displacement = 0) {
         let nextVertices = [];
         this.vertices.forEach(function (v) {
-            nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement));
+            nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement, v.getZ() + displacement));
         });
         return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
     };

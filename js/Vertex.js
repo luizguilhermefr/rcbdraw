@@ -139,4 +139,19 @@ function Vertex(x, y, z) {
     this.getMagnitude = function () {
         return Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
     };
+
+    this.xRotation = function(teta){
+        this.setY((this.getY()* Math.cos(teta)) - (this.getZ() * Math.sin(teta)));
+        this.setZ((this.getY()* Math.sin(teta)) + (this.getZ() * Math.cos(teta)));    
+    };
+
+    this.yRotation = function(teta){        
+        this.setX(Math.round((this.getX() * Math.cos(teta)) + (this.getZ() * Math.sin(teta))));
+        this.setZ(Math.round(((this.getX() * -1 )* Math.sin(teta)) + (this.getZ() * Math.cos(teta))));          
+    };
+
+    this.zRotation = function(teta){
+        this.setX((this.getX()* Math.cos(teta)) - (this.getY() * Math.sin(teta)));
+        this.setY((this.getX()* Math.sin(teta)) + (this.getY() * Math.cos(teta)));    
+    };
 }

@@ -68,7 +68,31 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this;
     };
 
-    this.getBoundaries = function () {
+    this.setDegree = function(degree) {
+        this.degree = degree;
+    };
+
+    this.setFaces = function(faces) {
+        this.faces = faces;
+    };
+
+    this.setAxis = function(axis) {
+        this.axis = axis;
+    };
+
+    this.getDegree = function() {
+        return this.degree;
+    };
+
+    this.getFaces = function() {
+        return this.faces;
+    };
+
+    this.getAxis = function() {
+        return this.axis;
+    };
+
+    this.getBoundaries = function() {
         return this.boundaries;
     };
 
@@ -136,6 +160,18 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         });
 
         return vertices;
+    };    
+
+    this.runRevolution = function () {
+        let teta = this.degree/this.faces;
+        console.log(teta);
+        teta *= Math.PI/180;             
+        //console.log(teta);
+        for(let i = 1; i < this.faces; i++) {
+            this.polygons.push(polygons[i - 1].clone());        
+            this.polygons[i].rotate(teta, this.axis);                    
+        }
+        console.log(polygons);
     };
 
     this.clone = function (displacement = 0) {
@@ -161,4 +197,10 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
     this.updateBoundaries();
 
     this.setCenter();
+
+    this.axis = null;
+
+    this.faces = null;
+
+    this.degree = null;
 }
