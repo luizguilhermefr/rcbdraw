@@ -1,4 +1,4 @@
-function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vrp, viewUp, p = null) {
+function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, vrp, viewUp, p = null) {
 
     this.setVectorN = function () {
         let N = this.vrp.clone().sub(this.p);
@@ -29,21 +29,21 @@ function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vr
     };
 
     this.setPSrc = function () {
-        this.pSrc = math.multiply(this.sruSrc, this.solid.toMatrix());
+        this.pSrc = math.multiply(this.sruSrc, this.polygon.toMatrix());
         this.pSrc.splice(2, 1);
     };
 
     this.setWorldCoordinates = function () {
-        this.wMaxX = this.worldWidth;//this.worldWidth / 2;
-        this.wMinX = 0;//this.worldWidth / -2;
-        this.wMaxY = this.worldHeight;//this.worldHeight / 2;
-        this.wMinY = 0;//this.worldHeight / -2;
+        this.wMaxX = this.worldWidth;
+        this.wMinX = 0;
+        this.wMaxY = this.worldHeight;
+        this.wMinY = 0;
     };
 
     this.setMatrixMjp = function () {
         this.mJp = [
             [(this.screenWidth) / (this.wMaxX - this.wMinX), 0, (this.wMinX * -1) * (this.screenWidth / (this.wMaxX - this.wMinX))],
-            [0, (this.screenHeight * -1) / (this.wMaxY - this.wMinY), (this.wMinX * (this.screenHeight / (this.wMaxY - this.wMinY))) + this.screenHeight],
+            [0, (this.screenHeight * -1) / (this.wMaxY - this.wMinY), (this.wMinY * (this.screenHeight / (this.wMaxY - this.wMinY))) + this.screenHeight],
             [0, 0, 1]
         ];
     };
@@ -88,7 +88,7 @@ function Pipeline (solid, screenWidth, screenHeight, worldWidth, worldHeight, vr
 
     this.p = p === null ? new Vertex(0, 0, 0) : p;
 
-    this.solid = solid;
+    this.polygon = polygon;
 
     this.screenWidth = screenWidth;
 

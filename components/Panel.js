@@ -192,7 +192,7 @@ Vue.component('panel', {
         getRelativeY (y) {
             return Math.round(y - this.canvas.offsetTop);
         },
-        strokeSolid (solid, color, autoClose = true) {
+        strokePoly (polygon, color, autoClose = true) {
             this.context.lineWidth = 1;
             this.context.strokeStyle = color;
             this.context.beginPath();
@@ -207,7 +207,7 @@ Vue.component('panel', {
                 vrp = new Vertex(100, 0, 0);
                 viewUp = new Vertex(0, 1, 0);
             }
-            let pipeline = new Pipeline(solid, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, vrp, viewUp);
+            let pipeline = new Pipeline(polygon, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, vrp, viewUp);
             let vertices = pipeline.run();
             this.context.moveTo(coordX = vertices[0].getX(), vertices[0].getY());
             for (let j = 1; j < vertices.length; j++) {
@@ -341,7 +341,7 @@ Vue.component('panel', {
             this.expandStyles.left = (this.canvas.offsetLeft + this.canvas.width - 40) + 'px';
             drawInterface.redraw();
         },
-        resizeDefault(isInitialResize) {
+        resizeDefault(isInitialResize = false) {
             let dimensions;
             if (this.expanded) {
                 dimensions = getScreenDimensions();
