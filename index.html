@@ -20,6 +20,7 @@
     <export-modal></export-modal>
     <regular-polygon-modal></regular-polygon-modal>
     <properties-modal></properties-modal>
+    <revolution-modal></revolution-modal>
     <about-modal></about-modal>
     <toolbar></toolbar>
 
@@ -42,6 +43,7 @@
 
 <script type="text/javascript" src="components/OpenModal.js"></script>
 <script type="text/javascript" src="components/PropertiesModal.js"></script>
+<script type="text/javascript" src="components/RevolutionModal.js"></script>
 <script type="text/javascript" src="components/SaveModal.js"></script>
 <script type="text/javascript" src="components/ExportModal.js"></script>
 <script type="text/javascript" src="components/RegularPolygonModal.js"></script>
@@ -173,6 +175,14 @@
             return;
         }
         vue.$emit('show::modal', 'properties-modal');
+    }
+
+    function openRevolutionModal () {
+        if (!drawInterface.isSomethingSelected()) {
+            alert('Nenhum objeto selecionado.');
+            return;
+        }
+        vue.$emit('show::modal', 'revolution-modal');
     }
 
     function expectRotation () {
