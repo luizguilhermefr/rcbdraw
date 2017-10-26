@@ -145,16 +145,9 @@ function Vertex(x, y, z) {
         this.setZ((this.getY()* Math.sin(teta)) + (this.getZ() * Math.cos(teta)));    
     };
 
-    this.yRotation = function(teta){
-        console.log('--');
-        console.log(this.getX());
-        console.log(this.getZ());
-        console.log('--');
-        this.setX((this.getX() * Math.cos(teta)) + (this.getZ() * Math.sin(teta)) );
-        this.setZ(((this.getX() * -1 )* Math.sin(teta)) + (this.getZ() * Math.cos(teta)));  
-        console.log(this.getX());
-        console.log(this.getZ());
-        console.log('--');
+    this.yRotation = function(teta){        
+        this.setX(Math.round((this.getX() * Math.cos(teta)) + (this.getZ() * Math.sin(teta))));
+        this.setZ(Math.round(((this.getX() * -1 )* Math.sin(teta)) + (this.getZ() * Math.cos(teta))));          
     };
 
     this.zRotation = function(teta){

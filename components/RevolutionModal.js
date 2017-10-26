@@ -53,8 +53,8 @@ Vue.component('revolution-modal', {
     
         data: function () {
             return {
-                degree: 180,
-                faces: 3,
+                degree: 360,
+                faces: 6,
                 axis: ""
             };
         },
