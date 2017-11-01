@@ -97,12 +97,16 @@ Vue.component('panel', {
             let y = this.getRelativeY(e.clientY);
             switch (this.mode) {
                 case 1:
+                    x = x - (this.canvas.width / 2);
+                    y = y - (this.canvas.height / 2);
                     this.putPoly(x, y);
                     break;
                 case 2:
                     this.selectionClick(x, y);
                     break;
                 case 3:
+                    x = x - (this.width / 2);
+                    y = y - (this.height / 2);
                     this.freehandClick(x, y);
                     break;
                 case 6:
@@ -126,6 +130,8 @@ Vue.component('panel', {
             if (this.dragging) {
                 switch (this.mode) {
                     case 4:
+                        x = x - (this.canvas.width / 2);
+                        y = y - (this.canvas.height / 2);
                         drawInterface.translateClick(x, y, this.h, this.v);
                         break;
                     case 5:
@@ -143,6 +149,8 @@ Vue.component('panel', {
             if (this.dragging) {
                 switch (this.mode) {
                     case 4:
+                        x = x - (this.canvas.width / 2);
+                        y = y - (this.canvas.height / 2);
                         drawInterface.translateClick(x, y, this.h, this.v);
                         break;
                     case 5:
@@ -196,8 +204,13 @@ Vue.component('panel', {
             this.context.lineWidth = 1;
             this.context.strokeStyle = color;
             this.context.beginPath();
-            polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
-            let vertices = polygon.getDrawableVertices(this.h, this.v);
+            let vertices;
+            if (this.h === 'px' && this.v === 'py') {
+                vertices = polygon.getDrawablePerspectiveVertices(this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
+            } else {
+                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
+                vertices = polygon.getDrawableVertices(this.h, this.v);
+            }
             for (let j = 1; j < vertices.length; j++) {
                 this.context.lineTo(vertices[j].getX(), vertices[j].getY());
             }
@@ -224,8 +237,10 @@ Vue.component('panel', {
                 toPush = new Vertex(x, y, 0);
             } else if (this.h === 'x' && this.v === 'z') { // top
                 toPush = new Vertex(x, 0, y);
-            } else { // left
+            } else if(this.h === 'z' && this.v === 'y') { // left
                 toPush = new Vertex(0, y, x);
+            } else { // perspective
+                toPush = new Vertex(x, y, 0);
             }
             this.freeHandDots.push(toPush);
             drawInterface.redraw();
@@ -251,7 +266,7 @@ Vue.component('panel', {
             } else if (this.h === 'x' && this.v === 'z') { // top
                 return this.freeHandDots[ 0 ].distanceToVertexXZ(this.freeHandDots[ this.freeHandDots.length -
                 1 ]) < 20;
-            } else { // left
+            } else if(this.h === 'z' && this.v === 'y'){ // left
                 return this.freeHandDots[ 0 ].distanceToVertexZY(this.freeHandDots[ this.freeHandDots.length -
                 1 ]) < 20;
             }

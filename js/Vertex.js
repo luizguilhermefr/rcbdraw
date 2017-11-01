@@ -141,17 +141,23 @@ function Vertex(x, y, z) {
     };
 
     this.xRotation = function(teta){
-        this.setY((this.getY()* Math.cos(teta)) - (this.getZ() * Math.sin(teta)));
-        this.setZ((this.getY()* Math.sin(teta)) + (this.getZ() * Math.cos(teta)));    
+        let temp = (this.getY()* Math.cos(teta)) - (this.getZ() * Math.sin(teta));
+        let temp1 = (this.getY()* Math.sin(teta)) + (this.getZ() * Math.cos(teta));
+        this.setY(Math.round(temp));
+        this.setZ(Math.round(temp1));    
     };
 
-    this.yRotation = function(teta){        
-        this.setX(Math.round((this.getX() * Math.cos(teta)) + (this.getZ() * Math.sin(teta))));
-        this.setZ(Math.round(((this.getX() * -1 )* Math.sin(teta)) + (this.getZ() * Math.cos(teta))));          
+    this.yRotation = function(teta){  
+        let temp = (this.getX() * Math.cos(teta)) + (this.getZ() * Math.sin(teta));
+        let temp1 = ((this.getX() * -1 )* Math.sin(teta)) + (this.getZ() * Math.cos(teta));
+        this.setX(Math.round(temp));
+        this.setZ(Math.round(temp1));                  
     };
 
-    this.zRotation = function(teta){
-        this.setX((this.getX()* Math.cos(teta)) - (this.getY() * Math.sin(teta)));
-        this.setY((this.getX()* Math.sin(teta)) + (this.getY() * Math.cos(teta)));    
+    this.zRotation = function(teta){        
+        let temp = (this.getX()* Math.cos(teta)) - (this.getY() * Math.sin(teta));
+        let temp1 = (this.getX()* Math.sin(teta)) + (this.getY() * Math.cos(teta));
+        this.setX(Math.round(temp));
+        this.setY(Math.round(temp1));            
     };
 }
