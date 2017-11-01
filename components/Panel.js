@@ -200,6 +200,19 @@ Vue.component('panel', {
         getRelativeY (y) {
             return Math.round(y - this.canvas.offsetTop);
         },
+        drawSolids (solids, shouldWireframe = false) {
+            solids.forEach(function (solid) {
+                solid.getPolygons().forEach(function (polygon) {
+                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);                
+                    if (solid.shouldFill() && !shouldWireframe) {
+                        this.fillPoly(polygon, solid.getFillColor());
+                    }
+                    if (solid.shouldStroke() || shouldWireframe) {
+                        this.strokePoly(polygon, shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor());
+                    }
+                }.bind(this));
+            }.bind(this));
+        },
         strokePoly (polygon, color, autoClose = true) {
             this.context.lineWidth = 1;
             this.context.strokeStyle = color;
@@ -208,7 +221,6 @@ Vue.component('panel', {
             if (this.h === 'px' && this.v === 'py') {
                 vertices = polygon.getDrawablePerspectiveVertices(this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
             } else {
-                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
                 vertices = polygon.getDrawableVertices(this.h, this.v);
             }
             for (let j = 1; j < vertices.length; j++) {
