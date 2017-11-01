@@ -121,7 +121,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
                 vertexMove = new Vertex(center.getX() - vertex.getX(), center.getY() - vertex.getY(), vertex.getZ());
             } else if (h === 'x' && v === 'z') {
                 vertexMove = new Vertex(center.getX() - vertex.getX(), vertex.getY(), center.getZ() - vertex.getZ());
-            } else {
+            } else if (h === 'z' && v === 'y') {
                 vertexMove = new Vertex(vertex.getX(), center.getY() - vertex.getY(), center.getZ() - vertex.getZ());
             }
             polygons[ i ].translatePoint(vertexMove);
@@ -138,7 +138,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
                 teta = Math.atan2(vertex.getX() - center.getX(), -(vertex.getY() - center.getY()));
             } else if (h === 'x' && v === 'z') {
                 teta = Math.atan2(vertex.getX() - center.getX(), -(vertex.getZ() - center.getZ()));
-            } else {
+            } else if (h === 'z' && v === 'y') {
                 teta = Math.atan2(vertex.getZ() - center.getZ(), -(vertex.getY() - center.getY()));
             }
             polygons[ i ].translatePoint(center);
@@ -164,14 +164,11 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
 
     this.runRevolution = function () {
         let teta = this.degree/this.faces;
-        console.log(teta);
         teta *= Math.PI/180;             
-        //console.log(teta);
         for(let i = 1; i < this.faces; i++) {
             this.polygons.push(polygons[i - 1].clone());        
             this.polygons[i].rotate(teta, this.axis);                    
         }
-        console.log(polygons);
     };
 
     this.clone = function (displacement = 0) {

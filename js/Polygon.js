@@ -33,6 +33,15 @@ function Polygon (vertices) {
         return this.boundaries;
     };
 
+    this.getDrawablePerspectiveVertices = function (canvasWidth, canvasHeight, worldWidth, worldHeight) {
+        let vrp = new Vertex(0, 100, 0);
+        let viewUp = new Vertex(0, 0, 1);
+        let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp, true);
+        let vertices = pipeline.run();        
+        
+        return vertices;
+    };
+
     this.updateDrawableVertices = function (h, v, canvasWidth, canvasHeight, worldWidth, worldHeight) {
         let vrp, viewUp;
         if (h === 'x' && v === 'y') {
@@ -41,12 +50,12 @@ function Polygon (vertices) {
         } else if (h === 'x' && v === 'z') {
             vrp = new Vertex(0, 100, 0);
             viewUp = new Vertex(0, 0, 1);
-        } else {
+        } else if(h === 'z' && v === 'y'){
             vrp = new Vertex(100, 0, 0);
             viewUp = new Vertex(0, 1, 0);
         }
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp);
-        let vertices = pipeline.run();
+        let vertices = pipeline.run();        
         this.setDrawableVertices(vertices, h, v);
 
         return this;
@@ -57,7 +66,7 @@ function Polygon (vertices) {
             this.drawableVerticesXY = vertices;
         } else if (h === 'x' && v === 'z') {
             this.drawableVerticesXZ = vertices;
-        } else {
+        } else if (h === 'z' && v === 'y') {
             this.drawableVerticesZY = vertices;
         }
         this.updateDrawableBoundaries(h, v);
@@ -70,7 +79,7 @@ function Polygon (vertices) {
             return this.drawableVerticesXY;
         } else if (h === 'x' && v === 'z') {
             return this.drawableVerticesXZ;
-        } else  {
+        } else if (h === 'z' && v === 'y') {
             return this.drawableVerticesZY;
         }
     };
@@ -114,7 +123,7 @@ function Polygon (vertices) {
             return this.drawableBoundariesXY;
         } else if (h === 'x' && v === 'z') {
             return this.drawableBoundariesXZ;
-        } else {
+        } else if (h === 'z' && v === 'y') {
             return this.drawableBoundariesZY;
         }
     };
@@ -124,7 +133,7 @@ function Polygon (vertices) {
             this.drawableBoundariesXY = boundary;
         } else if (h === 'x' && v === 'z') {
             this.drawableBoundariesXZ = boundary;
-        } else {
+        } else if (h === 'z' && v === 'y') {
             this.drawableBoundariesZY = boundary;
         }
 
@@ -201,7 +210,7 @@ function Polygon (vertices) {
             for(let i = 0; i < vertices.length; i++) {
                 vertices[i].yRotation(teta);
             }
-        } else {
+        } else if(axis === 'z'){
             for(let i = 0; i < vertices.length; i++) {
                 vertices[i].zRotation(teta);
             }

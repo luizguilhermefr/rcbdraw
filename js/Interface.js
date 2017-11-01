@@ -125,10 +125,11 @@ function Interface () {
         } else if (h === 'x' && v === 'z') { // top
             tempX = dotX + x;
             tempZ = (dotY * (-1)) + y;
-        } else { // left
+        } else if (h === 'z' && v === 'y') { // left
             tempZ = dotX + x;
             tempY = (dotY * (-1)) + y;
         }
+
         let tempVertex = new Vertex(tempX, tempY, tempZ);
         tempVertices.push(tempVertex);
         for (let i = 0; i < sides; i++) {
@@ -143,11 +144,12 @@ function Interface () {
                 tempX = dotX + x;
                 tempZ = (dotY * (-1)) + y;
                 tempY = 0;
-            } else { // left
+            } else if (h === 'z' && v === 'y') { // left
                 tempZ = dotX + x;
                 tempY = (dotY * (-1)) + y;
                 tempX = 0;
             }
+
             tempVertices.push(new Vertex(tempX, tempY, tempZ));
         }
         let polygon = new Polygon(tempVertices);
@@ -217,7 +219,7 @@ function Interface () {
             newPoint = new Vertex(x, y, 0);
         } else if (h == 'x' && v == 'z') {
             newPoint = new Vertex(x, 0, y);
-        } else {
+        } else if (h === 'z' && v === 'y') {
             newPoint = new Vertex(0, y, x);
         }
 
@@ -248,7 +250,7 @@ function Interface () {
             mouseClick = new Vertex(x, y, 0);
         } else if (h === 'x' && v === 'z') {
             mouseClick = new Vertex(x, 0, y);
-        } else {
+        } else if (h === 'z' && v === 'y') {
             mouseClick = new Vertex(0, y, x);
         }
         this.selectedSolid.solid.rotate(mouseClick, this.rotationSolid, h, v);

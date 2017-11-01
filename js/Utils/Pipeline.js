@@ -1,4 +1,4 @@
-function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, vrp, viewUp, p = null) {
+function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, vrp, viewUp, perspective = false, p = null) {
 
     this.setVectorN = function () {
         let N = this.vrp.clone().sub(this.p);
@@ -32,6 +32,29 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         this.pSrc = math.multiply(this.sruSrc, this.polygon.toMatrix());
         this.pSrc.splice(2, 1);
     };
+
+    this.setMatrixPersp = function (){
+        let zvp = this.dp * -1;
+        this.mPersp = [
+            [1, 0 , 0 , 0],
+            [0 , 1, 0 , 0],
+            [0, 0, (-zvp/ this.dp, 0)],
+            [0, 0, -1/this.dp, 0]
+        ]                 
+    };
+
+    this.setPpersp = function () {
+        this.pPersp = math.multiply(this.mPersp, this.pSrc);
+        this.pPersp.splice(2, 1);
+    };
+    
+    this.setMatrixHomogeneous = function() {
+        for(let i = 0; i < this.pPersp.length; i++){
+            for(let j = 0; j < pPersp[i].length - 1; j++) {
+                pPersp[i][j] /= pPersp[i][pPersp[i].length - 1];
+            }
+        }
+    };    
 
     this.setWorldCoordinates = function () {
         this.wMaxX = this.worldWidth;
@@ -80,6 +103,10 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         this.setVectorU();
         this.setMatrixSruSrc();
         this.setPSrc();
+        if(this.perspective){
+            this.setMatrixPersp();
+            this.setMatrixHomogeneous();
+        }
         this.setWorldCoordinates();
         this.setMatrixMjp();
         this.setMatrixPsrt();
@@ -87,6 +114,8 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
     };
 
     this.p = p === null ? new Vertex(0, 0, 0) : p;
+
+    this.dp = 100;
 
     this.polygon = polygon;
 
@@ -118,9 +147,13 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
 
     this.pSrc = [];
 
+    this.pPersp = [];
+
     this.mJp = [];
 
     this.pSrt = [];
 
     this.viewUp = viewUp;
+
+    this.perspective = perspective;
 }
