@@ -10,7 +10,7 @@ Vue.component('revolution-modal', {
                     <b-input-group-addon v-show="!degreeOk()">
                         <strong class="text-danger">!</strong>
                     </b-input-group-addon>
-                    <b-form-input placeholder="Graus" v-model.number="degree" disabled></b-form-input>
+                    <b-form-input placeholder="Graus" v-model.number="degree"></b-form-input>
                     <b-input-group-addon>px</b-input-group-addon>
                     <b-input-group-button>
                         <b-btn variant="danger" v-on:click="decreaseDegree()">-</b-btn>
@@ -26,7 +26,7 @@ Vue.component('revolution-modal', {
                     <b-input-group-addon v-show="!facesOk()">
                         <strong class="text-danger">!</strong>
                     </b-input-group-addon>
-                    <b-form-input placeholder="Faces" v-model.number="faces" disabled></b-form-input>
+                    <b-form-input placeholder="Faces" v-model.number="faces"></b-form-input>
                     <b-input-group-addon>px</b-input-group-addon>
                     <b-input-group-button>
                         <b-btn variant="danger" v-on:click="decreaseFaces()">-</b-btn>
@@ -53,8 +53,8 @@ Vue.component('revolution-modal', {
     
         data: function () {
             return {
-                degree: 90,    
-                faces: 3,
+                degree: 180,    
+                faces: 90,
                 axis: ""
             };
         },

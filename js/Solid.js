@@ -164,11 +164,13 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
 
     this.runRevolution = function () {
         let teta = this.degree/this.faces;
-        teta *= Math.PI/180;             
-        for(let i = 1; i < this.faces; i++) {
-            this.polygons.push(polygons[i - 1].clone());        
+        teta *= Math.PI/180;   
+        let tetaInicial = teta;                          
+        for(let i = 1; i < this.faces; i++) {            
+            this.polygons.push(polygons[0].clone());
             this.polygons[i].rotate(teta, this.axis);                    
-        }
+            teta += tetaInicial;
+        }        
     };
 
     this.clone = function (displacement = 0) {
