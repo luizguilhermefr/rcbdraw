@@ -57,10 +57,10 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
     };    
 
     this.setWorldCoordinates = function () {
-        this.wMaxX = this.worldWidth;
-        this.wMinX = 0;
-        this.wMaxY = this.worldHeight;
-        this.wMinY = 0;
+        this.wMaxX = this.worldWidth/2;
+        this.wMinX = -this.worldWidth/2;
+        this.wMaxY = this.worldHeight/2;
+        this.wMinY = -this.worldHeight/2;
     };
 
     this.setMatrixMjp = function () {
@@ -92,7 +92,11 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         }
         let vertices = [];
         columns.forEach(function (c) {
-            vertices.push(new Vertex(c[0], this.worldHeight - c[1], 1));
+            if (this.vrp.getZ() != 0 ){
+                vertices.push(new Vertex(c[0], this.worldHeight - c[1], 0));
+            } else {
+                vertices.push(new Vertex(this.worldWidth - c[0], this.worldHeight - c[1], 0));    
+            } 
         }.bind(this));
         return vertices;
     };

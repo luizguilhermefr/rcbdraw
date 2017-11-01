@@ -97,12 +97,16 @@ Vue.component('panel', {
             let y = this.getRelativeY(e.clientY);
             switch (this.mode) {
                 case 1:
+                    x = x - (this.canvas.width / 2);
+                    y = y - (this.canvas.height / 2);
                     this.putPoly(x, y);
                     break;
                 case 2:
                     this.selectionClick(x, y);
                     break;
                 case 3:
+                    x = x - (this.width / 2);
+                    y = y - (this.height / 2);
                     this.freehandClick(x, y);
                     break;
                 case 6:
@@ -126,6 +130,8 @@ Vue.component('panel', {
             if (this.dragging) {
                 switch (this.mode) {
                     case 4:
+                        x = x - (this.canvas.width / 2);
+                        y = y - (this.canvas.height / 2);
                         drawInterface.translateClick(x, y, this.h, this.v);
                         break;
                     case 5:
@@ -143,6 +149,8 @@ Vue.component('panel', {
             if (this.dragging) {
                 switch (this.mode) {
                     case 4:
+                        x = x - (this.canvas.width / 2);
+                        y = y - (this.canvas.height / 2);
                         drawInterface.translateClick(x, y, this.h, this.v);
                         break;
                     case 5:
