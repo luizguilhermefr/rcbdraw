@@ -105,8 +105,8 @@ Vue.component('panel', {
                     this.selectionClick(x, y);
                     break;
                 case 3:
-                    x = x - (this.width / 2);
-                    y = y - (this.height / 2);
+                    // x = x - (this.width / 2);
+                    // y = y - (this.height / 2);
                     this.freehandClick(x, y);
                     break;
                 case 6:
