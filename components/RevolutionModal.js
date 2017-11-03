@@ -1,6 +1,6 @@
 Vue.component('revolution-modal', {
-    
-        template: `
+
+    template: `
         <b-modal id="revolution-modal" title="Revolução do Sólido" @ok="submit" closeTitle="Cancelar" :ok-disabled="!canInsert()"> 
         <div class="modal-body">
             <div class="form-group">
@@ -50,46 +50,46 @@ Vue.component('revolution-modal', {
         </div>
     </b-modal>
             `,
-    
-        data: function () {
-            return {
-                degree: 180,    
-                faces: 90,
-                axis: ""
-            };
+
+    data: function() {
+        return {
+            degree: 90,
+            faces: 3,
+            axis: ""
+        };
+    },
+
+    methods: {
+        degreeOk() {
+            return this.degree >= 1;
         },
-    
-        methods: {
-            degreeOk() {
-                return this.degree >= 1;
-            },
-            increaseDegree() {
-                this.degree++;
-            },
-            decreaseDegree() {
-                this.degree--;
-            },
-            facesOk() {
-                return this.faces >= 3;
-            },
-            increaseFaces() {
-                this.faces++;
-            },
-            decreaseFaces() {
-                this.faces--;
-            },
-            axisOk () {
-                return this.axis.length;
-            },
-            canInsert () {
-                return this.degreeOk() && this.facesOk() && this.axisOk();
-            },
-            submit () {                
-                drawInterface.selectedSolid.solid.setDegree(this.degree);
-                drawInterface.selectedSolid.solid.setFaces(this.faces);
-                drawInterface.selectedSolid.solid.setAxis(this.axis);
-                drawInterface.selectedSolid.solid.runRevolution();
-                drawInterface.redraw();
-            }
+        increaseDegree() {
+            this.degree++;
+        },
+        decreaseDegree() {
+            this.degree--;
+        },
+        facesOk() {
+            return this.faces >= 3;
+        },
+        increaseFaces() {
+            this.faces++;
+        },
+        decreaseFaces() {
+            this.faces--;
+        },
+        axisOk() {
+            return this.axis.length;
+        },
+        canInsert() {
+            return this.degreeOk() && this.facesOk() && this.axisOk();
+        },
+        submit() {
+            drawInterface.selectedSolid.solid.setDegree(this.degree);
+            drawInterface.selectedSolid.solid.setFaces(this.faces);
+            drawInterface.selectedSolid.solid.setAxis(this.axis);
+            drawInterface.selectedSolid.solid.runRevolution();
+            drawInterface.redraw();
         }
-    });
+    }
+});
