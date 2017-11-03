@@ -44,6 +44,10 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this.mustStroke;
     };
 
+    this.deletePolygon = function (index) {
+        this.polygons.splice(index, 1);
+    };
+
     this.updateBoundaries = function () {
         let values = {
             minX: Number.MAX_VALUE,
@@ -68,35 +72,11 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this;
     };
 
-    this.setDegree = function(degree) {
-        this.degree = degree;
-    };
-
-    this.setFaces = function(faces) {
-        this.faces = faces;
-    };
-
-    this.setAxis = function(axis) {
-        this.axis = axis;
-    };
-
-    this.getDegree = function() {
-        return this.degree;
-    };
-
-    this.getFaces = function() {
-        return this.faces;
-    };
-
-    this.getAxis = function() {
-        return this.axis;
-    };
-
     this.getBoundaries = function() {
         return this.boundaries;
     };
 
-    this.setCenter = function () {
+    this.updateCenter = function () {
         let values = this.getBoundaries();
         this.center = new Vertex((values.maxX + values.minX) / 2, (values.maxY + values.minY) / 2, (values.maxZ +
             values.minZ) / 2);
@@ -109,7 +89,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
     };
 
     this.getDistance = function (vertex) {
-        return new Vertex(Math.abs(this.center.x - vertex.getX()), Math.abs(this.center.y - vertex.getY()), Math.abs(this.center.z -
+        return new Vertex(Math.abs(this.center.getX() - vertex.getX()), Math.abs(this.center.getY() - vertex.getY()), Math.abs(this.center.getZ() -
             vertex.getZ()));
     };
 
@@ -126,7 +106,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
             }
             polygons[ i ].translatePoint(vertexMove);
             this.updateBoundaries();
-            this.setCenter();
+            this.updateCenter();
         }
     };
 
@@ -145,7 +125,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
             polygons[ i ].rotate();
         }
         this.updateBoundaries();
-        this.setCenter();
+        this.updateCenter();
     };
 
     this.toMatrix = function () {
@@ -162,28 +142,32 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return vertices;
     };    
 
-    this.runRevolution = function() {
-        let teta = this.degree / (this.faces - 1);
+    this.runRevolution = function (faces, axis, degree) {
+        let teta = degree / (faces - 1);
         teta *= Math.PI / 180;
-        let tetaInicial = teta;
-        for (let i = 1; i < this.faces; i++) {
-            this.polygons.push(polygons[0].clone());
-            this.polygons[i].rotate(teta, this.axis);
-            teta += tetaInicial;                              
+        // noinspection UnnecessaryLocalVariableJS
+        let initialTeta = teta;
+        let tempPolygons = [
+            this.polygons[0].clone()
+        ];
+        for (let i = 1; i < faces; i++) {
+            tempPolygons.push(polygons[0].clone());
+            tempPolygons[i].rotate(teta, axis);
+            teta += initialTeta;
         }
-        for (let i = 0; i < this.faces - 1; i++) {            
-            this.closePolygon(this.polygons[i], this.polygons[i + 1]);
-        }              
+        for (let i = 0; i < faces - 1; i++) {
+            this.closePolygon(tempPolygons[i], tempPolygons[i + 1]);
+        }
     };
 
-    this.closePolygon = function(incial, final){
-        for(let i = 0; i < incial.getVertices().length - 1; i++){
+    this.closePolygon = function(initial, final){
+        for(let i = 0; i < initial.getVertices().length - 1; i++){
             let vertexPoly = [];    
-            vertexPoly.push(incial.vertexAt(i));                        
+            vertexPoly.push(initial.vertexAt(i));
             vertexPoly.push(final.vertexAt(i));        
             vertexPoly.push(final.vertexAt(i+1));            
-            vertexPoly.push(incial.vertexAt(i+1));            
-            vertexPoly.push(incial.vertexAt(i));               
+            vertexPoly.push(initial.vertexAt(i+1));
+            vertexPoly.push(initial.vertexAt(i));
             this.polygons.push(new Polygon(vertexPoly));            
         }
     };
@@ -194,6 +178,16 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
             nextPolygons.push(p.clone(displacement));
         });
         return new Solid(nextPolygons, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
+    };
+
+    this.paintersAlgorithm = function (depthAxis, vrp) {
+        this.polygons.sort(function (a, b) {
+            switch (depthAxis) {
+                case 'x' : return a.getDistance(vrp).getX() < b.getDistance(vrp).getX();
+                case 'y' : return a.getDistance(vrp).getY() < b.getDistance(vrp).getY();
+                default : return a.getDistance(vrp).getZ() < b.getDistance(vrp).getZ();
+            }
+        });
     };
 
     this.polygons = polygons;
@@ -210,11 +204,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
 
     this.updateBoundaries();
 
-    this.setCenter();
+    this.center = null;
 
-    this.axis = null;
-
-    this.faces = null;
-
-    this.degree = null;
+    this.updateCenter();
 }

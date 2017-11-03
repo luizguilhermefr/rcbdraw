@@ -8,6 +8,9 @@ function Scene () {
                 default : return a.getDistance(vrp).getZ() < b.getDistance(vrp).getZ();
             }
         });
+        this.solids.forEach(function (s) {
+            s.paintersAlgorithm(depthAxis, vrp)
+        });
     };
 
     this.makeDirty = function () {

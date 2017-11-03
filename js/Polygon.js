@@ -195,10 +195,7 @@ function Polygon(vertices) {
             this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
         }
         this.updateBoundaries();
-    };
-
-    this.getCenter = function() {
-        return this.center;
+        this.updateCenter();
     };
 
     this.rotate = function(teta, axis) {
@@ -215,6 +212,8 @@ function Polygon(vertices) {
                 vertices[i].zRotation(teta);
             }
         }
+        this.updateBoundaries();
+        this.updateCenter();
     };
 
     this.getNewPointX = function(x, y, teta) {
@@ -226,48 +225,50 @@ function Polygon(vertices) {
     };
 
     this.scale = function(vertex, clone) {
-        let referenceCenter = this.getCenter();
-        let scaleFactor = {
-            X: (vertex.getX() - referenceCenter.getX()) / 500,
-            Y: (vertex.getY() - referenceCenter.getY()) / 500
-        };
-        this.translatePoint(referenceCenter);
-        for (let i = 0; i < this.vertices.length; i++) {
-            vertices[i].setX(vertices[i].getX() + Math.round((clone.vertexAt(i).getX() * scaleFactor.X)));
-            vertices[i].setY(vertices[i].getY() + Math.round(clone.vertexAt(i).getY() * scaleFactor.Y));
-        }
-        referenceCenter.invert();
-        this.translatePoint(referenceCenter);
-        this.updateBoundaries();
-        return this;
+        // let referenceCenter = this.getCenter();
+        // let scaleFactor = {
+        //     X: (vertex.getX() - referenceCenter.getX()) / 500,
+        //     Y: (vertex.getY() - referenceCenter.getY()) / 500
+        // };
+        // this.translatePoint(referenceCenter);
+        // for (let i = 0; i < this.vertices.length; i++) {
+        //     vertices[i].setX(vertices[i].getX() + Math.round((clone.vertexAt(i).getX() * scaleFactor.X)));
+        //     vertices[i].setY(vertices[i].getY() + Math.round(clone.vertexAt(i).getY() * scaleFactor.Y));
+        // }
+        // referenceCenter.invert();
+        // this.translatePoint(referenceCenter);
+        // this.updateBoundaries();
+        // this.updateCenter();
+        //
+        // return this;
     };
 
     this.shearX = function(vertex) {
-        let referenceVertex = this.getCenter();
-        let shearFactor = (vertex.getX() - referenceVertex.getX()) / referenceVertex.getY();
-        this.translatePoint(referenceVertex);
-        this.vertices.forEach(function(v) {
-            v.setX(v.getX() + shearFactor * v.getY());
-        });
-        referenceVertex.invert();
-        this.translatePoint(referenceVertex);
-        this.updateBoundaries();
-
-        return this;
+        // let referenceVertex = this.getCenter();
+        // let shearFactor = (vertex.getX() - referenceVertex.getX()) / referenceVertex.getY();
+        // this.translatePoint(referenceVertex);
+        // this.vertices.forEach(function(v) {
+        //     v.setX(v.getX() + shearFactor * v.getY());
+        // });
+        // referenceVertex.invert();
+        // this.translatePoint(referenceVertex);
+        // this.updateBoundaries();
+        //
+        // return this;
     };
 
     this.shearY = function(vertex) {
-        let referenceVertex = this.getCenter();
-        let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
-        this.translatePoint(referenceVertex);
-        this.vertices.forEach(function(v) {
-            v.setY(v.getY() + shearFactor * v.getX());
-        });
-        referenceVertex.invert();
-        this.translatePoint(referenceVertex);
-        this.updateBoundaries();
-
-        return this;
+        // let referenceVertex = this.getCenter();
+        // let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
+        // this.translatePoint(referenceVertex);
+        // this.vertices.forEach(function(v) {
+        //     v.setY(v.getY() + shearFactor * v.getX());
+        // });
+        // referenceVertex.invert();
+        // this.translatePoint(referenceVertex);
+        // this.updateBoundaries();
+        //
+        // return this;
     };
 
     this.inside = function(x, y) {
@@ -323,6 +324,23 @@ function Polygon(vertices) {
         return insideX && insideY;
     };
 
+    this.updateCenter = function () {
+        let values = this.getBoundaries();
+        this.center = new Vertex((values.maxX + values.minX) / 2, (values.maxY + values.minY) / 2, (values.maxZ +
+            values.minZ) / 2);
+
+        return this;
+    };
+
+    this.getCenter = function () {
+        return this.center;
+    };
+
+    this.getDistance = function (vertex) {
+        return new Vertex(Math.abs(this.center.getX() - vertex.getX()), Math.abs(this.center.getY() - vertex.getY()), Math.abs(this.center.getZ() -
+            vertex.getZ()));
+    };
+
     this.vertices = vertices;
 
     this.drawableVerticesXY = null;
@@ -344,4 +362,8 @@ function Polygon(vertices) {
     this.boundaries = null;
 
     this.updateBoundaries();
+
+    this.center = null;
+
+    this.updateCenter();
 }

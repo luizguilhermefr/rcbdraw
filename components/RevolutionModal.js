@@ -85,10 +85,7 @@ Vue.component('revolution-modal', {
             return this.degreeOk() && this.facesOk() && this.axisOk();
         },
         submit() {
-            drawInterface.selectedSolid.solid.setDegree(this.degree);
-            drawInterface.selectedSolid.solid.setFaces(this.faces);
-            drawInterface.selectedSolid.solid.setAxis(this.axis);
-            drawInterface.selectedSolid.solid.runRevolution();
+            drawInterface.selectedSolid.solid.runRevolution(this.faces, this.axis, this.degree);
             drawInterface.redraw();
         }
     }
