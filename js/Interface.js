@@ -42,15 +42,15 @@ function Interface () {
         this.scene.paintersAlgorithm('z', new Vertex(0, 0, 100));
         solids = this.scene.getSolids();
         vue.$refs.panelFront.drawSolids(solids, this.shouldWireframe);
-        
-        this.scene.paintersAlgorithm('y', new Vertex(0, 0, 100));        
+
+        this.scene.paintersAlgorithm('y', new Vertex(0, 0, 100));
         solids = this.scene.getSolids();
         vue.$refs.panelTop.drawSolids(solids, this.shouldWireframe);
-        
+
         this.scene.paintersAlgorithm('x', new Vertex(0, 0, 100));
         solids = this.scene.getSolids();
         vue.$refs.panelLeft.drawSolids(solids, this.shouldWireframe);
-        
+
         // painters algorithm for perspective?
         // vue.$refs.panelPerspective.drawSolids(solids, this.shouldWireframe);
     };
@@ -172,41 +172,49 @@ function Interface () {
     };
 
     this.openFile = function (opened) {
-        // this.resetScene();
-        // let tempVertices = [];
-        // for (let i = 0; i < opened.length; i++) {
-        //     for (let j = 0; j < opened[ i ].vertices.length; j++) {
-        //         tempVertices.push(new Vertex(opened[ i ].vertices[ j ][ 0 ], opened[ i ].vertices[ j ][ 1 ]));
-        //     }
-        //     this.scene.addPolygon(new Polygon(tempVertices, opened[ i ].stroke_color, opened[ i ].fill_color, opened[ i ].must_stroke, opened[ i ].must_fill));
-        //     tempVertices = [];
-        // } 
-        // this.redraw();
+        this.resetScene();
+        opened.forEach(function (abstractSolid) {
+            let polygons = [];
+            abstractSolid.polygons.forEach(function (abstractPolygons) {
+                let vertices = [];
+                abstractPolygons.forEach(function (v) {
+                    vertices.push(new Vertex(v[0], v[1], v[2]));
+                });
+                polygons.push(new Polygon(vertices));
+            });
+            this.scene.addSolid(new Solid(polygons, abstractSolid.strokeColor,  abstractSolid.fillColor, abstractSolid.mustStroke, abstractSolid.mustFill));
+        }.bind(this));
+        this.redraw();
     };
 
     this.generateSave = function () {
-        // let polygons = this.scene.getPolygons();
-        // let dump = [];
-        // let current;
-        // for (let i = 0; i < polygons.length; i++) {
-        //     current = {
-        //         'fill_color': polygons[ i ].getFillColor(),
-        //         'must_fill': polygons[ i ].shouldFill(),
-        //         'stroke_color': polygons[ i ].getStrokeColor(),
-        //         'must_stroke': polygons[ i ].shouldStroke(),
-        //         'vertices': []
-        //     };
-        //     for (let j = 0; j < polygons[ i ].countVertices(); j++) {
-        //         current.vertices.push([
-        //             polygons[ i ].vertexAt(j).getX(),
-        //             polygons[ i ].vertexAt(j).getY(),
-        //             polygons[ i ].vertexAt(j).getZ()
-        //         ]);
-        //     }
-        //     dump.push(current);
-        // }
-        // this.scene.resetDirt();
-        // return dump;
+        let solids = this.scene.getSolids();
+        let dump = [];
+        let current;
+        solids.forEach(function (solid) {
+            current = {
+                fillColor: solid.getFillColor(),
+                mustFill: solid.shouldFill(),
+                strokeColor: solid.getStrokeColor(),
+                mustStroke: solid.shouldStroke(),
+                polygons: []
+            };
+            solid.getPolygons().forEach(function (poly) {
+                let polygon = [];
+                poly.getVertices().forEach(function (v) {
+                    polygon.push([
+                        v.getX(),
+                        v.getY(),
+                        v.getZ()
+                    ]);
+                });
+                current.polygons.push(polygon);
+            });
+            dump.push(current);
+        });
+
+        this.scene.resetDirt();
+        return dump;
     };
 
     this.convertTemporaryToPolygon = function (freeHandDots) {

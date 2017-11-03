@@ -3,7 +3,7 @@ Vue.component('panel-right-click', {
     template: `
         <b-list-group v-show="visible" class="rightclick" v-bind:style="styles">
           <b-list-group-item v-for="item in items" :key="item.id" href="#" v-b-modal="item.modal" v-on:click.native="click(item.action)">
-            {{item.title}}
+            <i v-bind:class="item.icon" aria-hidden="true"></i>&nbsp;{{item.title}}
           </b-list-group-item>
         </b-list-group>
     `,
@@ -18,6 +18,7 @@ Vue.component('panel-right-click', {
                     id: 1,
                     title: 'Mão Livre',
                     enabled: true,
+                    icon: 'fa fa-hand-pointer-o',
                     action () {
                         expectFreehand();
                     }
@@ -27,6 +28,7 @@ Vue.component('panel-right-click', {
                     title: 'Polígono Regular',
                     modal: 'regular-polygon-modal',
                     enabled: true,
+                    icon: 'fa fa-square-o',
                     action () {
                         return null;
                     }

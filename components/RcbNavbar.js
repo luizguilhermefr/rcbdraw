@@ -60,16 +60,16 @@ Vue.component('rcb-navbar', {
                                 return null;
                             }
                         },
-                        {
-                            id: 4,
-                            title: 'Exportar...',
-                            modal: 'export-modal',
-                            enabled: true,
-                            icon: 'fa fa-cog',
-                            action () {
-                                return null;
-                            }
-                        }
+                        // {
+                        //     id: 4,
+                        //     title: 'Exportar...',
+                        //     modal: 'export-modal',
+                        //     enabled: true,
+                        //     icon: 'fa fa-cog',
+                        //     action () {
+                        //         return null;
+                        //     }
+                        // }
                     ]
                 }
                 ,
@@ -117,7 +117,7 @@ Vue.component('rcb-navbar', {
                             id: 1,
                             title: 'Rotacionar',
                             enabled: true,
-                            icon: 'fa fa-circle-o-notch',
+                            icon: 'fa fa-repeat',
                             action () {
                                 expectRotation();
                             }
@@ -168,6 +168,15 @@ Vue.component('rcb-navbar', {
                             }
                         },
                         {
+                            id: 10,
+                            title: 'Revolução',
+                            enabled: true,
+                            icon: 'fa fa-circle-o-notch',
+                            action () {
+                                openRevolutionModal();
+                            }
+                        },
+                        {
                             id: 7,
                             title: 'Excluir',
                             enabled: true,
@@ -177,39 +186,12 @@ Vue.component('rcb-navbar', {
                             }
                         },
                         {
-                            id: 8,
-                            title: 'Trazer nível à frente',
-                            enabled: true,
-                            icon: 'fa fa-level-up',
-                            action () {
-                                bringForward();
-                            }
-                        },
-                        {
-                            id: 9,
-                            title: 'Levar nível à trás',
-                            enabled: true,
-                            icon: 'fa fa-level-down',
-                            action () {
-                                bringBackward();
-                            }
-                        },
-                        {
-                            id: 10,
+                            id: 11,
                             title: 'Propriedades do objeto...',
                             enabled: true,
                             icon: 'fa fa-info',
                             action () {
                                 openPropertiesModal();
-                            }
-                        },
-                        {
-                            id: 11,
-                            title: 'Revolução',
-                            enabled: true,
-                            icon: 'fa fa-info',
-                            action () {
-                                openRevolutionModal();
                             }
                         }
                     ]

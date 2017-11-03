@@ -8,7 +8,7 @@ function Scene () {
                 default : return a.getDistance(vrp).getZ() < b.getDistance(vrp).getZ();
             }
         });
-    }
+    };
 
     this.makeDirty = function () {
         this.dirty = true;
