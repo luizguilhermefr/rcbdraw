@@ -72,7 +72,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this;
     };
 
-    this.getBoundaries = function() {
+    this.getBoundaries = function () {
         return this.boundaries;
     };
 
@@ -89,8 +89,14 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
     };
 
     this.getDistance = function (vertex) {
-        return new Vertex(Math.abs(this.center.getX() - vertex.getX()), Math.abs(this.center.getY() - vertex.getY()), Math.abs(this.center.getZ() -
+        return new Vertex(Math.abs(this.center.getX() - vertex.getX()), Math.abs(this.center.getY() -
+            vertex.getY()), Math.abs(this.center.getZ() -
             vertex.getZ()));
+    };
+
+    this.getEuclidianDistance = function (vertex) {
+        return Math.sqrt(Math.pow(this.center.getX() - vertex.getX(), 2) +
+            Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2));
     };
 
     this.translate = function (vertex, h, v) {
@@ -140,7 +146,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         });
 
         return vertices;
-    };    
+    };
 
     this.runRevolution = function (faces, axis, degree) {
         let teta = degree / (faces - 1);
@@ -148,27 +154,28 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         // noinspection UnnecessaryLocalVariableJS
         let initialTeta = teta;
         let tempPolygons = [
-            this.polygons[0].clone()
+            this.polygons[ 0 ].clone()
         ];
         for (let i = 1; i < faces; i++) {
-            tempPolygons.push(polygons[0].clone());
-            tempPolygons[i].rotate(teta, axis);
+            tempPolygons.push(polygons[ 0 ].clone());
+            tempPolygons[ i ].rotate(teta, axis);
             teta += initialTeta;
         }
         for (let i = 0; i < faces - 1; i++) {
-            this.closePolygon(tempPolygons[i], tempPolygons[i + 1]);
+            this.closePolygon(tempPolygons[ i ], tempPolygons[ i + 1 ]);
         }
+        console.log(this.polygons);
     };
 
-    this.closePolygon = function(initial, final){
-        for(let i = 0; i < initial.getVertices().length - 1; i++){
-            let vertexPoly = [];    
+    this.closePolygon = function (initial, final) {
+        for (let i = 0; i < initial.getVertices().length - 1; i++) {
+            let vertexPoly = [];
             vertexPoly.push(initial.vertexAt(i));
-            vertexPoly.push(final.vertexAt(i));        
-            vertexPoly.push(final.vertexAt(i+1));            
-            vertexPoly.push(initial.vertexAt(i+1));
+            vertexPoly.push(final.vertexAt(i));
+            vertexPoly.push(final.vertexAt(i + 1));
+            vertexPoly.push(initial.vertexAt(i + 1));
             vertexPoly.push(initial.vertexAt(i));
-            this.polygons.push(new Polygon(vertexPoly));            
+            this.polygons.push(new Polygon(vertexPoly));
         }
     };
 
@@ -182,11 +189,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
 
     this.paintersAlgorithm = function (depthAxis, vrp) {
         this.polygons.sort(function (a, b) {
-            switch (depthAxis) {
-                case 'x' : return a.getDistance(vrp).getX() < b.getDistance(vrp).getX();
-                case 'y' : return a.getDistance(vrp).getY() < b.getDistance(vrp).getY();
-                default : return a.getDistance(vrp).getZ() < b.getDistance(vrp).getZ();
-            }
+            return a.getEuclidianDistance(vrp) < b.getEuclidianDistance(vrp);
         });
     };
 

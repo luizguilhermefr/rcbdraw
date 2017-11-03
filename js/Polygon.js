@@ -37,6 +37,7 @@ function Polygon(vertices) {
         let vrp = new Vertex(0, 100, 0);
         let viewUp = new Vertex(0, 0, 1);
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp, true);
+        // noinspection UnnecessaryLocalVariableJS
         let vertices = pipeline.run();
 
         return vertices;
@@ -48,7 +49,7 @@ function Polygon(vertices) {
             vrp = new Vertex(0, 0, 100);
             viewUp = new Vertex(0, 1, 0);
         } else if (h === 'x' && v === 'z') {
-            vrp = new Vertex(0, 100, 0);
+            vrp = new Vertex(0, -100, 0);
             viewUp = new Vertex(0, 0, 1);
         } else if (h === 'z' && v === 'y') {
             vrp = new Vertex(100, 0, 0);
@@ -339,6 +340,10 @@ function Polygon(vertices) {
     this.getDistance = function (vertex) {
         return new Vertex(Math.abs(this.center.getX() - vertex.getX()), Math.abs(this.center.getY() - vertex.getY()), Math.abs(this.center.getZ() -
             vertex.getZ()));
+    };
+
+    this.getEuclidianDistance = function (vertex) {
+        return Math.sqrt(Math.pow(this.center.getX() - vertex.getX(), 2) + Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2))
     };
 
     this.vertices = vertices;

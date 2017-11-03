@@ -1,16 +1,12 @@
 function Scene () {
 
     this.paintersAlgorithm = function (depthAxis, vrp) {
-        this.solids.sort(function (a, b) {
-            switch (depthAxis) {
-                case 'x' : return a.getDistance(vrp).getX() < b.getDistance(vrp).getX();
-                case 'y' : return a.getDistance(vrp).getY() < b.getDistance(vrp).getY();
-                default : return a.getDistance(vrp).getZ() < b.getDistance(vrp).getZ();
-            }
-        });
-        this.solids.forEach(function (s) {
-            s.paintersAlgorithm(depthAxis, vrp)
-        });
+        // this.solids.sort(function (a, b) {
+        //     return a.getEuclidianDistance(vrp) < b.getEuclidianDistance(vrp);
+        // });
+        // this.solids.forEach(function (s) {
+        //     s.paintersAlgorithm(depthAxis, vrp);
+        // });
     };
 
     this.makeDirty = function () {
@@ -32,7 +28,7 @@ function Scene () {
     };
 
     this.changeSolid = function (index, newSolid) {
-        this.solids[index] = newSolid;
+        this.solids[ index ] = newSolid;
     };
 
     this.getSolids = function () {
@@ -40,7 +36,7 @@ function Scene () {
     };
 
     this.getSolidAt = function (index) {
-        return this.solids[index];
+        return this.solids[ index ];
     };
 
     this.isDirty = function () {
