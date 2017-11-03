@@ -331,6 +331,8 @@ function Polygon(vertices) {
 
     this.drawableVerticesXZ = null;
 
+    this.drawableVerticesPerspective = null;
+
     this.drawableBoundariesXZ = null;
 
     this.drawableVerticesZY = null;

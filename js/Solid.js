@@ -108,8 +108,8 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         return this.center;
     };
 
-    this.getDistance = function(vertex, center) {
-        return new Vertex(Math.abs(center.x - vertex.getX()), Math.abs(center.y - vertex.getY()), Math.abs(center.z -
+    this.getDistance = function (vertex) {
+        return new Vertex(Math.abs(this.center.x - vertex.getX()), Math.abs(this.center.y - vertex.getY()), Math.abs(this.center.z -
             vertex.getZ()));
     };
 

@@ -1,6 +1,14 @@
 function Scene () {
-    this.solids = [];
-    this.dirty = false;
+
+    this.paintersAlgorithm = function (depthAxis, vrp) {
+        this.solids.sort(function (a, b) {
+            switch (depthAxis) {
+                case 'x' : return a.getDistance(vrp).getX() < b.getDistance(vrp).getX();
+                case 'y' : return a.getDistance(vrp).getY() < b.getDistance(vrp).getY();
+                default : return a.getDistance(vrp).getZ() < b.getDistance(vrp).getZ();
+            }
+        });
+    }
 
     this.makeDirty = function () {
         this.dirty = true;
@@ -40,31 +48,7 @@ function Scene () {
         this.dirty = false;
     };
 
-    this.bringForward = function(index) {
-        if (index === this.solids.length - 1) {
-            return false;
-        }
-        let tmp = this.solids[index];
-        this.solids[index] = this.solids[index + 1];
-        this.solids[index + 1] = tmp;
+    this.solids = [];
 
-        return {
-            index: index + 1,
-            solid: tmp
-        };
-    };
-
-    this.bringBackward = function(index) {
-        if (index === 0) {
-            return false;
-        }
-        let tmp = this.solids[index];
-        this.solids[index] = this.solids[index - 1];
-        this.solids[index - 1] = tmp;
-
-        return {
-            index: index - 1,
-            solid: tmp
-        };
-    };
+    this.dirty = false;
 }

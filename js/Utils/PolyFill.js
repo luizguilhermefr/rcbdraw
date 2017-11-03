@@ -13,10 +13,9 @@ function PolyFill (polygon, h, v) {
     };
 
     this.setMinMax = function () {
-        let boundaries = this.polygon.getBoundaries();
+        let boundaries = this.polygon.getDrawableBoundaries(this.h, this.v);
         this.minV = boundaries.minY;
         this.maxV = boundaries.maxY;
-
     };
 
     this.setIntersections = function (value) {
