@@ -55,7 +55,7 @@ Vue.component('revolution-modal', {
         return {
             degree: 90,
             faces: 3,
-            axis: ""
+            axis: "y"
         };
     },
 
@@ -70,7 +70,7 @@ Vue.component('revolution-modal', {
             this.degree--;
         },
         facesOk() {
-            return this.faces >= 3;
+            return this.faces >= 2;
         },
         increaseFaces() {
             this.faces++;

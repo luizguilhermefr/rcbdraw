@@ -162,15 +162,30 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return vertices;
     };    
 
-    this.runRevolution = function () {
-        let teta = this.degree/this.faces;
-        teta *= Math.PI/180;   
-        let tetaInicial = teta;                          
-        for(let i = 1; i < this.faces; i++) {            
+    this.runRevolution = function() {
+        let teta = this.degree / (this.faces - 1);
+        teta *= Math.PI / 180;
+        let tetaInicial = teta;
+        for (let i = 1; i < this.faces; i++) {
             this.polygons.push(polygons[0].clone());
-            this.polygons[i].rotate(teta, this.axis);                    
-            teta += tetaInicial;
-        }        
+            this.polygons[i].rotate(teta, this.axis);
+            teta += tetaInicial;                              
+        }
+        for (let i = 0; i < this.faces - 1; i++) {            
+            this.closePolygon(this.polygons[i], this.polygons[i + 1]);
+        }              
+    };
+
+    this.closePolygon = function(incial, final){
+        for(let i = 0; i < incial.getVertices().length - 1; i++){
+            let vertexPoly = [];    
+            vertexPoly.push(incial.vertexAt(i));                        
+            vertexPoly.push(final.vertexAt(i));        
+            vertexPoly.push(final.vertexAt(i+1));            
+            vertexPoly.push(incial.vertexAt(i+1));            
+            vertexPoly.push(incial.vertexAt(i));               
+            this.polygons.push(new Polygon(vertexPoly));            
+        }
     };
 
     this.clone = function (displacement = 0) {

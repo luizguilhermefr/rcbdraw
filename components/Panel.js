@@ -357,17 +357,19 @@ Vue.component('panel', {
             drawInterface.redraw();
         },
         resizeDefault(isInitialResize = false) {
-            let dimensions;
-            if (this.expanded) {
-                dimensions = getScreenDimensions();
-            } else {
-                dimensions = getHalfScreenDimensions();
-            }
-            this.resize(dimensions.width, dimensions.height);
-            if (isInitialResize) {
-                this.initialWidth = dimensions.width;
-                this.initialHeight = dimensions.height;
-            }
+            setTimeout(function() {
+                let dimensions;
+                if (this.expanded) {
+                    dimensions = getScreenDimensions();
+                } else {
+                    dimensions = getHalfScreenDimensions();
+                }
+                this.resize(dimensions.width, dimensions.height);
+                if (isInitialResize) {
+                    this.initialWidth = dimensions.width;
+                    this.initialHeight = dimensions.height;
+                }
+            }.bind(this), 1);
         },
     },
     mounted () {

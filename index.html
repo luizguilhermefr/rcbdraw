@@ -82,7 +82,7 @@
             }
         }, false);
 
-        window.addEventListener('resize', resizeAll, false);
+        window.addEventListener('resize', function(){resizeAll(false)}, false);
     };
 
     function toggleWireframe () {
