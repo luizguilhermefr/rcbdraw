@@ -160,4 +160,10 @@ function Vertex(x, y, z) {
         this.setX(Math.round(temp));
         this.setY(Math.round(temp1));            
     };
+
+    this.extrusionVertex = function (extrusionDistance) {
+        this.setX(this.getX() + extrusionDistance.getX());
+        this.setY(this.getY() + extrusionDistance.getY());
+        this.setZ(this.getZ() + extrusionDistance.getZ());
+    }
 }
