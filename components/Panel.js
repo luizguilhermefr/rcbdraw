@@ -105,8 +105,8 @@ Vue.component('panel', {
                     this.selectionClick(x, y);
                     break;
                 case 3:
-                    x = x - (this.width / 2);
-                    y = y - (this.height / 2);
+                    x = x - (this.canvas.width / 2);
+                    y = y - (this.canvas.height / 2);
                     this.freehandClick(x, y);
                     break;
                 case 6:
@@ -223,6 +223,10 @@ Vue.component('panel', {
             } else {
                 vertices = polygon.getDrawableVertices(this.h, this.v);
             }
+            if (vertices.length > 1) {
+                this.context.moveTo(vertices[0].getX(), vertices[0].getY());
+                this.context.lineTo(vertices[1].getX(), vertices[1].getY());
+            }
             for (let j = 1; j < vertices.length; j++) {
                 this.context.lineTo(vertices[j].getX(), vertices[j].getY());
             }
@@ -240,7 +244,9 @@ Vue.component('panel', {
         },
         drawTemporaryPolygon () {
             if (this.freeHandDots.length > 1) {
-                this.strokePoly(new Polygon(this.freeHandDots), Colors.TEMPORARY, false);
+                let polygon = new Polygon(this.freeHandDots);
+                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
+                this.strokePoly(polygon, Colors.TEMPORARY, false);
             }
         },
         pushFreeHandDot (x, y) {
@@ -251,8 +257,6 @@ Vue.component('panel', {
                 toPush = new Vertex(x, 0, y);
             } else if(this.h === 'z' && this.v === 'y') { // left
                 toPush = new Vertex(0, y, x);
-            } else { // perspective
-                toPush = new Vertex(x, y, 0);
             }
             this.freeHandDots.push(toPush);
             drawInterface.redraw();
