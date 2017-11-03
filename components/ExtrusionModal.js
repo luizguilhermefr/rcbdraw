@@ -1,22 +1,22 @@
-Vue.component('revolution-modal', {
+Vue.component('extrusion-modal', {
 
     template: `
-        <b-modal id="revolution-modal" title="Revolução do Sólido" @ok="submit" closeTitle="Cancelar" :ok-disabled="!canInsert()"> 
+        <b-modal id="extrusion-modal" title="Extrusão de Sólidos" @ok="submit" closeTitle="Cancelar" :ok-disabled="!canInsert()"> 
         <div class="modal-body">
             <div class="form-group">
-                <label>Quantidade em Graus</label>
+                <label>Distância em Pixels</label>
                 <br>
                 <b-input-group>
-                    <b-input-group-addon v-show="!degreeOk()">
+                    <b-input-group-addon v-show="!distanceOk()">
                         <strong class="text-danger">!</strong>
                     </b-input-group-addon>
-                    <b-form-input placeholder="Graus" v-model.number="degree"></b-form-input>
+                    <b-form-input placeholder="Distância" v-model.number="distance"></b-form-input>
                     <b-input-group-addon>px</b-input-group-addon>
                     <b-input-group-button>
-                        <b-btn variant="danger" v-on:click="decreaseDegree()">-</b-btn>
+                        <b-btn variant="danger" v-on:click="decreaseDistance()">-</b-btn>
                     </b-input-group-button>
                     <b-input-group-button>
-                        <b-btn variant="success" v-on:click="increaseDegree()">+</b-btn>
+                        <b-btn variant="success" v-on:click="increaseDistance()">+</b-btn>
                     </b-input-group-button>
                 </b-input-group>
                 <br>
@@ -36,7 +36,7 @@ Vue.component('revolution-modal', {
                     </b-input-group-button>
                 </b-input-group>
                 <br>
-                <label>Eixo de Rotação </label>
+                <label>Eixo de Extrusão </label>
                 <label class="form-check-label">
                     <input class="form-check-input" type="radio" name="X" id="Xaxis" v-model="axis" value="x">X
                 </label>
@@ -53,24 +53,24 @@ Vue.component('revolution-modal', {
 
     data: function() {
         return {
-            degree: 90,
-            faces: 3,
+            distance: 50,
+            faces: 2,
             axis: ""
         };
     },
 
     methods: {
-        degreeOk() {
-            return this.degree >= 1;
+        distanceOk() {
+            return this.distance >= 1;
         },
-        increaseDegree() {
-            this.degree++;
+        increaseDistance() {
+            this.distance++;
         },
-        decreaseDegree() {
-            this.degree--;
+        decreaseDistance() {
+            this.distance--;
         },
         facesOk() {
-            return this.faces >= 3;
+            return this.faces >= 2;
         },
         increaseFaces() {
             this.faces++;
@@ -82,10 +82,10 @@ Vue.component('revolution-modal', {
             return this.axis.length;
         },
         canInsert() {
-            return this.degreeOk() && this.facesOk() && this.axisOk();
+            return this.distanceOk() && this.facesOk() && this.axisOk();
         },
         submit() {
-            drawInterface.selectedSolid.solid.runRevolution(this.faces, this.axis, this.degree);
+            drawInterface.selectedSolid.solid.runExtrusion(this.faces, this.axis, this.distance);
             drawInterface.redraw();
         }
     }

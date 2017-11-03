@@ -21,6 +21,7 @@
     <regular-polygon-modal></regular-polygon-modal>
     <properties-modal></properties-modal>
     <revolution-modal></revolution-modal>
+    <extrusion-modal></extrusion-modal>
     <about-modal></about-modal>
     <toolbar></toolbar>
 
@@ -44,6 +45,7 @@
 <script type="text/javascript" src="components/OpenModal.js"></script>
 <script type="text/javascript" src="components/PropertiesModal.js"></script>
 <script type="text/javascript" src="components/RevolutionModal.js"></script>
+<script type="text/javascript" src="components/ExtrusionModal.js"></script>
 <script type="text/javascript" src="components/SaveModal.js"></script>
 <script type="text/javascript" src="components/ExportModal.js"></script>
 <script type="text/javascript" src="components/RegularPolygonModal.js"></script>
@@ -183,6 +185,14 @@
             return;
         }
         vue.$emit('show::modal', 'revolution-modal');
+    }
+
+    function openExtrusionModal() {
+        if (!drawInterface.isSomethingSelected()) {
+            alert('Nenhum objeto selecionado.');
+            return;
+        }
+        vue.$emit('show::modal', 'extrusion-modal');
     }
 
     function expectRotation () {

@@ -49,7 +49,7 @@ function Polygon(vertices) {
             vrp = new Vertex(0, 0, 100);
             viewUp = new Vertex(0, 1, 0);
         } else if (h === 'x' && v === 'z') {
-            vrp = new Vertex(0, -100, 0);
+            vrp = new Vertex(0, 100, 0);
             viewUp = new Vertex(0, 0, 1);
         } else if (h === 'z' && v === 'y') {
             vrp = new Vertex(100, 0, 0);
@@ -190,13 +190,27 @@ function Polygon(vertices) {
     };
 
     this.translatePoint = function(vertex) {
-        for (let v = 0; v < this.vertices.length; v++) {
-            this.vertices[v].setX(this.vertices[v].getX() - vertex.getX());
-            this.vertices[v].setY(this.vertices[v].getY() - vertex.getY());
-            this.vertices[v].setZ(this.vertices[v].getZ() - vertex.getZ());
+        for (let v = 0; v < vertices.length; v++) {
+            vertices[v].setX(vertices[v].getX() + vertex.getX());
+            vertices[v].setY(vertices[v].getY() + vertex.getY());
+            vertices[v].setZ(vertices[v].getZ() + vertex.getZ());
         }
         this.updateBoundaries();
         this.updateCenter();
+    };
+
+    this.extrusionPoint = function(distance, axis) {
+        let extrusionDistance;
+        if (axis === 'x') {
+            extrusionDistance = new Vertex(distance, 0, 0);
+        } else if (axis === 'y') {
+            extrusionDistance = new Vertex(0, distance, 0);
+        } else if (axis === 'z') {
+            extrusionDistance = new Vertex(0, 0, distance);
+        }
+        for(let i = 0; i < vertices.length; i++){
+            vertices[i].extrusionVertex(extrusionDistance);
+        }
     };
 
     this.rotate = function(teta, axis) {
@@ -342,7 +356,7 @@ function Polygon(vertices) {
             vertex.getZ()));
     };
 
-    this.getEuclidianDistance = function (vertex) {
+    this.getEuclideanDistance = function (vertex) {
         return Math.sqrt(Math.pow(this.center.getX() - vertex.getX(), 2) + Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2))
     };
 

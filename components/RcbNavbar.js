@@ -177,6 +177,15 @@ Vue.component('rcb-navbar', {
                             }
                         },
                         {
+                            id: 11,
+                            title: 'Extrusão',
+                            enabled: true,
+                            icon: 'fa fa-cube',
+                            action () {
+                                openExtrusionModal();
+                            }
+                        },
+                        {
                             id: 7,
                             title: 'Excluir',
                             enabled: true,

@@ -51,6 +51,15 @@ Vue.component('element-right-click', {
                     }
                 },
                 {
+                    id: 11,
+                    title: 'Extrusão',
+                    enabled: true,
+                    icon: 'fa fa-cube',
+                    action () {
+                        openExtrusionModal();
+                    }
+                },
+                {
                     id: 6,
                     title: 'Excluir',
                     enabled: true,
