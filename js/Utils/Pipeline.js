@@ -92,7 +92,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         }
         let vertices = [];
         columns.forEach(function (c) {
-            if (this.vrp.getZ() != 0 ){
+            if (this.vrp.getZ() !== 0 ){
                 vertices.push(new Vertex(c[0], this.worldHeight - c[1], 0));
             } else {
                 vertices.push(new Vertex(this.worldWidth - c[0], this.worldHeight - c[1], 0));    

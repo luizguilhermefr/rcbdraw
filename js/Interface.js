@@ -43,23 +43,16 @@ function Interface () {
         solids = this.scene.getSolids();
         vue.$refs.panelFront.drawSolids(solids, this.shouldWireframe);
 
-        this.scene.paintersAlgorithm('y', new Vertex(0, 0, 100));
+        this.scene.paintersAlgorithm('y', new Vertex(0, 100, 0));
         solids = this.scene.getSolids();
         vue.$refs.panelTop.drawSolids(solids, this.shouldWireframe);
 
-        this.scene.paintersAlgorithm('x', new Vertex(0, 0, 100));
+        this.scene.paintersAlgorithm('x', new Vertex(100, 0, 0));
         solids = this.scene.getSolids();
         vue.$refs.panelLeft.drawSolids(solids, this.shouldWireframe);
 
         // painters algorithm for perspective?
         // vue.$refs.panelPerspective.drawSolids(solids, this.shouldWireframe);
-    };
-
-    this.fillPolygons = function (polygon, color) {
-        vue.$refs.panelFront.fillPoly(polygon, color);
-        vue.$refs.panelTop.fillPoly(polygon, color);
-        vue.$refs.panelLeft.fillPoly(polygon, color);
-        vue.$refs.panelPerspective.fillPoly(polygon, color);
     };
 
     this.drawTemporaryPolygon = function () {
