@@ -150,7 +150,7 @@ function Polygon(vertices) {
     };
 
     this.vertexAt = function(index) {
-        return this.vertices[index];
+        return this.vertices[index].clone();
     };
 
     this.closestPoint = function(vertex) {
@@ -190,13 +190,16 @@ function Polygon(vertices) {
     };
 
     this.translatePoint = function(vertex) {
-        for (let v = 0; v < vertices.length; v++) {
-            vertices[v].setX(vertices[v].getX() + vertex.getX());
-            vertices[v].setY(vertices[v].getY() + vertex.getY());
-            vertices[v].setZ(vertices[v].getZ() + vertex.getZ());
+        for (let v = 0; v < this.vertices.length; v++) {
+            let tempX = vertices[v].getX() + vertex.getX();
+            let tempY = vertices[v].getY() + vertex.getY();
+            let tempZ = vertices[v].getZ() + vertex.getZ();
+            vertices[v].setX(tempX);
+            vertices[v].setY(tempY);
+            vertices[v].setZ(tempZ);
         }
-        this.updateBoundaries();
         this.updateCenter();
+        this.updateBoundaries();
     };
 
     this.extrusionPoint = function(distance, axis) {
@@ -208,7 +211,7 @@ function Polygon(vertices) {
         } else if (axis === 'z') {
             extrusionDistance = new Vertex(0, 0, distance);
         }
-        for(let i = 0; i < vertices.length; i++){
+        for(let i = 0; i < this.vertices.length; i++){
             vertices[i].extrusionVertex(extrusionDistance);
         }
     };
