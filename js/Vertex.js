@@ -128,6 +128,10 @@ function Vertex(x, y, z) {
         return value;
     };
 
+    this.clone = function(){
+        return new Vertex(this.getX(),this.getY(),this.getZ());
+    }
+
     this.divScalar = function (value) {
         this.x /= value;
         this.y /= value;
@@ -165,5 +169,5 @@ function Vertex(x, y, z) {
         this.setX(this.getX() + extrusionDistance.getX());
         this.setY(this.getY() + extrusionDistance.getY());
         this.setZ(this.getZ() + extrusionDistance.getZ());
-    }
+    };
 }

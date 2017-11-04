@@ -226,7 +226,7 @@ function Interface () {
         } else if (h === 'z' && v === 'y') {
             newPoint = new Vertex(0, y, x);
         }
-
+        console.log("Ponto clicado: ",newPoint);
         this.selectedSolid.solid.translate(newPoint, h, v);
         this.scene.makeDirty();
         this.redraw();

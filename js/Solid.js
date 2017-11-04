@@ -189,7 +189,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         for (i = 0; i < faces - 1; i++) {
             this.closePolygon(tempPolygons[i], tempPolygons[i + 1]);
         }
-        this.polygons.push(tempPolygons[i]); // isso eh feito para salvar a ultima face do objeto
+        this.polygons.push(tempPolygons[i]); 
     };
 
     this.closePolygon = function(initial, final) {
