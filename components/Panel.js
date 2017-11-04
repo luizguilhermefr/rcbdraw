@@ -204,11 +204,13 @@ Vue.component('panel', {
             solids.forEach(function (solid) {
                 solid.getPolygons().forEach(function (polygon) {
                     polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);                
-                    if (solid.shouldFill() && !shouldWireframe) {
-                        this.fillPoly(polygon, solid.getFillColor());
-                    }
-                    if (solid.shouldStroke() || shouldWireframe) {
-                        this.strokePoly(polygon, shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor());
+                    if (polygon.isVisible(this.h, this.v)) {
+                        if (solid.shouldFill() && !shouldWireframe) {
+                            this.fillPoly(polygon, solid.getFillColor());
+                        }
+                        if (solid.shouldStroke() || shouldWireframe) {
+                            this.strokePoly(polygon, shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor());
+                        }
                     }
                 }.bind(this));
             }.bind(this));

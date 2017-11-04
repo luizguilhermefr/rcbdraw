@@ -101,8 +101,17 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         return vertices;
     };
 
-    this.run = function () {
+    this.setNormalVector = function () {
+      //
+    };
+
+    this.normal = function () {
         this.setVectorN();
+        this.setNormalVector();
+        //
+    };
+
+    this.run = function () {
         this.setVectorV();
         this.setVectorU();
         this.setMatrixSruSrc();
@@ -160,4 +169,6 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
     this.viewUp = viewUp;
 
     this.perspective = perspective;
+
+    this.normalVector = null;
 }
