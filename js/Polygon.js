@@ -232,7 +232,7 @@ function Polygon(vertices) {
         }
         this.updateBoundaries();
         this.updateCenter();
-    };
+    };    
 
     this.getNewPointX = function(x, y, teta) {
         return (x * Math.cos(teta)) - (y * Math.sin(teta));

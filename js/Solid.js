@@ -116,20 +116,12 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         }
     };
 
-    this.rotate = function(vertex, rotationSolid, h, v) {
-        let center = this.getCenter();
-        let teta;
-        for (let i = 0; i < this.polygons.length; i++) {
-            if (h === 'x' && v === 'y') {
-                teta = Math.atan2(vertex.getX() - center.getX(), -(vertex.getY() - center.getY()));
-            } else if (h === 'x' && v === 'z') {
-                teta = Math.atan2(vertex.getX() - center.getX(), -(vertex.getZ() - center.getZ()));
-            } else if (h === 'z' && v === 'y') {
-                teta = Math.atan2(vertex.getZ() - center.getZ(), -(vertex.getY() - center.getY()));
-            }
-            polygons[i].translatePoint(center);
-            polygons[i].rotate();
-        }
+    this.rotate = function(center, teta, deep) {        
+        for (let i = 0; i < this.polygons.length; i++) {            
+            polygons[i].translatePoint(center.invert());
+            polygons[i].rotate(teta, deep);   
+            polygons[i].translatePoint(center.invert());                     
+        }        
         this.updateBoundaries();
         this.updateCenter();
     };

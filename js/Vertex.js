@@ -161,8 +161,8 @@ function Vertex(x, y, z) {
     this.zRotation = function(teta){        
         let temp = (this.getX()* Math.cos(teta)) - (this.getY() * Math.sin(teta));
         let temp1 = (this.getX()* Math.sin(teta)) + (this.getY() * Math.cos(teta));
-        this.setX(Math.round(temp));
-        this.setY(Math.round(temp1));            
+        this.setX(temp);
+        this.setY(temp1);            
     };
 
     this.extrusionVertex = function (extrusionDistance) {
