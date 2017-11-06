@@ -264,7 +264,7 @@ function Interface () {
             deep = 'x';
         }
         this.selectedSolid.solid.rotate(centerClone, tetaX, tetaY, tetaZ, deep);
-        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());
+        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());        
         this.scene.makeDirty();
         this.redraw();
     };

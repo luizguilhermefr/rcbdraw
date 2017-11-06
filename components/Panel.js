@@ -119,9 +119,9 @@ Vue.component('panel', {
         },
         mouseDown (e) {
             if (this.mode >= 4 && this.mode <= 5 || this.mode === 8) {
-                this.dragging = true;
-                this.tempClickX = 0;
-                this.tempClickY = 0;
+                this.dragging = true;                
+                this.tempClickX = this.getRelativeX(e.clientX);
+                this.tempClickY = this.getRelativeY(e.clientY);
             }
 
             return false;
@@ -142,7 +142,7 @@ Vue.component('panel', {
                     case 8:                      
                         let temp = (x - this.tempClickX) / 80;
                         let temp1 = (y - this.tempClickY) / 80;
-                        drawInterface.rotationClick(temp1, -temp, this.h, this.v);
+                        drawInterface.rotationClick(temp1, temp, this.h, this.v);
                         this.tempClickX = x;
                         this.tempClickY = y;
                         break;
@@ -166,8 +166,10 @@ Vue.component('panel', {
                     case 8:    
                         let temp = (x - this.tempClickX) / 80;
                         let temp1 = (y - this.tempClickY) / 80;
-                        drawInterface.rotationClick(temp1, -temp, this.h, this.v);
+                        drawInterface.rotationClick(temp1, temp, this.h, this.v);
                         drawInterface.resetRotationClick();
+                        this.tempClickX = 0;
+                        this.tempClickY = 0;
                         break;
                 }
                 this.dragging = false;
