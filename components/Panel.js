@@ -137,7 +137,9 @@ Vue.component('panel', {
                     case 5:
                         drawInterface.scaleClick(x, y, this.h, this.v);
                         break;
-                    case 8:                        
+                    case 8:                      
+                        x = x - (this.canvas.width / 2);
+                        y = y - (this.canvas.height / 2);  
                         drawInterface.rotationClick(x, y, this.h, this.v);
                         break;
                 }
@@ -157,7 +159,9 @@ Vue.component('panel', {
                         drawInterface.scaleClick(x, y, this.h, this.v);
                         drawInterface.resetScaleClick();
                         break;
-                    case 8:                        
+                    case 8:              
+                        x = x - (this.canvas.width / 2);
+                        y = y - (this.canvas.height / 2);          
                         drawInterface.rotationClick(x, y, this.h, this.v);
                         drawInterface.resetRotationClick();
                         break;

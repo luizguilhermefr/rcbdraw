@@ -250,7 +250,8 @@ function Interface () {
         } else {
             this.scene.changeSolid(this.selectedSolid.index, this.rotationSolid.clone());
         }
-        centerClone = this.rotationSolid.getCenter();
+        centerClone = this.rotationSolid.getCenter().clone();
+
         if (h === 'x' && v === 'y') {            
             mouseClick = new Vertex(x, y, 0);            
             teta = Math.atan2(mouseClick.getX() - centerClone.getX(), -(mouseClick.getY() - centerClone.getY()));
@@ -264,8 +265,7 @@ function Interface () {
             teta = Math.atan2(mouseClick.getZ() - centerClone.getZ(), -(mouseClick.getY() - centerClone.getY()));            
             deep = 'x';
         }
-        teta /= 20;
-
+        teta *= (Math.PI/180);
         this.selectedSolid.solid.rotate(centerClone, teta, deep);
         this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());
         //this.selectedSolid.solid = this.scene.solids[this.selectedSolid.index];

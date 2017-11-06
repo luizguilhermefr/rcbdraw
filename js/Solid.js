@@ -78,6 +78,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
 
     this.updateCenter = function() {
         let values = this.getBoundaries();
+
         this.center = new Vertex((values.maxX + values.minX) / 2, (values.maxY + values.minY) / 2, (values.maxZ +
             values.minZ) / 2);
 

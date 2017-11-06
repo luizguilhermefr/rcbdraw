@@ -227,7 +227,8 @@ function Polygon(vertices) {
             }
         } else if (axis === 'z') {
             for (let i = 0; i < vertices.length; i++) {
-                vertices[i].zRotation(teta);
+                vertices[i].xRotation(teta);
+                vertices[i].yRotation(teta);
             }
         }
         this.updateBoundaries();
