@@ -226,7 +226,7 @@ function Interface () {
         } else if (h === 'z' && v === 'y') {
             newPoint = new Vertex(0, y, x);
         }
-        console.log("Ponto clicado: ",newPoint);
+        //console.log("Ponto clicado: ",newPoint);
         this.selectedSolid.solid.translate(newPoint, h, v);
         this.scene.makeDirty();
         this.redraw();
@@ -244,22 +244,44 @@ function Interface () {
     };
 
     this.rotationClick = function (x, y, h, v) {
-        let mouseClick;
+        let mouseClick, teta, ceterClone, deep;
         if (this.rotationSolid === null) {
             this.rotationSolid = this.selectedSolid.solid.clone();
         } else {
             this.scene.changeSolid(this.selectedSolid.index, this.rotationSolid.clone());
         }
-        if (h === 'x' && v === 'y') {
-            mouseClick = new Vertex(x, y, 0);
+        centerClone = this.rotationSolid.getCenter();
+        if (h === 'x' && v === 'y') {            
+            mouseClick = new Vertex(x, y, 0);            
+            teta = Math.atan2(mouseClick.getX() - centerClone.getX(), -(mouseClick.getY() - centerClone.getY()));
+            deep = 'z';
         } else if (h === 'x' && v === 'z') {
-            mouseClick = new Vertex(x, 0, y);
+            mouseClick = new Vertex(x, 0, y);            
+            teta = Math.atan2(mouseClick.getX() - centerClone.getX(), -(mouseClick.getZ() - centerClone.getZ()));
+            deep = 'y';
         } else if (h === 'z' && v === 'y') {
             mouseClick = new Vertex(0, y, x);
+            teta = Math.atan2(mouseClick.getZ() - centerClone.getZ(), -(mouseClick.getY() - centerClone.getY()));            
+            deep = 'x';
         }
-        this.selectedSolid.solid.rotate(mouseClick, this.rotationSolid, h, v);
+        teta /= 20;
+
+        this.selectedSolid.solid.rotate(centerClone, teta, deep);
+        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());
+        //this.selectedSolid.solid = this.scene.solids[this.selectedSolid.index];
+        //this.updateSelectionSolid(this.selectedSolid.index);        
         this.scene.makeDirty();
         this.redraw();
+    };
+
+    this.updateSelectionSolid = function (index) {
+        let polygons = this.scene.solids[index].getPolygons();
+        for(let i = 0; i < polygons.length; i++) {
+            let vertex = polygons[i].getVertices();
+            for(let j = 0; j < vertex.length; j++) {
+                this.selectedSolid.solid.polygons[i].vertices[j] = vertex[j].clone();
+            }
+        }
     };
 
     this.shearHorizontalClick = function (x, y) {
