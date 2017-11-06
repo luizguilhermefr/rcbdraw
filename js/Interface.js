@@ -243,33 +243,28 @@ function Interface () {
         this.redraw();
     };
 
-    this.rotationClick = function (x, y, h, v) {
-        let mouseClick, teta, ceterClone, deep;
+    this.rotationClick = function (tetaX, tetaY, h, v) {
+        let ceterClone, deep, tetaZ;
         if (this.rotationSolid === null) {
             this.rotationSolid = this.selectedSolid.solid.clone();
         } else {
             this.scene.changeSolid(this.selectedSolid.index, this.rotationSolid.clone());
         }
-        centerClone = this.rotationSolid.getCenter();
+        centerClone = this.rotationSolid.getCenter().clone();
         if (h === 'x' && v === 'y') {            
-            mouseClick = new Vertex(x, y, 0);            
-            teta = Math.atan2(mouseClick.getX() - centerClone.getX(), -(mouseClick.getY() - centerClone.getY()));
+            tetaZ = 0;
             deep = 'z';
         } else if (h === 'x' && v === 'z') {
-            mouseClick = new Vertex(x, 0, y);            
-            teta = Math.atan2(mouseClick.getX() - centerClone.getX(), -(mouseClick.getZ() - centerClone.getZ()));
+            tetaZ = tetaY;
+            tetaY = 0;
             deep = 'y';
         } else if (h === 'z' && v === 'y') {
-            mouseClick = new Vertex(0, y, x);
-            teta = Math.atan2(mouseClick.getZ() - centerClone.getZ(), -(mouseClick.getY() - centerClone.getY()));            
+            tetaZ = tetaX;
+            tetaX = 0;
             deep = 'x';
         }
-        teta /= 20;
-
-        this.selectedSolid.solid.rotate(centerClone, teta, deep);
-        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());
-        //this.selectedSolid.solid = this.scene.solids[this.selectedSolid.index];
-        //this.updateSelectionSolid(this.selectedSolid.index);        
+        this.selectedSolid.solid.rotate(centerClone, tetaX, tetaY, tetaZ, deep);
+        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());        
         this.scene.makeDirty();
         this.redraw();
     };
