@@ -52,7 +52,9 @@ function Interface () {
         vue.$refs.panelLeft.drawSolids(solids, this.shouldWireframe);
 
         // painters algorithm for perspective?
-        // vue.$refs.panelPerspective.drawSolids(solids, this.shouldWireframe);
+        this.scene.paintersAlgorithm('z', new Vertex(0, 0, 100));
+        solids = this.scene.getSolids();
+        vue.$refs.panelPerspective.drawSolids(solids, this.shouldWireframe);
     };
 
     this.drawTemporaryPolygon = function () {

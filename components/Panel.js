@@ -92,9 +92,13 @@ Vue.component('panel', {
             }
             this.cursor = 'pointer';
         },
+        vrpRotation () {
+            this.mode = 9;
+            this.cursor = 'pointer';
+        },
         onClick (e) {
             let x = this.getRelativeX(e.clientX);
-            let y = this.getRelativeY(e.clientY);
+            let y = this.getRelativeY(e.clientY);            
             switch (this.mode) {
                 case 1:
                     x = x - (this.canvas.width / 2);
@@ -114,14 +118,20 @@ Vue.component('panel', {
                     break;
                 case 7:
                     drawInterface.shearVerticalClick(x, y, this.h, this.v);
-                    break;
-            }
+                    break;                
+            }                                             
         },
         mouseDown (e) {
             if (this.mode >= 4 && this.mode <= 5 || this.mode === 8) {
                 this.dragging = true;                
                 this.tempClickX = this.getRelativeX(e.clientX);
-                this.tempClickY = this.getRelativeY(e.clientY);
+                this.tempClickY = this.getRelativeY(e.clientY);                
+            }
+            if(this.identifier === 'panelPerspective') {
+                this.dragging = true;
+                vrpRotation();     
+                this.tempClickX = this.getRelativeX(e.clientX);
+                this.tempClickY = this.getRelativeY(e.clientY);               
             }
 
             return false;
@@ -143,6 +153,16 @@ Vue.component('panel', {
                         let temp = (x - this.tempClickX) / 80;
                         let temp1 = (y - this.tempClickY) / 80;
                         drawInterface.rotationClick(temp1, temp, this.h, this.v);
+                        this.tempClickX = x;
+                        this.tempClickY = y;
+                        break;
+                    case 9:                        
+                        let deltaX = (x - this.tempClickX) / 80;
+                        let deltaY = (y - this.tempClickY) / 80;
+                        console.log(this.vrp);
+                        this.vrp.rotationVertex(deltaX, deltaY, 0);                                                
+                        console.log(this.vrp);                                                        
+                        drawInterface.redraw();
                         this.tempClickX = x;
                         this.tempClickY = y;
                         break;
@@ -170,6 +190,14 @@ Vue.component('panel', {
                         drawInterface.resetRotationClick();
                         this.tempClickX = 0;
                         this.tempClickY = 0;
+                        break;
+                    case 9:
+                        let deltaX = (x - this.tempClickX) / 80;
+                        let deltaY = (y - this.tempClickY) / 80;
+                        this.vrp.rotationVertex(deltaX, deltaY, 0);                                                
+                        drawInterface.redraw();
+                        this.tempClickX = 0;
+                        this.tempClickX = 0;                        
                         break;
                 }
                 this.dragging = false;
@@ -212,13 +240,13 @@ Vue.component('panel', {
         },
         drawSolids (solids, shouldWireframe = false) {
             solids.forEach(function (solid) {
-                solid.getPolygons().forEach(function (polygon) {
-                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);                
-                    if (solid.shouldFill() && !shouldWireframe) {
+                solid.getPolygons().forEach(function (polygon) {                    
+                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp);                                    
+                    if (solid.shouldFill() && !shouldWireframe) {                        
                         this.fillPoly(polygon, solid.getFillColor());
                     }
                     if (solid.shouldStroke() || shouldWireframe) {
-                        this.strokePoly(polygon, shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor());
+                        this.strokePoly(polygon, shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor(), this.vrp);
                     }
                 }.bind(this));
             }.bind(this));
@@ -229,7 +257,7 @@ Vue.component('panel', {
             this.context.beginPath();
             let vertices;
             if (this.h === 'px' && this.v === 'py') {
-                vertices = polygon.getDrawablePerspectiveVertices(this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
+                vertices = polygon.getDrawablePerspectiveVertices(this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp);
             } else {
                 vertices = polygon.getDrawableVertices(this.h, this.v);
             }
@@ -252,10 +280,10 @@ Vue.component('panel', {
             let filler = new PolyFill(polygon, this.h, this.v);
             filler.run(this.context);
         },
-        drawTemporaryPolygon () {
+        drawTemporaryPolygon (vrp = false) {
             if (this.freeHandDots.length > 1) {
                 let polygon = new Polygon(this.freeHandDots);
-                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
+                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp);
                 this.strokePoly(polygon, Colors.TEMPORARY, false);
             }
         },
@@ -395,5 +423,6 @@ Vue.component('panel', {
         this.mode = this.readonly ? -1 : 2;
         this.tempClickX = null;
         this.tempClickY = null;
+        this.vrp = new Vertex(0, 0, -100);
     }
 });

@@ -33,9 +33,8 @@ function Polygon(vertices) {
         return this.boundaries;
     };
 
-    this.getDrawablePerspectiveVertices = function(canvasWidth, canvasHeight, worldWidth, worldHeight) {
-        let vrp = new Vertex(0, 100, 0);
-        let viewUp = new Vertex(0, 0, 1);
+    this.getDrawablePerspectiveVertices = function(canvasWidth, canvasHeight, worldWidth, worldHeight, vrp) {        
+        let viewUp = new Vertex(0, 1, 0);
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp, true);
         // noinspection UnnecessaryLocalVariableJS
         let vertices = pipeline.run();
@@ -43,8 +42,8 @@ function Polygon(vertices) {
         return vertices;
     };
 
-    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight) {
-        let vrp, viewUp;
+    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp) {
+        let viewUp, perspective = false;
         if (h === 'x' && v === 'y') {
             vrp = new Vertex(0, 0, 100);
             viewUp = new Vertex(0, 1, 0);
@@ -54,8 +53,12 @@ function Polygon(vertices) {
         } else if (h === 'z' && v === 'y') {
             vrp = new Vertex(100, 0, 0);
             viewUp = new Vertex(0, 1, 0);
+        } else {            
+            viewUp = new Vertex(0, 1, 0);
+            perspective = true;
         }
-        let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp);
+        let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp, perspective);
+        perspective = false;
         let vertices = pipeline.run();
         this.setDrawableVertices(vertices, h, v);
 
@@ -69,6 +72,8 @@ function Polygon(vertices) {
             this.drawableVerticesXZ = vertices;
         } else if (h === 'z' && v === 'y') {
             this.drawableVerticesZY = vertices;
+        } else {
+            this.drawableVerticesPerspective = vertices;
         }
         this.updateDrawableBoundaries(h, v);
 
@@ -82,6 +87,8 @@ function Polygon(vertices) {
             return this.drawableVerticesXZ;
         } else if (h === 'z' && v === 'y') {
             return this.drawableVerticesZY;
+        } else {
+            return this.drawableVerticesPerspective;
         }
     };
 
@@ -92,6 +99,8 @@ function Polygon(vertices) {
             return this.drawableVerticesXZ[index];
         } else if (h === 'z' && v === 'y') {
             return this.drawableVerticesZY[index];
+        } else {
+            return this.drawableVerticesPerspective[index];
         }
 
         return null;
@@ -126,6 +135,8 @@ function Polygon(vertices) {
             return this.drawableBoundariesXZ;
         } else if (h === 'z' && v === 'y') {
             return this.drawableBoundariesZY;
+        } else {
+            return this.drawableBoundariesPerspective;
         }
     };
 
@@ -136,6 +147,8 @@ function Polygon(vertices) {
             this.drawableBoundariesXZ = boundary;
         } else if (h === 'z' && v === 'y') {
             this.drawableBoundariesZY = boundary;
+        } else {
+            this.drawableBoundariesPerspective = boundary;
         }
 
         return this;
@@ -362,6 +375,8 @@ function Polygon(vertices) {
     this.drawableVerticesXZ = null;
 
     this.drawableVerticesPerspective = null;
+
+    this.drawableBoundariesPerspective = null;
 
     this.drawableBoundariesXZ = null;
 
