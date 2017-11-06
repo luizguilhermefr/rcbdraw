@@ -120,6 +120,8 @@ Vue.component('panel', {
         mouseDown (e) {
             if (this.mode >= 4 && this.mode <= 5 || this.mode === 8) {
                 this.dragging = true;
+                this.tempClickX = 0;
+                this.tempClickY = 0;
             }
 
             return false;
@@ -138,9 +140,11 @@ Vue.component('panel', {
                         drawInterface.scaleClick(x, y, this.h, this.v);
                         break;
                     case 8:                      
-                        x = x - (this.canvas.width / 2);
-                        y = y - (this.canvas.height / 2);  
-                        drawInterface.rotationClick(x, y, this.h, this.v);
+                        let temp = (x - this.tempClickX) / 80;
+                        let temp1 = (y - this.tempClickY) / 80;
+                        drawInterface.rotationClick(temp1, -temp, this.h, this.v);
+                        this.tempClickX = x;
+                        this.tempClickY = y;
                         break;
                 }
             }
@@ -159,10 +163,10 @@ Vue.component('panel', {
                         drawInterface.scaleClick(x, y, this.h, this.v);
                         drawInterface.resetScaleClick();
                         break;
-                    case 8:              
-                        x = x - (this.canvas.width / 2);
-                        y = y - (this.canvas.height / 2);          
-                        drawInterface.rotationClick(x, y, this.h, this.v);
+                    case 8:    
+                        let temp = (x - this.tempClickX) / 80;
+                        let temp1 = (y - this.tempClickY) / 80;
+                        drawInterface.rotationClick(temp1, -temp, this.h, this.v);
                         drawInterface.resetRotationClick();
                         break;
                 }
@@ -387,5 +391,7 @@ Vue.component('panel', {
         this.context.strokeStyle = Colors.DEFAULT;
         this.cursor = this.readonly ? 'default' : 'pointer';
         this.mode = this.readonly ? -1 : 2;
+        this.tempClickX = null;
+        this.tempClickY = null;
     }
 });

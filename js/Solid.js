@@ -117,10 +117,10 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         }
     };
 
-    this.rotate = function(center, teta, deep) {        
+    this.rotate = function(center, tetaX, tetaY, tetaZ, deep) {        
         for (let i = 0; i < this.polygons.length; i++) {            
             polygons[i].translatePoint(center.invert());
-            polygons[i].rotate(teta, deep);   
+            polygons[i].rotate(tetaX, tetaY, tetaZ, deep);   
             polygons[i].translatePoint(center.invert());                     
         }        
         this.updateBoundaries();
@@ -155,8 +155,21 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
             this.polygons[0].clone()
         ];
         for (let i = 1; i < faces; i++) {
+            if(axis == 'x'){
+                tetaX = teta;
+                tetaY = 0;
+                tetaZ = 0;
+            } else if ( axis == 'y'){
+                tetaX = 0;
+                tetaY = teta;
+                tetaZ = 0;
+            }else if ( axis == 'z'){
+                tetaX = 0;
+                tetaY = 0;
+                tetaZ = teta;
+            }
             tempPolygons.push(polygons[0].clone());
-            tempPolygons[i].rotate(teta, axis);
+            tempPolygons[i].rotate(tetaX,tetaY,tetaZ);
             teta += initialTeta;
         }
         let i;

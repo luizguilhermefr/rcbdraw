@@ -216,20 +216,9 @@ function Polygon(vertices) {
         }
     };
 
-    this.rotate = function(teta, axis) {
-        if (axis === 'x') {
-            for (let i = 0; i < vertices.length; i++) {
-                vertices[i].xRotation(teta);
-            }
-        } else if (axis === 'y') {
-            for (let i = 0; i < vertices.length; i++) {
-                vertices[i].yRotation(teta);
-            }
-        } else if (axis === 'z') {
-            for (let i = 0; i < vertices.length; i++) {
-                vertices[i].xRotation(teta);
-                vertices[i].yRotation(teta);
-            }
+    this.rotate = function(tetaX, tetaY, tetaZ) {
+        for(let i = 0; i < this.vertices.length; i++){
+            vertices[i].rotationVertex(tetaX, tetaY, tetaZ);
         }
         this.updateBoundaries();
         this.updateCenter();
