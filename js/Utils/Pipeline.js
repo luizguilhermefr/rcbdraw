@@ -101,8 +101,28 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         return vertices;
     };
 
-    this.run = function () {
+    this.setNormalVector = function () {
+      let p1 = this.polygon.vertexAt(2);
+      let p2 = this.polygon.vertexAt(1);
+      let p3 = this.polygon.vertexAt(0);
+      let a = p1.sub(p2);
+      let b = p3.sub(p2);
+      let i = (b.getY() * a.getZ()) - (b.getZ() * a.getY());
+      let j = (b.getZ() * a.getX()) - (b.getX() * a.getZ());
+      let k = (b.getX() * a.getY()) - (b.getY() * a.getX());
+      this.normalVector = new Vertex(i, j, k);
+    };
+
+    this.normal = function (forceVisible = false) {
         this.setVectorN();
+        if (forceVisible) {
+            return true;
+        }
+        this.setNormalVector();
+        return this.normalVector.dotProduct(this.n) > 0;
+    };
+
+    this.run = function () {
         this.setVectorV();
         this.setVectorU();
         this.setMatrixSruSrc();
@@ -160,4 +180,6 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
     this.viewUp = viewUp;
 
     this.perspective = perspective;
+
+    this.normalVector = null;
 }

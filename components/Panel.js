@@ -214,11 +214,13 @@ Vue.component('panel', {
             solids.forEach(function (solid) {
                 solid.getPolygons().forEach(function (polygon) {
                     polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);                
-                    if (solid.shouldFill() && !shouldWireframe) {
-                        this.fillPoly(polygon, solid.getFillColor());
-                    }
-                    if (solid.shouldStroke() || shouldWireframe) {
-                        this.strokePoly(polygon, shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor());
+                    if (polygon.isVisible(this.h, this.v)) {
+                        if (solid.shouldFill() && !shouldWireframe) {
+                            this.fillPoly(polygon, solid.getFillColor());
+                        }
+                        if (solid.shouldStroke() || shouldWireframe) {
+                            this.strokePoly(polygon, shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor());
+                        }
                     }
                 }.bind(this));
             }.bind(this));
@@ -255,7 +257,7 @@ Vue.component('panel', {
         drawTemporaryPolygon () {
             if (this.freeHandDots.length > 1) {
                 let polygon = new Polygon(this.freeHandDots);
-                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
+                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, true);
                 this.strokePoly(polygon, Colors.TEMPORARY, false);
             }
         },
@@ -300,7 +302,9 @@ Vue.component('panel', {
         drawSelectedSolid (solid) {
             let polygons = solid.getPolygons();
             for (let i = 0; i < polygons.length; i++) {
-                this.strokePoly(polygons[ i ], Colors.SELECTED);
+                if (polygons[i].isVisible(this.h, this.v)) {
+                    this.strokePoly(polygons[ i ], Colors.SELECTED);
+                }
             }
         },
         contextMenu (e) {

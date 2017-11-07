@@ -43,7 +43,7 @@ function Polygon(vertices) {
         return vertices;
     };
 
-    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight) {
+    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, forceVisible = false) {
         let vrp, viewUp;
         if (h === 'x' && v === 'y') {
             vrp = new Vertex(0, 0, 100);
@@ -56,10 +56,35 @@ function Polygon(vertices) {
             viewUp = new Vertex(0, 1, 0);
         }
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp);
-        let vertices = pipeline.run();
-        this.setDrawableVertices(vertices, h, v);
+        let visible = pipeline.normal(forceVisible);
+        this.setVisibility(visible, h, v);
+        if (visible) {
+            let vertices = pipeline.run();
+            this.setDrawableVertices(vertices, h, v);
+        }
+        return this;
+    };
+
+    this.setVisibility = function(visible, h, v) {
+        if (h === 'x' && v === 'y') {
+            this.visibleXY = visible;
+        } else if (h === 'x' && v === 'z') {
+            this.visibleXZ = visible;
+        } else if (h === 'z' && v === 'y') {
+            this.visibleZY = visible;
+        }
 
         return this;
+    };
+
+    this.isVisible = function (h, v) {
+        if (h === 'x' && v === 'y') {
+            return this.visibleXY;
+        } else if (h === 'x' && v === 'z') {
+            return this.visibleXZ;
+        } else if (h === 'z' && v === 'y') {
+            return this.visibleZY;
+        }
     };
 
     this.setDrawableVertices = function(vertices, h, v) {
@@ -323,6 +348,9 @@ function Polygon(vertices) {
     };
 
     this.isInsideDrawableBoundaryTolerance = function(clickVertex, h, v) {
+        if (! this.isVisible(h, v)) {
+            return false;
+        }
         let tolerance = 20;
         let boundary = this.getDrawableBoundaries(h, v);
 
@@ -368,6 +396,12 @@ function Polygon(vertices) {
     this.drawableVerticesZY = null;
 
     this.drawableBoundariesZY = null;
+
+    this.visibleXY = false;
+
+    this.visibleXZ = false;
+
+    this.visibleZY = false;
 
     this.edges = [];
 
