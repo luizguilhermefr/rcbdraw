@@ -302,7 +302,9 @@ Vue.component('panel', {
         drawSelectedSolid (solid) {
             let polygons = solid.getPolygons();
             for (let i = 0; i < polygons.length; i++) {
-                this.strokePoly(polygons[ i ], Colors.SELECTED);
+                if (polygons[i].isVisible(this.h, this.v)) {
+                    this.strokePoly(polygons[ i ], Colors.SELECTED);
+                }
             }
         },
         contextMenu (e) {

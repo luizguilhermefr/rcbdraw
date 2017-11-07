@@ -348,6 +348,9 @@ function Polygon(vertices) {
     };
 
     this.isInsideDrawableBoundaryTolerance = function(clickVertex, h, v) {
+        if (! this.isVisible(h, v)) {
+            return false;
+        }
         let tolerance = 20;
         let boundary = this.getDrawableBoundaries(h, v);
 

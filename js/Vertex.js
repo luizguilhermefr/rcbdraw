@@ -130,7 +130,7 @@ function Vertex(x, y, z) {
 
     this.clone = function(){
         return new Vertex(this.getX(),this.getY(),this.getZ());
-    }
+    };
 
     this.divScalar = function (value) {
         this.x /= value;
