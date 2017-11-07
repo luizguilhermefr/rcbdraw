@@ -78,6 +78,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
 
     this.updateCenter = function() {
         let values = this.getBoundaries();
+
         this.center = new Vertex((values.maxX + values.minX) / 2, (values.maxY + values.minY) / 2, (values.maxZ +
             values.minZ) / 2);
 
@@ -116,20 +117,12 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         }
     };
 
-    this.rotate = function(vertex, rotationSolid, h, v) {
-        let center = this.getCenter();
-        let teta;
-        for (let i = 0; i < this.polygons.length; i++) {
-            if (h === 'x' && v === 'y') {
-                teta = Math.atan2(vertex.getX() - center.getX(), -(vertex.getY() - center.getY()));
-            } else if (h === 'x' && v === 'z') {
-                teta = Math.atan2(vertex.getX() - center.getX(), -(vertex.getZ() - center.getZ()));
-            } else if (h === 'z' && v === 'y') {
-                teta = Math.atan2(vertex.getZ() - center.getZ(), -(vertex.getY() - center.getY()));
-            }
-            polygons[i].translatePoint(center);
-            polygons[i].rotate();
-        }
+    this.rotate = function(center, tetaX, tetaY, tetaZ, deep) {        
+        for (let i = 0; i < this.polygons.length; i++) {            
+            polygons[i].translatePoint(center.invert());
+            polygons[i].rotate(tetaX, tetaY, tetaZ, deep);   
+            polygons[i].translatePoint(center.invert());                     
+        }        
         this.updateBoundaries();
         this.updateCenter();
     };
@@ -162,8 +155,21 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
             this.polygons[0].clone()
         ];
         for (let i = 1; i < faces; i++) {
+            if(axis == 'x'){
+                tetaX = teta;
+                tetaY = 0;
+                tetaZ = 0;
+            } else if ( axis == 'y'){
+                tetaX = 0;
+                tetaY = teta;
+                tetaZ = 0;
+            }else if ( axis == 'z'){
+                tetaX = 0;
+                tetaY = 0;
+                tetaZ = teta;
+            }
             tempPolygons.push(polygons[0].clone());
-            tempPolygons[i].rotate(teta, axis);
+            tempPolygons[i].rotate(tetaX,tetaY,tetaZ);
             teta += initialTeta;
         }
         let i;
@@ -189,7 +195,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         for (i = 0; i < faces - 1; i++) {
             this.closePolygon(tempPolygons[i], tempPolygons[i + 1]);
         }
-        this.polygons.push(tempPolygons[i]); // isso eh feito para salvar a ultima face do objeto
+        this.polygons.push(tempPolygons[i]); 
     };
 
     this.closePolygon = function(initial, final) {

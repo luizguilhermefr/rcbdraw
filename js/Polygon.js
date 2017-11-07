@@ -175,7 +175,7 @@ function Polygon(vertices) {
     };
 
     this.vertexAt = function(index) {
-        return this.vertices[index];
+        return this.vertices[index].clone();
     };
 
     this.closestPoint = function(vertex) {
@@ -215,13 +215,16 @@ function Polygon(vertices) {
     };
 
     this.translatePoint = function(vertex) {
-        for (let v = 0; v < vertices.length; v++) {
-            vertices[v].setX(vertices[v].getX() + vertex.getX());
-            vertices[v].setY(vertices[v].getY() + vertex.getY());
-            vertices[v].setZ(vertices[v].getZ() + vertex.getZ());
+        for (let v = 0; v < this.vertices.length; v++) {
+            let tempX = vertices[v].getX() + vertex.getX();
+            let tempY = vertices[v].getY() + vertex.getY();
+            let tempZ = vertices[v].getZ() + vertex.getZ();
+            vertices[v].setX(tempX);
+            vertices[v].setY(tempY);
+            vertices[v].setZ(tempZ);
         }
-        this.updateBoundaries();
         this.updateCenter();
+        this.updateBoundaries();
     };
 
     this.extrusionPoint = function(distance, axis) {
@@ -233,28 +236,18 @@ function Polygon(vertices) {
         } else if (axis === 'z') {
             extrusionDistance = new Vertex(0, 0, distance);
         }
-        for(let i = 0; i < vertices.length; i++){
+        for(let i = 0; i < this.vertices.length; i++){
             vertices[i].extrusionVertex(extrusionDistance);
         }
     };
 
-    this.rotate = function(teta, axis) {
-        if (axis === 'x') {
-            for (let i = 0; i < vertices.length; i++) {
-                vertices[i].xRotation(teta);
-            }
-        } else if (axis === 'y') {
-            for (let i = 0; i < vertices.length; i++) {
-                vertices[i].yRotation(teta);
-            }
-        } else if (axis === 'z') {
-            for (let i = 0; i < vertices.length; i++) {
-                vertices[i].zRotation(teta);
-            }
+    this.rotate = function(tetaX, tetaY, tetaZ) {
+        for(let i = 0; i < this.vertices.length; i++){
+            vertices[i].rotationVertex(tetaX, tetaY, tetaZ);
         }
         this.updateBoundaries();
         this.updateCenter();
-    };
+    };    
 
     this.getNewPointX = function(x, y, teta) {
         return (x * Math.cos(teta)) - (y * Math.sin(teta));
