@@ -120,9 +120,19 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
     this.rotate = function(center, tetaX, tetaY, tetaZ, deep) {        
         for (let i = 0; i < this.polygons.length; i++) {            
             polygons[i].translatePoint(center.invert());
-            polygons[i].rotate(tetaX, tetaY, tetaZ, deep);   
-            polygons[i].translatePoint(center.invert());                     
-        }        
+            polygons[i].rotate(tetaX, tetaY, tetaZ);
+            polygons[i].translatePoint(center.invert());
+            this.updateBoundaries();
+            this.updateCenter();
+        }
+    };
+
+    this.scale = function(center, tetaX, tetaY, tetaZ) {
+        for (let i = 0; i < this.polygons.length; i++) {
+            polygons[i].translatePoint(center.invert());
+            polygons[i].scale(tetaX, tetaY, tetaZ);
+            polygons[i].translatePoint(center.invert());
+        }
         this.updateBoundaries();
         this.updateCenter();
     };
@@ -149,6 +159,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
     this.runRevolution = function(faces, axis, degree) {
         let teta = degree / (faces - 1);
         teta *= Math.PI / 180;
+        let tetaX, tetaY, tetaZ;
         // noinspection UnnecessaryLocalVariableJS
         let initialTeta = teta;
         let tempPolygons = [
@@ -176,7 +187,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         for (i = 0; i < faces - 1; i++) {
             this.closePolygon(tempPolygons[i], tempPolygons[i + 1]);
         }
-        this.polygons.push(tempPolygons[i]); // isso eh feito para salvar a ultima face do objeto
+        this.polygons.push(tempPolygons[i].invertOrientation());
     };
 
     this.runExtrusion = function(faces, axis, distance) {

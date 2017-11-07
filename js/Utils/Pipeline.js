@@ -65,8 +65,8 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
 
     this.setMatrixMjp = function () {
         this.mJp = [
-            [(this.screenWidth) / (this.wMaxX - this.wMinX), 0, (this.wMinX * -1) * (this.screenWidth / (this.wMaxX - this.wMinX))],
-            [0, (this.screenHeight * -1) / (this.wMaxY - this.wMinY), (this.wMinY * (this.screenHeight / (this.wMaxY - this.wMinY))) + this.screenHeight],
+            [(this.screenWidth) / (this.wMaxX - this.wMinX), 0, -this.wMinX * (this.screenWidth / (this.wMaxX - this.wMinX))],
+            [0, -this.screenHeight / (this.wMaxY - this.wMinY), (this.wMinY * (this.screenHeight / (this.wMaxY - this.wMinY))) + this.screenHeight],
             [0, 0, 1]
         ];
     };
@@ -87,7 +87,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
     this.to2DVertices = function () {
         let columns = [];
         let len = this.pSrt[0].length;
-        for (i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++) {
             columns.push(this.getCol(this.pSrt, i));
         }
         let vertices = [];
@@ -96,7 +96,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
                 vertices.push(new Vertex(c[0], this.worldHeight - c[1], 0));
             } else {
                 vertices.push(new Vertex(this.worldWidth - c[0], this.worldHeight - c[1], 0));    
-            } 
+            }
         }.bind(this));
         return vertices;
     };
@@ -119,7 +119,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
             return true;
         }
         this.setNormalVector();
-        return this.normalVector.dotProduct(this.n) > 0;
+        return this.normalVector.dotProduct(this.n) >= 0;
     };
 
     this.run = function () {
@@ -134,7 +134,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         this.setWorldCoordinates();
         this.setMatrixMjp();
         this.setMatrixPsrt();
-        return this.to2DVertices()
+        return this.to2DVertices();
     };
 
     this.p = p === null ? new Vertex(0, 0, 0) : p;

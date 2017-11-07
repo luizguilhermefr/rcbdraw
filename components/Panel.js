@@ -127,9 +127,9 @@ Vue.component('panel', {
             return false;
         },
         mouseMove (e) {
-            let x = this.getRelativeX(e.clientX);
-            let y = this.getRelativeY(e.clientY);
             if (this.dragging) {
+                let x = this.getRelativeX(e.clientX);
+                let y = this.getRelativeY(e.clientY);
                 switch (this.mode) {
                     case 4:
                         x = x - (this.canvas.width / 2);
@@ -137,7 +137,11 @@ Vue.component('panel', {
                         drawInterface.translateClick(x, y, this.h, this.v);
                         break;
                     case 5:
-                        drawInterface.scaleClick(x, y, this.h, this.v);
+                        let scaleFactorX = (x - this.tempClickX) / 80;
+                        let scaleFactorY = (y - this.tempClickY) / 80;
+                        drawInterface.scaleClick(scaleFactorY, scaleFactorX, this.h, this.v);
+                        this.tempClickX = 0;
+                        this.tempClickY = 0;
                         break;
                     case 8:                      
                         let temp = (x - this.tempClickX) / 80;
@@ -150,9 +154,9 @@ Vue.component('panel', {
             }
         },
         mouseUp (e) {
-            let x = this.getRelativeX(e.clientX);
-            let y = this.getRelativeY(e.clientY);
             if (this.dragging) {
+                let x = this.getRelativeX(e.clientX);
+                let y = this.getRelativeY(e.clientY);
                 switch (this.mode) {
                     case 4:
                         x = x - (this.canvas.width / 2);
@@ -160,8 +164,12 @@ Vue.component('panel', {
                         drawInterface.translateClick(x, y, this.h, this.v);
                         break;
                     case 5:
-                        drawInterface.scaleClick(x, y, this.h, this.v);
+                        let scaleFactorX = (x - this.tempClickX) / 80;
+                        let scaleFactorY = (y - this.tempClickY) / 80;
+                        drawInterface.scaleClick(scaleFactorY, scaleFactorX, this.h, this.v);
                         drawInterface.resetScaleClick();
+                        this.tempClickX = 0;
+                        this.tempClickY = 0;
                         break;
                     case 8:    
                         let temp = (x - this.tempClickX) / 80;
@@ -375,7 +383,7 @@ Vue.component('panel', {
             drawInterface.redraw();
         },
         resizeDefault(isInitialResize = false) {
-            setTimeout(function() {
+            this.$nextTick(function() {
                 let dimensions;
                 if (this.expanded) {
                     dimensions = getScreenDimensions();
@@ -387,7 +395,7 @@ Vue.component('panel', {
                     this.initialWidth = dimensions.width;
                     this.initialHeight = dimensions.height;
                 }
-            }.bind(this), 1);
+            }.bind(this));
         },
     },
     mounted () {
