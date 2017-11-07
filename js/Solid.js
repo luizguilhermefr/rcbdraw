@@ -121,10 +121,10 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         for (let i = 0; i < this.polygons.length; i++) {            
             polygons[i].translatePoint(center.invert());
             polygons[i].rotate(tetaX, tetaY, tetaZ);
-            polygons[i].translatePoint(center.invert());                     
-        }        
-        this.updateBoundaries();
-        this.updateCenter();
+            polygons[i].translatePoint(center.invert());
+            this.updateBoundaries();
+            this.updateCenter();
+        }
     };
 
     this.scale = function(center, tetaX, tetaY, tetaZ) {
