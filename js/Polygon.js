@@ -43,7 +43,7 @@ function Polygon(vertices) {
         return vertices;
     };
 
-    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, forceVisible = false) {
+    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, index, forceVisible = false) {
         let vrp, viewUp;
         if (h === 'x' && v === 'y') {
             vrp = new Vertex(0, 0, 100);
@@ -194,6 +194,16 @@ function Polygon(vertices) {
         return closestPoint.vertex;
     };
 
+    this.invertOrientation = function () {
+        let newVertices = [];
+        for (i = this.vertices.length - 1; i >= 0; i--) {
+            newVertices.push(this.vertices[i]);
+        }
+        this.vertices = newVertices;
+
+        return this;
+    };
+
     this.closestDrawedEdge = function(clickVertex, h, v) {
         let closestEdge = {
             distance: Number.POSITIVE_INFINITY,
@@ -247,6 +257,23 @@ function Polygon(vertices) {
         }
         this.updateBoundaries();
         this.updateCenter();
+    };
+
+    this.rotateFace = function(){
+        if(this.vertices.length % 2 === 0){
+            for(let i = 1; i < this.vertices[i].length-1; i+=2){
+                let temp = this.vertexAt(i+1);
+                this.vertices[i+1] = this.vertices[i];
+                this.vertices[i] = temp;
+            }
+        } else {
+            for(let i = 0; i < this.vertices[i].length-1; i++){
+                let temp = this.vertexAt(i+1);
+                this.vertices[i+1] = this.vertices[i];
+                this.vertices[i] = temp;
+            }
+        }
+        console.log(this.vertices);
     };
 
     this.scale = function(tetaX, tetaY, tetaZ) {
