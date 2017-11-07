@@ -137,7 +137,11 @@ Vue.component('panel', {
                         drawInterface.translateClick(x, y, this.h, this.v);
                         break;
                     case 5:
-                        drawInterface.scaleClick(x, y, this.h, this.v);
+                        let scaleFactorX = (x - this.tempClickX) / 80;
+                        let scaleFactorY = (y - this.tempClickY) / 80;
+                        drawInterface.scaleClick(scaleFactorY, scaleFactorX, this.h, this.v);
+                        this.tempClickX = 0;
+                        this.tempClickY = 0;
                         break;
                     case 8:                      
                         let temp = (x - this.tempClickX) / 80;
@@ -160,8 +164,12 @@ Vue.component('panel', {
                         drawInterface.translateClick(x, y, this.h, this.v);
                         break;
                     case 5:
-                        drawInterface.scaleClick(x, y, this.h, this.v);
+                        let scaleFactorX = (x - this.tempClickX) / 80;
+                        let scaleFactorY = (y - this.tempClickY) / 80;
+                        drawInterface.scaleClick(scaleFactorY, scaleFactorX, this.h, this.v);
                         drawInterface.resetScaleClick();
+                        this.tempClickX = 0;
+                        this.tempClickY = 0;
                         break;
                     case 8:    
                         let temp = (x - this.tempClickX) / 80;

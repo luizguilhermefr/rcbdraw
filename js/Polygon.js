@@ -247,7 +247,15 @@ function Polygon(vertices) {
         }
         this.updateBoundaries();
         this.updateCenter();
-    };    
+    };
+
+    this.scale = function(tetaX, tetaY, tetaZ) {
+        for(let i = 0; i < this.vertices.length; i++){
+            vertices[i].scaleVertex(tetaX, tetaY, tetaZ);
+        }
+        this.updateBoundaries();
+        this.updateCenter();
+    };
 
     this.getNewPointX = function(x, y, teta) {
         return (x * Math.cos(teta)) - (y * Math.sin(teta));
@@ -255,25 +263,6 @@ function Polygon(vertices) {
 
     this.getNewPointY = function(x, y, teta) {
         return (x * Math.sin(teta)) + (y * Math.cos(teta));
-    };
-
-    this.scale = function(vertex, clone) {
-        // let referenceCenter = this.getCenter();
-        // let scaleFactor = {
-        //     X: (vertex.getX() - referenceCenter.getX()) / 500,
-        //     Y: (vertex.getY() - referenceCenter.getY()) / 500
-        // };
-        // this.translatePoint(referenceCenter);
-        // for (let i = 0; i < this.vertices.length; i++) {
-        //     vertices[i].setX(vertices[i].getX() + Math.round((clone.vertexAt(i).getX() * scaleFactor.X)));
-        //     vertices[i].setY(vertices[i].getY() + Math.round(clone.vertexAt(i).getY() * scaleFactor.Y));
-        // }
-        // referenceCenter.invert();
-        // this.translatePoint(referenceCenter);
-        // this.updateBoundaries();
-        // this.updateCenter();
-        //
-        // return this;
     };
 
     this.shearX = function(vertex) {

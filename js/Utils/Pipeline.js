@@ -87,7 +87,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
     this.to2DVertices = function () {
         let columns = [];
         let len = this.pSrt[0].length;
-        for (i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++) {
             columns.push(this.getCol(this.pSrt, i));
         }
         let vertices = [];
@@ -119,7 +119,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
             return true;
         }
         this.setNormalVector();
-        return this.normalVector.dotProduct(this.n) > 0;
+        return this.normalVector.dotProduct(this.n) >= 0;
     };
 
     this.run = function () {
