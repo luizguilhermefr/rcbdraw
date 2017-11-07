@@ -166,6 +166,7 @@ function Vertex(x, y, z) {
     };
 
     this.rotationVertex = function (tetaX, tetaY, tetaZ) {
+        
         let temp = (this.getY()* Math.cos(tetaX)) - (this.getZ() * Math.sin(tetaX));
         let temp1 = (this.getY()* Math.sin(tetaX)) + (this.getZ() * Math.cos(tetaX));
         this.setY(temp);
@@ -180,7 +181,19 @@ function Vertex(x, y, z) {
         temp1 = (this.getX()* Math.sin(tetaZ)) + (this.getY() * Math.cos(tetaZ));
         this.setX(temp);
         this.setY(temp1);         
-    }
+    };
+
+    this.vrpRotation = function (tetaX, tetaY) {
+        let temp = (this.getX() * Math.cos(tetaY)) + (this.getZ() * Math.sin(tetaY));
+        let temp1 = ((this.getX() * -1 )* Math.sin(tetaY)) + (this.getZ() * Math.cos(tetaY));
+        this.setX(temp);
+        this.setZ(temp1);
+
+        temp = (this.getY()* Math.cos(tetaX)) - (this.getZ() * Math.sin(tetaX));
+        temp1 = (this.getY()* Math.sin(tetaX)) + (this.getZ() * Math.cos(tetaX));
+        this.setY(temp);
+        this.setZ(temp1);   
+    };
 
     this.extrusionVertex = function (extrusionDistance) {
         this.setX(this.getX() + extrusionDistance.getX());

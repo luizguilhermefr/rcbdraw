@@ -213,7 +213,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
     this.clone = function(displacement = 0) {
         let nextPolygons = [];
         this.polygons.forEach(function(p) {
-            nextPolygons.push(p.clone(displacement));
+            nextPolygons.push(p.clone(displacement));            
         });
         return new Solid(nextPolygons, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
     };

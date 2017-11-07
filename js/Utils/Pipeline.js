@@ -38,7 +38,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         this.mPersp = [
             [1, 0 , 0 , 0],
             [0 , 1, 0 , 0],
-            [0, 0, (-zvp/ this.dp, 0)],
+            [0, 0, (-zvp/ this.dp), 0],
             [0, 0, -1/this.dp, 0]
         ]                 
     };
@@ -51,7 +51,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
     this.setMatrixHomogeneous = function() {
         for(let i = 0; i < this.pPersp.length; i++){
             for(let j = 0; j < pPersp[i].length - 1; j++) {
-                pPersp[i][j] /= pPersp[i][pPersp[i].length - 1];
+                pPersp[i][j] /= pPersp[pPersp[i].length - 1][j];
             }
         }
     };    

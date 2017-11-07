@@ -64,12 +64,12 @@ function Interface () {
         vue.$refs.panelPerspective.drawTemporaryPolygon();
     };
 
-    this.drawSelectedSolid = function () {
-        if (this.selectedSolid !== null) {
-            vue.$refs.panelFront.drawSelectedSolid(this.selectedSolid.solid);
-            vue.$refs.panelTop.drawSelectedSolid(this.selectedSolid.solid);
-            vue.$refs.panelLeft.drawSelectedSolid(this.selectedSolid.solid);
-            vue.$refs.panelPerspective.drawSelectedSolid(this.selectedSolid.solid);
+    this.drawSelectedSolid = function () {        
+        if (this.selectedSolid !== null) {    
+            vue.$refs.panelFront.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
+            vue.$refs.panelTop.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
+            vue.$refs.panelLeft.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
+            vue.$refs.panelPerspective.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
         }
     };
 
@@ -255,18 +255,15 @@ function Interface () {
         centerClone = this.rotationSolid.getCenter().clone();
         if (h === 'x' && v === 'y') {            
             tetaZ = 0;
-            deep = 'z';
         } else if (h === 'x' && v === 'z') {
             tetaZ = tetaY;
             tetaY = 0;
-            deep = 'y';
         } else if (h === 'z' && v === 'y') {
             tetaZ = tetaX;
             tetaX = 0;
-            deep = 'x';
         }
-        this.selectedSolid.solid.rotate(centerClone, tetaX, tetaY, tetaZ, deep);
-        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());        
+        this.selectedSolid.solid.rotate(centerClone, tetaX, tetaY, tetaZ);        
+        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());                   
         this.scene.makeDirty();
         this.redraw();
     };

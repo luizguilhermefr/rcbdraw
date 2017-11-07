@@ -33,8 +33,8 @@ function Polygon(vertices) {
         return this.boundaries;
     };
 
-    this.getDrawablePerspectiveVertices = function(canvasWidth, canvasHeight, worldWidth, worldHeight, vrp) {        
-        let viewUp = new Vertex(0, 1, 0);
+    this.getDrawablePerspectiveVertices = function(canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp) {        
+        //let viewUp = new Vertex(0,1,0);
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp, true);
         // noinspection UnnecessaryLocalVariableJS
         let vertices = pipeline.run();
@@ -42,8 +42,8 @@ function Polygon(vertices) {
         return vertices;
     };
 
-    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp) {
-        let viewUp, perspective = false;
+    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp = null) {
+        let perspective = false;
         if (h === 'x' && v === 'y') {
             vrp = new Vertex(0, 0, 100);
             viewUp = new Vertex(0, 1, 0);
@@ -53,8 +53,7 @@ function Polygon(vertices) {
         } else if (h === 'z' && v === 'y') {
             vrp = new Vertex(100, 0, 0);
             viewUp = new Vertex(0, 1, 0);
-        } else {            
-            viewUp = new Vertex(0, 1, 0);
+        } else {                        
             perspective = true;
         }
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp, perspective);
@@ -313,10 +312,38 @@ function Polygon(vertices) {
     this.clone = function(displacement = 0) {
         let nextVertices = [];
         this.vertices.forEach(function(v) {
-            nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement, v.getZ() + displacement));
+            nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement, v.getZ() + displacement));            
         });
-        return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
-    };
+        let newPoli = new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
+        
+        newPoli.drawableVerticesXY = [];            
+        newPoli.drawableVerticesXZ = [];
+        newPoli.drawableVerticesPerspective = [];        
+        newPoli.drawableVerticesZY = [];        
+        
+        for(let i = 0; i < this.drawableVerticesXY.length; i++){            
+            newPoli.drawableVerticesXY.push(this.drawableVerticesXY[i].clone());            
+        } 
+
+        for(let i = 0; i < this.drawableVerticesXZ.length; i++){
+            newPoli.drawableVerticesXZ.push(this.drawableVerticesXZ[i].clone());
+        }
+        
+        for(let i = 0; i < this.drawableVerticesPerspective.length; i++){
+            newPoli.drawableVerticesPerspective.push(this.drawableVerticesPerspective[i].clone());
+        }                
+
+        for(let i = 0; i < this.drawableVerticesZY.length; i++){
+            newPoli.drawableVerticesZY.push(this.drawableVerticesZY[i].clone());
+        }
+        
+        newPoli.drawableBoundariesXY = this.drawableBoundariesXY;
+        newPoli.drawableBoundariesPerspective = this.drawableBoundariesPerspective;
+        newPoli.drawableBoundariesXZ = this.drawableBoundariesXZ;
+        newPoli.drawableBoundariesZY = this.drawableBoundariesZY;
+
+        return newPoli;
+    };    
 
     this.toMatrix = function() {
         let vertices = [
@@ -333,7 +360,7 @@ function Polygon(vertices) {
         });
 
         return vertices;
-    };
+    };    
 
     this.isInsideDrawableBoundaryTolerance = function(clickVertex, h, v) {
         let tolerance = 20;
@@ -364,7 +391,7 @@ function Polygon(vertices) {
 
     this.getEuclideanDistance = function (vertex) {
         return Math.sqrt(Math.pow(this.center.getX() - vertex.getX(), 2) + Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2))
-    };
+    };    
 
     this.vertices = vertices;
 
