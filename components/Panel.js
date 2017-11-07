@@ -257,7 +257,7 @@ Vue.component('panel', {
         drawTemporaryPolygon () {
             if (this.freeHandDots.length > 1) {
                 let polygon = new Polygon(this.freeHandDots);
-                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight);
+                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, true);
                 this.strokePoly(polygon, Colors.TEMPORARY, false);
             }
         },

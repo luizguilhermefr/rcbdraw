@@ -180,7 +180,7 @@ function Vertex(x, y, z) {
         temp1 = (this.getX()* Math.sin(tetaZ)) + (this.getY() * Math.cos(tetaZ));
         this.setX(temp);
         this.setY(temp1);         
-    }
+    };
 
     this.extrusionVertex = function (extrusionDistance) {
         this.setX(this.getX() + extrusionDistance.getX());

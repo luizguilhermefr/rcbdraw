@@ -43,7 +43,7 @@ function Polygon(vertices) {
         return vertices;
     };
 
-    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight) {
+    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, forceVisible = false) {
         let vrp, viewUp;
         if (h === 'x' && v === 'y') {
             vrp = new Vertex(0, 0, 100);
@@ -56,7 +56,7 @@ function Polygon(vertices) {
             viewUp = new Vertex(0, 1, 0);
         }
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp);
-        let visible = pipeline.normal();
+        let visible = pipeline.normal(forceVisible);
         this.setVisibility(visible, h, v);
         if (visible) {
             let vertices = pipeline.run();

@@ -113,14 +113,12 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
       this.normalVector = new Vertex(i, j, k);
     };
 
-    this.normal = function () {
+    this.normal = function (forceVisible = false) {
         this.setVectorN();
+        if (forceVisible) {
+            return true;
+        }
         this.setNormalVector();
-        // console.log(this.polygon.vertexAt(0));
-        // console.log(this.polygon.vertexAt(1));
-        // console.log(this.polygon.vertexAt(2));
-        // console.log(this.n);
-        // console.log(this.normalVector);
         return this.normalVector.dotProduct(this.n) > 0;
     };
 
