@@ -127,9 +127,9 @@ Vue.component('panel', {
             return false;
         },
         mouseMove (e) {
-            let x = this.getRelativeX(e.clientX);
-            let y = this.getRelativeY(e.clientY);
             if (this.dragging) {
+                let x = this.getRelativeX(e.clientX);
+                let y = this.getRelativeY(e.clientY);
                 switch (this.mode) {
                     case 4:
                         x = x - (this.canvas.width / 2);
@@ -150,9 +150,9 @@ Vue.component('panel', {
             }
         },
         mouseUp (e) {
-            let x = this.getRelativeX(e.clientX);
-            let y = this.getRelativeY(e.clientY);
             if (this.dragging) {
+                let x = this.getRelativeX(e.clientX);
+                let y = this.getRelativeY(e.clientY);
                 switch (this.mode) {
                     case 4:
                         x = x - (this.canvas.width / 2);
@@ -375,7 +375,7 @@ Vue.component('panel', {
             drawInterface.redraw();
         },
         resizeDefault(isInitialResize = false) {
-            setTimeout(function() {
+            this.$nextTick(function() {
                 let dimensions;
                 if (this.expanded) {
                     dimensions = getScreenDimensions();
@@ -387,7 +387,7 @@ Vue.component('panel', {
                     this.initialWidth = dimensions.width;
                     this.initialHeight = dimensions.height;
                 }
-            }.bind(this), 1);
+            }.bind(this));
         },
     },
     mounted () {
