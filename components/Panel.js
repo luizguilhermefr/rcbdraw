@@ -159,9 +159,7 @@ Vue.component('panel', {
                     case 9:                        
                         let deltaX = (x - this.tempClickX) / 80;
                         let deltaY = (y - this.tempClickY) / 80;
-                        console.log(this.vrp);
-                        this.vrp.rotationVertex(deltaX, deltaY, 0);                                                
-                        console.log(this.vrp);                                                        
+                        this.vrp.rotationVertex(-deltaY, -deltaX, 0);                                                
                         drawInterface.redraw();
                         this.tempClickX = x;
                         this.tempClickY = y;
@@ -194,7 +192,7 @@ Vue.component('panel', {
                     case 9:
                         let deltaX = (x - this.tempClickX) / 80;
                         let deltaY = (y - this.tempClickY) / 80;
-                        this.vrp.rotationVertex(deltaX, deltaY, 0);                                                
+                        this.vrp.rotationVertex(-deltaY, -deltaX, 0);                                                
                         drawInterface.redraw();
                         this.tempClickX = 0;
                         this.tempClickX = 0;                        
