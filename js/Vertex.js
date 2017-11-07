@@ -93,7 +93,6 @@ function Vertex(x, y, z) {
     };
 
     this.distanceToEdge = function (edge) {
-        // TODO: Include Z comparison
         let from = edge.getFrom();
         let to = edge.getTo();
 
@@ -130,7 +129,7 @@ function Vertex(x, y, z) {
 
     this.clone = function(){
         return new Vertex(this.getX(),this.getY(),this.getZ());
-    }
+    };
 
     this.divScalar = function (value) {
         this.x /= value;
@@ -193,6 +192,15 @@ function Vertex(x, y, z) {
         temp1 = (this.getY()* Math.sin(tetaX)) + (this.getZ() * Math.cos(tetaX));
         this.setY(temp);
         this.setZ(temp1);   
+    };
+
+    this.scaleVertex = function (tetaX, tetaY, tetaZ) {
+        let tempX = (this.getX() + Math.round(this.getX() * tetaX));
+        let tempY = (this.getY() + Math.round(this.getY() * tetaY));
+        let tempZ = (this.getZ() + Math.round(this.getZ() * tetaZ));
+        this.setX(tempX);
+        this.setY(tempY);
+        this.setZ(tempZ);
     };
 
     this.extrusionVertex = function (extrusionDistance) {

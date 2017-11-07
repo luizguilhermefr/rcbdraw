@@ -228,25 +228,34 @@ function Interface () {
         } else if (h === 'z' && v === 'y') {
             newPoint = new Vertex(0, y, x);
         }
-        //console.log("Ponto clicado: ",newPoint);
         this.selectedSolid.solid.translate(newPoint, h, v);
         this.scene.makeDirty();
         this.redraw();
     };
 
-    this.scaleClick = function (x, y) {
+    this.scaleClick = function (tetaX, tetaY, h, v) {
+        let centerClone, tetaZ;
         if (this.scaleSolid === null) {
-            this.scaleSolid = this.selectedSolid.clone();
+            this.scaleSolid = this.selectedSolid.solid.clone();
         } else {
             this.scene.changeSolid(this.selectedSolid.index, this.scaleSolid.clone());
         }
-        this.selectedSolid.scale(new Vertex(x, y), this.scaleSolid);
+        centerClone = this.scaleSolid.getCenter().clone();
+        if (h === 'x' && v === 'y') {
+            tetaZ = 0;
+        } else if (h === 'x' && v === 'z') {
+            tetaZ = tetaY;
+        } else if (h === 'z' && v === 'y') {
+            tetaZ = tetaX;
+        }
+        this.selectedSolid.solid.scale(centerClone, tetaX, tetaY, tetaZ);
+        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());
         this.scene.makeDirty();
         this.redraw();
     };
 
     this.rotationClick = function (tetaX, tetaY, h, v) {
-        let ceterClone, deep, tetaZ;
+        let centerClone, deep, tetaZ;
         if (this.rotationSolid === null) {
             this.rotationSolid = this.selectedSolid.solid.clone();
         } else {

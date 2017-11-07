@@ -33,8 +33,7 @@ function Polygon(vertices) {
         return this.boundaries;
     };
 
-    this.getDrawablePerspectiveVertices = function(canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp) {        
-        //let viewUp = new Vertex(0,1,0);
+    this.getDrawablePerspectiveVertices = function(canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp) {   
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp, true);
         // noinspection UnnecessaryLocalVariableJS
         let vertices = pipeline.run();
@@ -42,8 +41,7 @@ function Polygon(vertices) {
         return vertices;
     };
 
-    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp = null) {
-        let perspective = false;
+    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp = null, viewUp = null, forceVisible = false) {
         if (h === 'x' && v === 'y') {
             vrp = new Vertex(0, 0, 100);
             viewUp = new Vertex(0, 1, 0);
@@ -56,12 +54,40 @@ function Polygon(vertices) {
         } else {                        
             perspective = true;
         }
-        let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp, perspective);
-        perspective = false;
-        let vertices = pipeline.run();
-        this.setDrawableVertices(vertices, h, v);
+        let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp);
+        let visible = pipeline.normal(forceVisible);
+        this.setVisibility(visible, h, v);
+        if (visible) {
+            let vertices = pipeline.run();
+            this.setDrawableVertices(vertices, h, v);
+        }
+        return this;
+    };
+
+    this.setVisibility = function(visible, h, v) {
+        if (h === 'x' && v === 'y') {
+            this.visibleXY = visible;
+        } else if (h === 'x' && v === 'z') {
+            this.visibleXZ = visible;
+        } else if (h === 'z' && v === 'y') {
+            this.visibleZY = visible;
+        } else {
+            this.visiblePersp = visible;
+        }
 
         return this;
+    };
+
+    this.isVisible = function (h, v) {
+        if (h === 'x' && v === 'y') {
+            return this.visibleXY;
+        } else if (h === 'x' && v === 'z') {
+            return this.visibleXZ;
+        } else if (h === 'z' && v === 'y') {
+            return this.visibleZY;
+        } else {
+            return this.visiblePersp;
+        }
     };
 
     this.setDrawableVertices = function(vertices, h, v) {
@@ -181,6 +207,16 @@ function Polygon(vertices) {
         return closestPoint.vertex;
     };
 
+    this.invertOrientation = function () {
+        let newVertices = [];
+        for (i = this.vertices.length - 1; i >= 0; i--) {
+            newVertices.push(this.vertices[i]);
+        }
+        this.vertices = newVertices;
+
+        return this;
+    };
+
     this.closestDrawedEdge = function(clickVertex, h, v) {
         let closestEdge = {
             distance: Number.POSITIVE_INFINITY,
@@ -234,7 +270,32 @@ function Polygon(vertices) {
         }
         this.updateBoundaries();
         this.updateCenter();
-    };    
+    };
+
+    this.rotateFace = function(){
+        if(this.vertices.length % 2 === 0){
+            for(let i = 1; i < this.vertices[i].length-1; i+=2){
+                let temp = this.vertexAt(i+1);
+                this.vertices[i+1] = this.vertices[i];
+                this.vertices[i] = temp;
+            }
+        } else {
+            for(let i = 0; i < this.vertices[i].length-1; i++){
+                let temp = this.vertexAt(i+1);
+                this.vertices[i+1] = this.vertices[i];
+                this.vertices[i] = temp;
+            }
+        }
+        console.log(this.vertices);
+    };
+
+    this.scale = function(tetaX, tetaY, tetaZ) {
+        for(let i = 0; i < this.vertices.length; i++){
+            vertices[i].scaleVertex(tetaX, tetaY, tetaZ);
+        }
+        this.updateBoundaries();
+        this.updateCenter();
+    };
 
     this.getNewPointX = function(x, y, teta) {
         return (x * Math.cos(teta)) - (y * Math.sin(teta));
@@ -242,25 +303,6 @@ function Polygon(vertices) {
 
     this.getNewPointY = function(x, y, teta) {
         return (x * Math.sin(teta)) + (y * Math.cos(teta));
-    };
-
-    this.scale = function(vertex, clone) {
-        // let referenceCenter = this.getCenter();
-        // let scaleFactor = {
-        //     X: (vertex.getX() - referenceCenter.getX()) / 500,
-        //     Y: (vertex.getY() - referenceCenter.getY()) / 500
-        // };
-        // this.translatePoint(referenceCenter);
-        // for (let i = 0; i < this.vertices.length; i++) {
-        //     vertices[i].setX(vertices[i].getX() + Math.round((clone.vertexAt(i).getX() * scaleFactor.X)));
-        //     vertices[i].setY(vertices[i].getY() + Math.round(clone.vertexAt(i).getY() * scaleFactor.Y));
-        // }
-        // referenceCenter.invert();
-        // this.translatePoint(referenceCenter);
-        // this.updateBoundaries();
-        // this.updateCenter();
-        //
-        // return this;
     };
 
     this.shearX = function(vertex) {
@@ -314,35 +356,7 @@ function Polygon(vertices) {
         this.vertices.forEach(function(v) {
             nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement, v.getZ() + displacement));            
         });
-        let newPoli = new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
-        
-        newPoli.drawableVerticesXY = [];            
-        newPoli.drawableVerticesXZ = [];
-        newPoli.drawableVerticesPerspective = [];        
-        newPoli.drawableVerticesZY = [];        
-        
-        for(let i = 0; i < this.drawableVerticesXY.length; i++){            
-            newPoli.drawableVerticesXY.push(this.drawableVerticesXY[i].clone());            
-        } 
-
-        for(let i = 0; i < this.drawableVerticesXZ.length; i++){
-            newPoli.drawableVerticesXZ.push(this.drawableVerticesXZ[i].clone());
-        }
-        
-        for(let i = 0; i < this.drawableVerticesPerspective.length; i++){
-            newPoli.drawableVerticesPerspective.push(this.drawableVerticesPerspective[i].clone());
-        }                
-
-        for(let i = 0; i < this.drawableVerticesZY.length; i++){
-            newPoli.drawableVerticesZY.push(this.drawableVerticesZY[i].clone());
-        }
-        
-        newPoli.drawableBoundariesXY = this.drawableBoundariesXY;
-        newPoli.drawableBoundariesPerspective = this.drawableBoundariesPerspective;
-        newPoli.drawableBoundariesXZ = this.drawableBoundariesXZ;
-        newPoli.drawableBoundariesZY = this.drawableBoundariesZY;
-
-        return newPoli;
+        return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
     };    
 
     this.toMatrix = function() {
@@ -363,6 +377,9 @@ function Polygon(vertices) {
     };    
 
     this.isInsideDrawableBoundaryTolerance = function(clickVertex, h, v) {
+        if (! this.isVisible(h, v)) {
+            return false;
+        }
         let tolerance = 20;
         let boundary = this.getDrawableBoundaries(h, v);
 
@@ -410,6 +427,14 @@ function Polygon(vertices) {
     this.drawableVerticesZY = null;
 
     this.drawableBoundariesZY = null;
+
+    this.visibleXY = false;
+
+    this.visibleXZ = false;
+
+    this.visibleZY = false;
+    
+    this.visiblePersp = false;
 
     this.edges = [];
 
