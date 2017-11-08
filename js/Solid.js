@@ -235,6 +235,16 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         });
     };
 
+    this.getSelected = function () {
+        return this.selected;
+    }
+
+    this.changeSelected = function () {
+        this.selected = !this.selected;
+    }
+
+    this.selected = false;
+
     this.polygons = polygons;
 
     this.strokeColor = strokeColor;

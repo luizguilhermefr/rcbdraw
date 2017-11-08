@@ -247,7 +247,11 @@ Vue.component('panel', {
                             this.fillPoly(polygon, solid.getFillColor());
                         }
                         if (solid.shouldStroke() || shouldWireframe) {
-                            this.strokePoly(polygon, shouldWireframe ? Colors.WIREFRAME : solid.getStrokeColor());
+                            let color = solid.getStrokeColor();
+                            if(solid.getSelected())
+                                color = Colors.SELECTED;
+                                
+                            this.strokePoly(polygon, shouldWireframe ? Colors.WIREFRAME : color);
                         }
                     }
                 }.bind(this));
@@ -257,9 +261,8 @@ Vue.component('panel', {
             this.context.lineWidth = 1;
             this.context.strokeStyle = color;
             this.context.beginPath();
-            let vertices;
-            console.log(this.h, this.v);
-            if (this.h === 'px' && this.v === 'py') {
+            let vertices;            
+            if (this.h === 'px' && this.v === 'py') {                                                                                    
                 vertices = polygon.getDrawablePerspectiveVertices(this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp);
             } else {
                 vertices = polygon.getDrawableVertices(this.h, this.v);

@@ -18,7 +18,7 @@ function Interface () {
         this.drawSolids();
         this.drawTemporaryPolygon();
         this.drawAxis();
-        this.drawSelectedSolid();
+        //this.drawSelectedSolid();
     };
 
     this.resetRotationClick = function () {
@@ -81,6 +81,7 @@ function Interface () {
     };
 
     this.clearSelectedSolid = function (redraw = false) {
+        this.scene.getSolidAt(this.selectedSolid.index).changeSelected();
         this.selectedSolid = null;
         if (redraw) {
             this.redraw();
@@ -332,7 +333,8 @@ function Interface () {
             this.selectedSolid = {
                 index: lowestDistance.solid,
                 solid: solids[ lowestDistance.solid ]
-            };
+            };            
+            this.scene.getSolidAt(this.selectedSolid.index).changeSelected();
         } else {
             this.clearSelectedSolid();
         }

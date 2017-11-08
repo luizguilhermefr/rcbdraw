@@ -1,12 +1,14 @@
 function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, vrp, viewUp, perspective = false, p = null) {
 
-    this.setVectorN = function () {
+    this.setVectorN = function () {        
         let N = this.vrp.clone().sub(this.p);
-        let magnitude = N.getMagnitude();
-        this.n = N.divScalar(magnitude);
+        let magnitude = N.getMagnitude();                
+        this.n = N.divScalar(magnitude);               
     };
 
-    this.setVectorV = function () {
+    this.setVectorV = function () {     
+        if(this.n === null)           
+            this.setVectorN();
         let V = this.viewUp.clone().sub((this.viewUp.clone().mult(this.n)).mult(this.n));
         let magnitude = V.getMagnitude();
         this.v = V.divScalar(magnitude);
