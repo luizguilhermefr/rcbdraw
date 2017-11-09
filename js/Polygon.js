@@ -286,7 +286,6 @@ function Polygon(vertices) {
                 this.vertices[i] = temp;
             }
         }
-        console.log(this.vertices);
     };
 
     this.scale = function(tetaX, tetaY, tetaZ) {
@@ -297,26 +296,12 @@ function Polygon(vertices) {
         this.updateCenter();
     };
 
-    this.getNewPointX = function(x, y, teta) {
-        return (x * Math.cos(teta)) - (y * Math.sin(teta));
-    };
-
-    this.getNewPointY = function(x, y, teta) {
-        return (x * Math.sin(teta)) + (y * Math.cos(teta));
-    };
-
-    this.shearX = function(vertex) {
-        // let referenceVertex = this.getCenter();
-        // let shearFactor = (vertex.getX() - referenceVertex.getX()) / referenceVertex.getY();
-        // this.translatePoint(referenceVertex);
-        // this.vertices.forEach(function(v) {
-        //     v.setX(v.getX() + shearFactor * v.getY());
-        // });
-        // referenceVertex.invert();
-        // this.translatePoint(referenceVertex);
-        // this.updateBoundaries();
-        //
-        // return this;
+    this.shearX = function(tetaX, tetaZ, axis) {
+        for(let i = 0; i < this.vertices.length; i++){
+            vertices[i].shearXVertex(tetaX, tetaZ,axis);
+        }
+        this.updateBoundaries();
+        this.updateCenter();
     };
 
     this.shearY = function(vertex) {
@@ -331,23 +316,6 @@ function Polygon(vertices) {
         // this.updateBoundaries();
         //
         // return this;
-    };
-
-    this.inside = function(x, y) {
-        let isInside = false;
-        for (let i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
-            let xi = this.vertices[i].getX(),
-                yi = this.vertices[i].getY();
-            let xj = this.vertices[j].getX(),
-                yj = this.vertices[j].getY();
-
-            let intersect = ((yi > y) !== (yj > y)) &&
-                (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-            if (intersect) {
-                isInside = !isInside;
-            }
-        }
-        return isInside;
     };
 
     // noinspection SyntaxError

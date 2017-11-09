@@ -113,16 +113,10 @@ Vue.component('panel', {
                     y = y - (this.canvas.height / 2);
                     this.freehandClick(x, y);
                     break;
-                case 6:
-                    drawInterface.shearHorizontalClick(x, y, this.h, this.v);
-                    break;
-                case 7:
-                    drawInterface.shearVerticalClick(x, y, this.h, this.v);
-                    break;                
             }                                             
         },
         mouseDown (e) {
-            if (this.mode >= 4 && this.mode <= 5 || this.mode === 8) {
+            if (this.mode >= 4 && this.mode <= 9) {
                 this.dragging = true;                
                 this.tempClickX = this.getRelativeX(e.clientX);
                 this.tempClickY = this.getRelativeY(e.clientY);                
@@ -148,6 +142,12 @@ Vue.component('panel', {
                         drawInterface.scaleClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
                         this.tempClickX = x;
                         this.tempClickY = y;
+                        break;
+                    case 6:
+                        drawInterface.shearHorizontalClick((x - this.tempClickX) / 80, this.h, this.v);
+                        break;
+                    case 7:
+                        drawInterface.shearVerticalClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
                         break;
                     case 8:                      
                     drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) / 80, this.h, this.v);
