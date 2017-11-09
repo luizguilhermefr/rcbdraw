@@ -18,7 +18,7 @@ function Interface () {
         this.drawSolids();
         this.drawTemporaryPolygon();
         this.drawAxis();
-        this.drawSelectedSolid();
+        //this.drawSelectedSolid();
     };
 
     this.resetRotationClick = function () {
@@ -52,7 +52,9 @@ function Interface () {
         vue.$refs.panelLeft.drawSolids(solids, this.shouldWireframe);
 
         // painters algorithm for perspective?
-        // vue.$refs.panelPerspective.drawSolids(solids, this.shouldWireframe);
+        this.scene.paintersAlgorithm('z', new Vertex(0, 0, 100));
+        solids = this.scene.getSolids();
+        vue.$refs.panelPerspective.drawSolids(solids, this.shouldWireframe);
     };
 
     this.drawTemporaryPolygon = function () {
@@ -62,12 +64,12 @@ function Interface () {
         vue.$refs.panelPerspective.drawTemporaryPolygon();
     };
 
-    this.drawSelectedSolid = function () {
-        if (this.selectedSolid !== null) {
-            vue.$refs.panelFront.drawSelectedSolid(this.selectedSolid.solid);
-            vue.$refs.panelTop.drawSelectedSolid(this.selectedSolid.solid);
-            vue.$refs.panelLeft.drawSelectedSolid(this.selectedSolid.solid);
-            vue.$refs.panelPerspective.drawSelectedSolid(this.selectedSolid.solid);
+    this.drawSelectedSolid = function () {        
+        if (this.selectedSolid !== null) {    
+            vue.$refs.panelFront.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
+            vue.$refs.panelTop.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
+            vue.$refs.panelLeft.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
+            vue.$refs.panelPerspective.drawSelectedSolid(this.scene.getSolidAt(this.selectedSolid.index));
         }
     };
 
@@ -79,6 +81,7 @@ function Interface () {
     };
 
     this.clearSelectedSolid = function (redraw = false) {
+        this.scene.getSolidAt(this.selectedSolid.index).changeSelected();
         this.selectedSolid = null;
         if (redraw) {
             this.redraw();
@@ -262,18 +265,15 @@ function Interface () {
         centerClone = this.rotationSolid.getCenter().clone();
         if (h === 'x' && v === 'y') {            
             tetaZ = 0;
-            deep = 'z';
         } else if (h === 'x' && v === 'z') {
             tetaZ = tetaY;
             tetaY = 0;
-            deep = 'y';
         } else if (h === 'z' && v === 'y') {
             tetaZ = tetaX;
             tetaX = 0;
-            deep = 'x';
         }
-        this.selectedSolid.solid.rotate(centerClone, tetaX, tetaY, tetaZ, deep);
-        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());        
+        this.selectedSolid.solid.rotate(centerClone, tetaX, tetaY, tetaZ);        
+        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());                   
         this.scene.makeDirty();
         this.redraw();
     };
@@ -333,7 +333,8 @@ function Interface () {
             this.selectedSolid = {
                 index: lowestDistance.solid,
                 solid: solids[ lowestDistance.solid ]
-            };
+            };            
+            this.scene.getSolidAt(this.selectedSolid.index).changeSelected();
         } else {
             this.clearSelectedSolid();
         }

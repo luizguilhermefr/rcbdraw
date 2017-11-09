@@ -31,7 +31,7 @@
 
     <panel ref="panelLeft" identifier="panelLeft" title="left" h="z" v="y"></panel>
 
-    <panel ref="panelPerspective" identifier="panelPerspective" readonly="true" title="perspective" h="px" v="py"></panel>
+    <panel ref="panelPerspective" identifier="panelPerspective" title="perspective" h="px" v="py"></panel>
 
     <element-right-click ref="elementRightClick"></element-right-click>
     <panel-right-click ref="panelRightClick"></panel-right-click>
@@ -144,6 +144,10 @@
         vue.$refs.panelFront.expectSelection();
         vue.$refs.panelTop.expectSelection();
         vue.$refs.panelLeft.expectSelection();
+    }
+
+    function vrpRotation(){
+        vue.$refs.panelPerspective.vrpRotation();
     }
 
     function expectFreehand () {

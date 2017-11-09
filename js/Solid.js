@@ -206,7 +206,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         for (i = 0; i < faces - 1; i++) {
             this.closePolygon(tempPolygons[i], tempPolygons[i + 1]);
         }
-        this.polygons.push(tempPolygons[i]); 
+        this.polygons.push(tempPolygons[i].invertOrientation()); 
     };
 
     this.closePolygon = function(initial, final) {
@@ -224,7 +224,7 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
     this.clone = function(displacement = 0) {
         let nextPolygons = [];
         this.polygons.forEach(function(p) {
-            nextPolygons.push(p.clone(displacement));
+            nextPolygons.push(p.clone(displacement));            
         });
         return new Solid(nextPolygons, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
     };
@@ -234,6 +234,16 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
             return a.getEuclideanDistance(vrp) - b.getEuclideanDistance(vrp);
         });
     };
+
+    this.getSelected = function () {
+        return this.selected;
+    }
+
+    this.changeSelected = function () {
+        this.selected = !this.selected;
+    }
+
+    this.selected = false;
 
     this.polygons = polygons;
 

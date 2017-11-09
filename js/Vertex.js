@@ -165,6 +165,7 @@ function Vertex(x, y, z) {
     };
 
     this.rotationVertex = function (tetaX, tetaY, tetaZ) {
+        
         let temp = (this.getY()* Math.cos(tetaX)) - (this.getZ() * Math.sin(tetaX));
         let temp1 = (this.getY()* Math.sin(tetaX)) + (this.getZ() * Math.cos(tetaX));
         this.setY(temp);
@@ -181,11 +182,22 @@ function Vertex(x, y, z) {
         this.setY(temp1);         
     };
 
+    this.vrpRotation = function (tetaX, tetaY) {
+        let temp = (this.getX() * Math.cos(tetaY)) + (this.getZ() * Math.sin(tetaY));
+        let temp1 = ((this.getX() * -1 )* Math.sin(tetaY)) + (this.getZ() * Math.cos(tetaY));
+        this.setX(temp);
+        this.setZ(temp1);
+
+        temp = (this.getY()* Math.cos(tetaX)) - (this.getZ() * Math.sin(tetaX));
+        temp1 = (this.getY()* Math.sin(tetaX)) + (this.getZ() * Math.cos(tetaX));
+        this.setY(temp);
+        this.setZ(temp1);   
+    };
+
     this.scaleVertex = function (tetaX, tetaY, tetaZ) {
         let tempX = (this.getX() + Math.round(this.getX() * tetaX));
         let tempY = (this.getY() + Math.round(this.getY() * tetaY));
         let tempZ = (this.getZ() + Math.round(this.getZ() * tetaZ));
-        console.log(tempX, tempY, tempZ);
         this.setX(tempX);
         this.setY(tempY);
         this.setZ(tempZ);

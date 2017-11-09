@@ -1,12 +1,14 @@
 function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, vrp, viewUp, perspective = false, p = null) {
 
-    this.setVectorN = function () {
+    this.setVectorN = function () {        
         let N = this.vrp.clone().sub(this.p);
-        let magnitude = N.getMagnitude();
-        this.n = N.divScalar(magnitude);
+        let magnitude = N.getMagnitude();                
+        this.n = N.divScalar(magnitude);               
     };
 
-    this.setVectorV = function () {
+    this.setVectorV = function () {     
+        if(this.n === null)           
+            this.setVectorN();
         let V = this.viewUp.clone().sub((this.viewUp.clone().mult(this.n)).mult(this.n));
         let magnitude = V.getMagnitude();
         this.v = V.divScalar(magnitude);
@@ -38,7 +40,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         this.mPersp = [
             [1, 0 , 0 , 0],
             [0 , 1, 0 , 0],
-            [0, 0, (-zvp/ this.dp, 0)],
+            [0, 0, (-zvp/ this.dp), 0],
             [0, 0, -1/this.dp, 0]
         ]                 
     };
@@ -51,7 +53,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
     this.setMatrixHomogeneous = function() {
         for(let i = 0; i < this.pPersp.length; i++){
             for(let j = 0; j < pPersp[i].length - 1; j++) {
-                pPersp[i][j] /= pPersp[i][pPersp[i].length - 1];
+                pPersp[i][j] /= pPersp[pPersp[i].length - 1][j];
             }
         }
     };    
@@ -127,7 +129,7 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         this.setVectorU();
         this.setMatrixSruSrc();
         this.setPSrc();
-        if(this.perspective){
+        if (this.perspective) {
             this.setMatrixPersp();
             this.setMatrixHomogeneous();
         }
