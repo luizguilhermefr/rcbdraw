@@ -145,11 +145,9 @@ Vue.component('panel', {
                     drawInterface.translateClick(x - (this.canvas.width / 2), y - (this.canvas.height / 2), this.h, this.v);
                         break;
                     case 5:
-                        let scaleFactorX = (x - this.tempClickX) / 80;
-                        let scaleFactorY = (y - this.tempClickY) / 80;
-                        drawInterface.scaleClick(scaleFactorY, scaleFactorX, this.h, this.v);
-                        this.tempClickX = 0;
-                        this.tempClickY = 0;
+                        drawInterface.scaleClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
+                        this.tempClickX = x;
+                        this.tempClickY = y;
                         break;
                     case 8:                      
                     drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) / 80, this.h, this.v);
@@ -174,12 +172,10 @@ Vue.component('panel', {
                         drawInterface.translateClick(x - (this.canvas.width / 2), y - (this.canvas.height / 2), this.h, this.v);
                         break;
                     case 5:
-                        let scaleFactorX = (x - this.tempClickX) / 80;
-                        let scaleFactorY = (y - this.tempClickY) / 80;
-                        drawInterface.scaleClick(scaleFactorY, scaleFactorX, this.h, this.v);
+                        drawInterface.scaleClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
                         drawInterface.resetScaleClick();
-                        this.tempClickX = 0;
-                        this.tempClickY = 0;
+                        this.tempClickX = x;
+                        this.tempClickY = y;
                         break;
                     case 8:    
                         drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) / 80, this.h, this.v);
