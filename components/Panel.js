@@ -33,7 +33,7 @@ Vue.component('panel', {
             expanded: false,
             canvas: null,
             context: null,
-            mode: -1,
+            mode: NULL_MODE,
             size: 0,
             sides: 0,
             stroke: Colors.DEFAULT,
@@ -61,34 +61,34 @@ Vue.component('panel', {
             this.fill = fill;
             this.mustStroke = mustStroke;
             this.mustFill = mustFill;
-            this.mode = 1;
+            this.mode = PUT_POLY;
             this.cursor = 'copy';
         },
         expectSelection () {
-            this.mode = 2;
+            this.mode = SELECTION;
             this.cursor = 'pointer';
         },
         expectFreehand () {
-            this.mode = 3;
+            this.mode = FREEHAND;
             this.cursor = 'crosshair';
         },
         expectTranslate () {
-            this.mode = 4;
+            this.mode = TRANSLATE;
             this.cursor = 'move';
         },
         expectScale () {
-            this.mode = 5;
+            this.mode = RESIZE;
             this.cursor = 'w-resize';
         },
         expectRotation () {
-            this.mode = 8;
+            this.mode = ROTATE;
             this.cursor = 'move';
         },
         expectShear (direction) {
             if (direction === 'x') {
-                this.mode = 6;
+                this.mode = SHEAR_H;
             } else if (direction === 'y') {
-                this.mode = 7;
+                this.mode = SHEAR_V;
             }
             this.cursor = 'pointer';
         },
@@ -101,29 +101,29 @@ Vue.component('panel', {
             let x = this.getRelativeX(e.clientX);
             let y = this.getRelativeY(e.clientY);            
             switch (this.mode) {
-                case 1:
+                case PUT_POLY:
                     x = x - (this.canvas.width / 2);
                     y = y - (this.canvas.height / 2);
                     this.putPoly(x, y);
                     break;
-                case 2:
+                case SELECTION:
                     this.selectionClick(x, y);
                     break;
-                case 3:
+                case FREEHAND:
                     x = x - (this.canvas.width / 2);
                     y = y - (this.canvas.height / 2);
                     this.freehandClick(x, y);
                     break;
-                case 6:
+                case SHEAR_H:
                     drawInterface.shearHorizontalClick(x, y, this.h, this.v);
                     break;
-                case 7:
+                case SHEAR_V:
                     drawInterface.shearVerticalClick(x, y, this.h, this.v);
                     break;                
             }                                             
         },
         mouseDown (e) {
-            if (this.mode >= 4 && this.mode <= 5 || this.mode === 8) {
+            if (this.mode === TRANSLATE || this.mode === RESIZE || this.mode === ROTATE) {
                 this.dragging = true;                
                 this.tempClickX = this.getRelativeX(e.clientX);
                 this.tempClickY = this.getRelativeY(e.clientY);                

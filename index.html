@@ -67,6 +67,17 @@
 <script type="text/javascript" src="js/Utils/Pipeline.js"></script>
 
 <script type="text/javascript">
+
+    const NULL_MODE = -1;
+    const PUT_POLY = 1;
+    const SELECTION = 2;
+    const FREEHAND = 3;
+    const TRANSLATE = 4;
+    const RESIZE = 5;
+    const SHEAR_H = 6;
+    const SHEAR_V = 7;
+    const ROTATE = 8;
+
     window.onload = function () {
         vue = new Vue({
             el: '#rcb'
