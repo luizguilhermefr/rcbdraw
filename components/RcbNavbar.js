@@ -145,7 +145,7 @@ Vue.component('rcb-navbar', {
                             enabled: true,
                             icon: 'fa fa-arrows-h',
                             action () {
-                                expectShear('x');
+                                expectShear('h');
                             }
                         },
                         {
@@ -154,7 +154,7 @@ Vue.component('rcb-navbar', {
                             enabled: true,
                             icon: 'fa fa-arrows-v',
                             action () {
-                                expectShear('y');
+                                expectShear('v');
                             }
                         },
                         // {

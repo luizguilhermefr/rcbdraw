@@ -255,6 +255,10 @@
             alert('Nenhum objeto selecionado.');
             return;
         }
+        if (!drawInterface.selectedSolid.solid.canBeSheared()) {
+            alert('Apenas para objetos de face única.');
+            return;
+        }
         toggleReset();
         vue.$refs.panelFront.expectShear(direction);
         vue.$refs.panelTop.expectShear(direction);

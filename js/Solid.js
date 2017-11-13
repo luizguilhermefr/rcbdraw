@@ -257,6 +257,10 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         this.selected = !this.selected;
     };
 
+    this.canBeSheared = function () {
+        return this.countPolygons() === 1;
+    };
+
     this.selected = false;
 
     this.polygons = polygons;

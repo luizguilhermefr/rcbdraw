@@ -85,9 +85,9 @@ Vue.component('panel', {
             this.cursor = 'move';
         },
         expectShear (direction) {
-            if (direction === 'x') {
+            if (direction === 'h') {
                 this.mode = SHEAR_H;
-            } else if (direction === 'y') {
+            } else if (direction === 'v') {
                 this.mode = SHEAR_V;
             }
             this.cursor = 'pointer';
@@ -113,6 +113,12 @@ Vue.component('panel', {
                     x = x - (this.canvas.width / 2);
                     y = y - (this.canvas.height / 2);
                     this.freehandClick(x, y);
+                    break;
+                case SHEAR_H:
+                    drawInterface.shearHorizontalClick((x - this.tempClickX) / 80, this.h, this.v);
+                    break;
+                case SHEAR_V:
+                    drawInterface.shearVerticalClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
                     break;
             }                                             
         },
@@ -144,14 +150,8 @@ Vue.component('panel', {
                         this.tempClickX = x;
                         this.tempClickY = y;
                         break;
-                    case SHEAR_H:
-                        drawInterface.shearHorizontalClick((x - this.tempClickX) / 80, this.h, this.v);
-                        break;
-                    case SHEAR_V:
-                        drawInterface.shearVerticalClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
-                        break;
                     case ROTATE:
-                    drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) / 80, this.h, this.v);
+                        drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) / 80, this.h, this.v);
                         this.tempClickX = x;
                         this.tempClickY = y;
                         break;

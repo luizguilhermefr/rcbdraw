@@ -18,7 +18,6 @@ function Interface () {
         this.drawSolids();
         this.drawTemporaryPolygon();
         this.drawAxis();
-        //this.drawSelectedSolid();
     };
 
     this.resetRotationClick = function () {
