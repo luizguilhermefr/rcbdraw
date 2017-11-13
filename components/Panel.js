@@ -93,7 +93,7 @@ Vue.component('panel', {
             this.cursor = 'pointer';
         },
         vrpRotation () {
-            this.mode = 9;
+            this.mode = MOVE_VRP;
             this.cursor = 'pointer';
         },
         onClick (e) {
@@ -117,12 +117,12 @@ Vue.component('panel', {
             }                                             
         },
         mouseDown (e) {
-            if (this.mode >= 4 && this.mode <= 9) {
+            if (this.mode >= TRANSLATE && this.mode <= MOVE_VRP) {
                 this.dragging = true;                
                 this.tempClickX = this.getRelativeX(e.clientX);
                 this.tempClickY = this.getRelativeY(e.clientY);                
             }
-            if(this.identifier === 'panelPerspective') {
+            if (this.identifier === 'panelPerspective') { // grave quebra do design pattern, mas fazer o que...
                 this.dragging = true;
                 vrpRotation();     
                 this.tempClickX = this.getRelativeX(e.clientX);
@@ -136,26 +136,26 @@ Vue.component('panel', {
                 let x = this.getRelativeX(e.clientX);
                 let y = this.getRelativeY(e.clientY);
                 switch (this.mode) {
-                    case 4:
+                    case TRANSLATE:
                     drawInterface.translateClick(x - (this.canvas.width / 2), y - (this.canvas.height / 2), this.h, this.v);
                         break;
-                    case 5:
+                    case RESIZE:
                         drawInterface.scaleClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
                         this.tempClickX = x;
                         this.tempClickY = y;
                         break;
-                    case 6:
+                    case SHEAR_H:
                         drawInterface.shearHorizontalClick((x - this.tempClickX) / 80, this.h, this.v);
                         break;
-                    case 7:
+                    case SHEAR_V:
                         drawInterface.shearVerticalClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
                         break;
-                    case 8:                      
+                    case ROTATE:
                     drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) / 80, this.h, this.v);
                         this.tempClickX = x;
                         this.tempClickY = y;
                         break;
-                    case 9:                        
+                    case MOVE_VRP:
                         this.vrp.vrpRotation(((y - this.tempClickY) / 180), -(x - this.tempClickX) / 180);                                                     
                         drawInterface.redraw();
                         this.tempClickX = x;
@@ -169,22 +169,22 @@ Vue.component('panel', {
                 let x = this.getRelativeX(e.clientX);
                 let y = this.getRelativeY(e.clientY);
                 switch (this.mode) {
-                    case 4:
+                    case TRANSLATE:
                         drawInterface.translateClick(x - (this.canvas.width / 2), y - (this.canvas.height / 2), this.h, this.v);
                         break;
-                    case 5:
+                    case RESIZE:
                         drawInterface.scaleClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
                         drawInterface.resetScaleClick();
                         this.tempClickX = x;
                         this.tempClickY = y;
                         break;
-                    case 8:    
+                    case ROTATE:
                         drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) / 80, this.h, this.v);
                         drawInterface.resetRotationClick();
                         this.tempClickX = 0;
                         this.tempClickY = 0;
                         break;
-                    case 9:
+                    case MOVE_VRP:
                         this.vrp.vrpRotation(((y - this.tempClickY) / 180), -(x - this.tempClickX) / 180);                             
                         drawInterface.redraw();
                         this.tempClickX = 0;
