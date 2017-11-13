@@ -18,7 +18,6 @@ function Interface () {
         this.drawSolids();
         this.drawTemporaryPolygon();
         this.drawAxis();
-        //this.drawSelectedSolid();
     };
 
     this.resetRotationClick = function () {
@@ -81,8 +80,10 @@ function Interface () {
     };
 
     this.clearSelectedSolid = function (redraw = false) {
-        this.scene.getSolidAt(this.selectedSolid.index).changeSelected();
-        this.selectedSolid = null;
+        if (this.selectedSolid !== null) {
+            this.scene.getSolidAt(this.selectedSolid.index).changeSelected();
+            this.selectedSolid = null;
+        }
         if (redraw) {
             this.redraw();
         }
@@ -288,35 +289,14 @@ function Interface () {
         }
     };
 
-    this.shearHorizontalClick = function (tetaX, h, v) {
-        let centerClone, tetaZ;
-        if (this.shearXSolid === null) {
-            this.shearXSolid = this.selectedSolid.solid.clone();
-        } else {
-            this.scene.changeSolid(this.selectedSolid.index, this.shearXSolid.clone());
-        }
-        centerClone = this.shearXSolid.getCenter().clone();
-        if (h === 'x' && v === 'y') {
-            tetaZ = 0;
-        } else if (h === 'x' && v === 'z') {
-            tetaZ = 0;
-        } else if (h === 'z' && v === 'y') {
-            tetaZ = tetaX;
-        }
-        this.selectedSolid.solid.shearX(centerClone, tetaX, tetaZ, v);
-        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());
-        this.scene.makeDirty();
-        this.redraw();
-    };
-
-    this.shearVerticalClick = function (x, y) {
-        this.selectedSolid.shearY(new Vertex(x, y));
+    this.shearClick = function (axis, vertex) {
+        this.selectedSolid.solid.shear(axis, vertex);
         this.scene.makeDirty();
         this.redraw();
     };
 
     this.isSomethingSelected = function () {
-        return !(this.selectedSolid === null);
+        return this.selectedSolid !== null;
     };
 
     this.selectionClick = function (x, y, h, v) {

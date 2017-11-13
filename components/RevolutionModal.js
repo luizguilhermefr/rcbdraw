@@ -1,7 +1,7 @@
 Vue.component('revolution-modal', {
 
     template: `
-        <b-modal id="revolution-modal" title="Revolução do Sólido" @ok="submit" closeTitle="Cancelar" :ok-disabled="!canInsert()"> 
+        <b-modal id="revolution-modal" title="Revolução do Sólido" @ok="submit" closeTitle="Cancelar" :ok-disabled="!canExecute()"> 
         <div class="modal-body">
             <div class="form-group">
                 <label>Quantidade em Graus</label>
@@ -11,7 +11,6 @@ Vue.component('revolution-modal', {
                         <strong class="text-danger">!</strong>
                     </b-input-group-addon>
                     <b-form-input placeholder="Graus" v-model.number="degree"></b-form-input>
-                    <b-input-group-addon>px</b-input-group-addon>
                     <b-input-group-button>
                         <b-btn variant="danger" v-on:click="decreaseDegree()">-</b-btn>
                     </b-input-group-button>
@@ -27,7 +26,6 @@ Vue.component('revolution-modal', {
                         <strong class="text-danger">!</strong>
                     </b-input-group-addon>
                     <b-form-input placeholder="Faces" v-model.number="faces"></b-form-input>
-                    <b-input-group-addon>px</b-input-group-addon>
                     <b-input-group-button>
                         <b-btn variant="danger" v-on:click="decreaseFaces()">-</b-btn>
                     </b-input-group-button>
@@ -47,6 +45,9 @@ Vue.component('revolution-modal', {
                     <input class="form-check-input" type="radio" name="Z" id="Zaxis" v-model="axis" value="z">Z
                 </label>
             </div>
+            <b-alert variant="warning" :show="!canExecute()">
+                Insira entre 1 e 360 graus e pelo menos 3 faces. Além disso, escolha um eixo de rotação.
+            </b-alert>
         </div>
     </b-modal>
             `,
@@ -61,7 +62,7 @@ Vue.component('revolution-modal', {
 
     methods: {
         degreeOk() {
-            return this.degree >= 1;
+            return this.degree >= 1 && this.degree <= 360;
         },
         increaseDegree() {
             this.degree++;
@@ -81,7 +82,7 @@ Vue.component('revolution-modal', {
         axisOk() {
             return this.axis.length;
         },
-        canInsert() {
+        canExecute() {
             return this.degreeOk() && this.facesOk() && this.axisOk();
         },
         submit() {

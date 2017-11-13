@@ -1,10 +1,10 @@
 Vue.component('extrusion-modal', {
 
     template: `
-        <b-modal id="extrusion-modal" title="Extrusão de Sólidos" @ok="submit" closeTitle="Cancelar" :ok-disabled="!canInsert()"> 
+        <b-modal id="extrusion-modal" title="Extrusão de Sólidos" @ok="submit" closeTitle="Cancelar" :ok-disabled="!canExecute()"> 
         <div class="modal-body">
             <div class="form-group">
-                <label>Distância em Pixels</label>
+                <label>Distância</label>
                 <br>
                 <b-input-group>
                     <b-input-group-addon v-show="!distanceOk()">
@@ -27,7 +27,6 @@ Vue.component('extrusion-modal', {
                         <strong class="text-danger">!</strong>
                     </b-input-group-addon>
                     <b-form-input placeholder="Faces" v-model.number="faces"></b-form-input>
-                    <b-input-group-addon>px</b-input-group-addon>
                     <b-input-group-button>
                         <b-btn variant="danger" v-on:click="decreaseFaces()">-</b-btn>
                     </b-input-group-button>
@@ -47,44 +46,47 @@ Vue.component('extrusion-modal', {
                     <input class="form-check-input" type="radio" name="Z" id="Zaxis" v-model="axis" value="z">Z
                 </label>
             </div>
+            <b-alert variant="warning" :show="!canExecute()">
+                Insira uma distância de pelo menos 50 pixels e duas faces. Além disso, escolha um eixo de extrusão.
+            </b-alert>
         </div>
     </b-modal>
             `,
 
-    data: function() {
+    data: function () {
         return {
             distance: 50,
             faces: 2,
-            axis: ""
+            axis: ''
         };
     },
 
     methods: {
-        distanceOk() {
-            return this.distance >= 1;
+        distanceOk () {
+            return this.distance >= 50;
         },
-        increaseDistance() {
+        increaseDistance () {
             this.distance++;
         },
-        decreaseDistance() {
+        decreaseDistance () {
             this.distance--;
         },
-        facesOk() {
+        facesOk () {
             return this.faces >= 2;
         },
-        increaseFaces() {
+        increaseFaces () {
             this.faces++;
         },
-        decreaseFaces() {
+        decreaseFaces () {
             this.faces--;
         },
-        axisOk() {
+        axisOk () {
             return this.axis.length;
         },
-        canInsert() {
+        canExecute () {
             return this.distanceOk() && this.facesOk() && this.axisOk();
         },
-        submit() {
+        submit () {
             drawInterface.selectedSolid.solid.runExtrusion(this.faces, this.axis, this.distance);
             drawInterface.redraw();
         }

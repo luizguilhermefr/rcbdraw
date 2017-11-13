@@ -33,7 +33,7 @@ Vue.component('panel', {
             expanded: false,
             canvas: null,
             context: null,
-            mode: -1,
+            mode: NULL_MODE,
             size: 0,
             sides: 0,
             stroke: Colors.DEFAULT,
@@ -61,71 +61,82 @@ Vue.component('panel', {
             this.fill = fill;
             this.mustStroke = mustStroke;
             this.mustFill = mustFill;
-            this.mode = 1;
+            this.mode = PUT_POLY;
             this.cursor = 'copy';
         },
         expectSelection () {
-            this.mode = 2;
+            this.mode = SELECTION;
             this.cursor = 'pointer';
         },
         expectFreehand () {
-            this.mode = 3;
+            this.mode = FREEHAND;
             this.cursor = 'crosshair';
         },
         expectTranslate () {
-            this.mode = 4;
+            this.mode = TRANSLATE;
             this.cursor = 'move';
         },
         expectScale () {
-            this.mode = 5;
+            this.mode = RESIZE;
             this.cursor = 'w-resize';
         },
         expectRotation () {
-            this.mode = 8;
+            this.mode = ROTATE;
             this.cursor = 'move';
         },
         expectShear (direction) {
-            if (direction === 'x') {
-                this.mode = 6;
-            } else if (direction === 'y') {
-                this.mode = 7;
+            if (direction === 'h') {
+                this.mode = SHEAR_H;
+            } else if (direction === 'v') {
+                this.mode = SHEAR_V;
             }
             this.cursor = 'pointer';
         },
         vrpRotation () {
-            this.mode = 9;
+            this.mode = MOVE_VRP;
             this.cursor = 'pointer';
         },
         onClick (e) {
+            hideContext();
             let x = this.getRelativeX(e.clientX);
-            let y = this.getRelativeY(e.clientY);            
+            let y = this.getRelativeY(e.clientY);
             switch (this.mode) {
-                case 1:
+                case PUT_POLY:
                     x = x - (this.canvas.width / 2);
                     y = y - (this.canvas.height / 2);
                     this.putPoly(x, y);
                     break;
-                case 2:
+                case SELECTION:
                     this.selectionClick(x, y);
                     break;
-                case 3:
+                case FREEHAND:
                     x = x - (this.canvas.width / 2);
                     y = y - (this.canvas.height / 2);
                     this.freehandClick(x, y);
                     break;
-            }                                             
+                case SHEAR_H:
+                    x = x - (this.canvas.width / 2);
+                    y = y - (this.canvas.height / 2);
+                    drawInterface.shearClick(this.h, new Vertex(x, y, 0));
+                    break;
+                case SHEAR_V:
+                    x = x - (this.canvas.width / 2);
+                    y = y - (this.canvas.height / 2);
+                    drawInterface.shearClick(this.v, new Vertex(x, y, 0));
+                    break;
+            }
         },
         mouseDown (e) {
-            if (this.mode >= 4 && this.mode <= 9) {
-                this.dragging = true;                
-                this.tempClickX = this.getRelativeX(e.clientX);
-                this.tempClickY = this.getRelativeY(e.clientY);                
-            }
-            if(this.identifier === 'panelPerspective') {
+            if (this.mode === TRANSLATE || this.mode === MOVE_VRP || this.mode === RESIZE || this.mode === ROTATE) {
                 this.dragging = true;
-                vrpRotation();     
                 this.tempClickX = this.getRelativeX(e.clientX);
-                this.tempClickY = this.getRelativeY(e.clientY);               
+                this.tempClickY = this.getRelativeY(e.clientY);
+            }
+            if (this.identifier === 'panelPerspective') { // grave quebra do design pattern, mas fazer o que...
+                this.dragging = true;
+                vrpRotation();
+                this.tempClickX = this.getRelativeX(e.clientX);
+                this.tempClickY = this.getRelativeY(e.clientY);
             }
 
             return false;
@@ -135,30 +146,27 @@ Vue.component('panel', {
                 let x = this.getRelativeX(e.clientX);
                 let y = this.getRelativeY(e.clientY);
                 switch (this.mode) {
-                    case 4:
-                    drawInterface.translateClick(x - (this.canvas.width / 2), y - (this.canvas.height / 2), this.h, this.v);
+                    case TRANSLATE:
+                        drawInterface.translateClick(x - (this.canvas.width / 2), y -
+                            (this.canvas.height / 2), this.h, this.v);
                         break;
-                    case 5:
-                        drawInterface.scaleClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
+                    case RESIZE:
+                        drawInterface.scaleClick((x - this.tempClickX) / 80, ((y - this.tempClickY) /
+                            80), this.h, this.v);
                         this.tempClickX = x;
                         this.tempClickY = y;
                         break;
-                    case 6:
-                        drawInterface.shearHorizontalClick((x - this.tempClickX) / 80, this.h, this.v);
-                        break;
-                    case 7:
-                        drawInterface.shearVerticalClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
-                        break;
-                    case 8:                      
-                    drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) / 80, this.h, this.v);
+                    case ROTATE:
+                        drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) /
+                            80, this.h, this.v);
                         this.tempClickX = x;
                         this.tempClickY = y;
                         break;
-                    case 9:                        
-                        this.vrp.vrpRotation(((y - this.tempClickY) / 180), -(x - this.tempClickX) / 180);                                                     
+                    case MOVE_VRP:
+                        this.vrp.vrpRotation(((y - this.tempClickY) / 180), -(x - this.tempClickX) / 180);
                         drawInterface.redraw();
                         this.tempClickX = x;
-                        this.tempClickY = y;                        
+                        this.tempClickY = y;
                         break;
                 }
             }
@@ -168,33 +176,37 @@ Vue.component('panel', {
                 let x = this.getRelativeX(e.clientX);
                 let y = this.getRelativeY(e.clientY);
                 switch (this.mode) {
-                    case 4:
-                        drawInterface.translateClick(x - (this.canvas.width / 2), y - (this.canvas.height / 2), this.h, this.v);
+                    case TRANSLATE:
+                        drawInterface.translateClick(x - (this.canvas.width / 2), y -
+                            (this.canvas.height / 2), this.h, this.v);
                         break;
-                    case 5:
-                        drawInterface.scaleClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
+                    case RESIZE:
+                        drawInterface.scaleClick((x - this.tempClickX) / 80, ((y - this.tempClickY) /
+                            80), this.h, this.v);
                         drawInterface.resetScaleClick();
                         this.tempClickX = x;
                         this.tempClickY = y;
                         break;
-                    case 8:    
-                        drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) / 80, this.h, this.v);
+                    case ROTATE:
+                        drawInterface.rotationClick(-(y - this.tempClickY) / 80, (x - this.tempClickX) /
+                            80, this.h, this.v);
                         drawInterface.resetRotationClick();
                         this.tempClickX = 0;
                         this.tempClickY = 0;
                         break;
-                    case 9:
-                        this.vrp.vrpRotation(((y - this.tempClickY) / 180), -(x - this.tempClickX) / 180);                             
+                    case MOVE_VRP:
+                        this.vrp.vrpRotation(((y - this.tempClickY) / 180), -(x - this.tempClickX) / 180);
                         drawInterface.redraw();
                         this.tempClickX = 0;
-                        this.tempClickX = 0;                        
+                        this.tempClickX = 0;
                         break;
                 }
                 this.dragging = false;
             }
         },
-        normalizeViewUp() {
-            let norma = Math.sqrt( Math.pow(this.viewUp.getX(),2) + Math.pow(this.viewUp.getY(),2) + Math.pow(this.viewUp.getZ(),2));
+        normalizeViewUp () {
+            let norma = Math.sqrt(Math.pow(this.viewUp.getX(), 2) + Math.pow(this.viewUp.getY(), 2) +
+                Math.pow(this.viewUp.getZ(), 2));
             this.viewUp.setX(this.viewUp.getX() / norma);
             this.viewUp.setY(this.viewUp.getY() / norma);
             this.viewUp.setZ(this.viewUp.getZ() / norma);
@@ -236,17 +248,19 @@ Vue.component('panel', {
         },
         drawSolids (solids, shouldWireframe = false) {
             solids.forEach(function (solid) {
+                let shouldIgnoreVisibility = solid.countPolygons() < 2;
                 solid.getPolygons().forEach(function (polygon) {
-                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp);                
+                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility);
                     if (polygon.isVisible(this.h, this.v)) {
                         if (solid.shouldFill() && !shouldWireframe) {
                             this.fillPoly(polygon, solid.getFillColor());
                         }
                         if (solid.shouldStroke() || shouldWireframe) {
                             let color = solid.getStrokeColor();
-                            if(solid.getSelected())
+                            if (solid.getSelected()) {
                                 color = Colors.SELECTED;
-                                
+                            }
+
                             this.strokePoly(polygon, shouldWireframe ? Colors.WIREFRAME : color);
                         }
                     }
@@ -257,18 +271,18 @@ Vue.component('panel', {
             this.context.lineWidth = 1;
             this.context.strokeStyle = color;
             this.context.beginPath();
-            let vertices;            
-            if (this.h === 'px' && this.v === 'py') {                                                                                    
+            let vertices;
+            if (this.h === 'px' && this.v === 'py') {
                 vertices = polygon.getDrawablePerspectiveVertices(this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp);
             } else {
                 vertices = polygon.getDrawableVertices(this.h, this.v);
             }
             if (vertices.length > 1) {
-                this.context.moveTo(vertices[0].getX(), vertices[0].getY());
-                this.context.lineTo(vertices[1].getX(), vertices[1].getY());
+                this.context.moveTo(vertices[ 0 ].getX(), vertices[ 0 ].getY());
+                this.context.lineTo(vertices[ 1 ].getX(), vertices[ 1 ].getY());
             }
             for (let j = 1; j < vertices.length; j++) {
-                this.context.lineTo(vertices[j].getX(), vertices[j].getY());
+                this.context.lineTo(vertices[ j ].getX(), vertices[ j ].getY());
             }
             if (autoClose) {
                 this.context.closePath();
@@ -285,7 +299,7 @@ Vue.component('panel', {
         drawTemporaryPolygon (vrp = false) {
             if (this.freeHandDots.length > 1) {
                 let polygon = new Polygon(this.freeHandDots);
-                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight,this.vrp, this.viewUp, true);
+                polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, true);
                 this.strokePoly(polygon, Colors.TEMPORARY, false);
             }
         },
@@ -295,7 +309,7 @@ Vue.component('panel', {
                 toPush = new Vertex(x, y, 0);
             } else if (this.h === 'x' && this.v === 'z') { // top
                 toPush = new Vertex(x, 0, y);
-            } else if(this.h === 'z' && this.v === 'y') { // left
+            } else if (this.h === 'z' && this.v === 'y') { // left
                 toPush = new Vertex(0, y, x);
             }
             this.freeHandDots.push(toPush);
@@ -322,7 +336,7 @@ Vue.component('panel', {
             } else if (this.h === 'x' && this.v === 'z') { // top
                 return this.freeHandDots[ 0 ].distanceToVertexXZ(this.freeHandDots[ this.freeHandDots.length -
                 1 ]) < 20;
-            } else if(this.h === 'z' && this.v === 'y'){ // left
+            } else if (this.h === 'z' && this.v === 'y') { // left
                 return this.freeHandDots[ 0 ].distanceToVertexZY(this.freeHandDots[ this.freeHandDots.length -
                 1 ]) < 20;
             }
@@ -330,7 +344,7 @@ Vue.component('panel', {
         drawSelectedSolid (solid) {
             let polygons = solid.getPolygons();
             for (let i = 0; i < polygons.length; i++) {
-                if (polygons[i].isVisible(this.h, this.v)) {
+                if (polygons[ i ].isVisible(this.h, this.v)) {
                     this.strokePoly(polygons[ i ], Colors.SELECTED);
                 }
             }
@@ -402,8 +416,8 @@ Vue.component('panel', {
             this.expandStyles.left = (this.canvas.offsetLeft + this.canvas.width - 40) + 'px';
             drawInterface.redraw();
         },
-        resizeDefault(isInitialResize = false) {
-            this.$nextTick(function() {
+        resizeDefault (isInitialResize = false) {
+            this.$nextTick(function () {
                 let dimensions;
                 if (this.expanded) {
                     dimensions = getScreenDimensions();
@@ -416,7 +430,7 @@ Vue.component('panel', {
                     this.initialHeight = dimensions.height;
                 }
             }.bind(this));
-        },
+        }
     },
     mounted () {
         this.canvas = document.getElementById(this.identifier);

@@ -39,7 +39,6 @@ Vue.component('rcb-navbar', {
                                 }
                             }
                         },
-
                         {
                             id: 2,
                             title: 'Abrir',
@@ -59,7 +58,7 @@ Vue.component('rcb-navbar', {
                             action () {
                                 return null;
                             }
-                        },
+                        }
                         // {
                         //     id: 4,
                         //     title: 'Exportar...',
@@ -112,7 +111,7 @@ Vue.component('rcb-navbar', {
                     id: 3,
                     title: 'Editar',
                     enabled: true,
-                    subitems: [ 
+                    subitems: [
                         {
                             id: 1,
                             title: 'Rotacionar',
@@ -146,7 +145,7 @@ Vue.component('rcb-navbar', {
                             enabled: true,
                             icon: 'fa fa-arrows-h',
                             action () {
-                                expectShear('x');
+                                expectShear('h');
                             }
                         },
                         {
@@ -155,18 +154,18 @@ Vue.component('rcb-navbar', {
                             enabled: true,
                             icon: 'fa fa-arrows-v',
                             action () {
-                                expectShear('y');
+                                expectShear('v');
                             }
                         },
-                        {
-                            id: 6,
-                            title: 'Duplicar',
-                            enabled: true,
-                            icon: 'fa fa-files-o',
-                            action () {
-                                duplicateSelected();
-                            }
-                        },
+                        // {
+                        //     id: 6,
+                        //     title: 'Duplicar',
+                        //     enabled: true,
+                        //     icon: 'fa fa-files-o',
+                        //     action () {
+                        //         duplicateSelected();
+                        //     }
+                        // },
                         {
                             id: 10,
                             title: 'Revolução',

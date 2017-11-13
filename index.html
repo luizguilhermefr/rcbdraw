@@ -67,6 +67,18 @@
 <script type="text/javascript" src="js/Utils/Pipeline.js"></script>
 
 <script type="text/javascript">
+
+    const NULL_MODE = -1;
+    const PUT_POLY = 1;
+    const SELECTION = 2;
+    const FREEHAND = 3;
+    const TRANSLATE = 4;
+    const RESIZE = 5;
+    const SHEAR_H = 6;
+    const SHEAR_V = 7;
+    const ROTATE = 8;
+    const MOVE_VRP = 9;
+
     window.onload = function () {
         vue = new Vue({
             el: '#rcb'
@@ -84,7 +96,9 @@
             }
         }, false);
 
-        window.addEventListener('resize', function(){resizeAll(false)}, false);
+        window.addEventListener('resize', function () {
+            resizeAll(false);
+        }, false);
     };
 
     function toggleWireframe () {
@@ -128,6 +142,10 @@
 
     function escape () {
         toggleReset();
+        hideContext();
+    }
+
+    function hideContext () {
         vue.$refs.elementRightClick.hide();
         vue.$refs.panelRightClick.hide();
     }
@@ -146,7 +164,7 @@
         vue.$refs.panelLeft.expectSelection();
     }
 
-    function vrpRotation(){
+    function vrpRotation () {
         vue.$refs.panelPerspective.vrpRotation();
     }
 
@@ -191,7 +209,7 @@
         vue.$emit('show::modal', 'revolution-modal');
     }
 
-    function openExtrusionModal() {
+    function openExtrusionModal () {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
             return;
@@ -235,6 +253,10 @@
     function expectShear (direction) {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
+            return;
+        }
+        if (!drawInterface.selectedSolid.solid.canBeSheared()) {
+            alert('Apenas para objetos de face única.');
             return;
         }
         toggleReset();
