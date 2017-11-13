@@ -294,9 +294,10 @@ function Polygon (vertices) {
         this.updateCenter();
     };
 
-    this.shearH = function (h, vertex) {
+    this.shearX = function (vertex) {
         let referenceVertex = this.getCenter();
         let shearFactor = (vertex.getX() - referenceVertex.getX()) / referenceVertex.getY();
+        shearFactor /= 2;
         this.translatePoint(referenceVertex);
         this.vertices.forEach(function (v) {
             v.setX(v.getX() + shearFactor * v.getY());
@@ -308,7 +309,7 @@ function Polygon (vertices) {
         return this;
     };
 
-    this.shearV = function (v, vertex) {
+    this.shearY = function (vertex) {
         let referenceVertex = this.getCenter();
         let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
         this.translatePoint(referenceVertex);
@@ -320,6 +321,30 @@ function Polygon (vertices) {
         this.updateBoundaries();
 
         return this;
+    };
+
+    this.shearZ = function (vertex) {
+        let referenceVertex = this.getCenter();
+        let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
+        this.translatePoint(referenceVertex);
+        this.vertices.forEach(function (v) {
+            v.setY(v.getY() + shearFactor * v.getX());
+        });
+        referenceVertex.invert();
+        this.translatePoint(referenceVertex);
+        this.updateBoundaries();
+
+        return this;
+    };
+
+    this.shear = function (axis, vertex) {
+        if (axis === 'x') {
+            return this.shearX(vertex);
+        } else if (axis === 'y') {
+            return this.shearY(vertex);
+        } else {
+            return this.shearZ(vertex);
+        }
     };
 
     // noinspection SyntaxError

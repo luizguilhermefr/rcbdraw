@@ -115,10 +115,14 @@ Vue.component('panel', {
                     this.freehandClick(x, y);
                     break;
                 case SHEAR_H:
-                    drawInterface.shearHorizontalClick(this.h, new Vertex(x, y, 0));
+                    x = x - (this.canvas.width / 2);
+                    y = y - (this.canvas.height / 2);
+                    drawInterface.shearClick(this.h, new Vertex(x, y, 0));
                     break;
                 case SHEAR_V:
-                    drawInterface.shearVerticalClick(this.v, new Vertex(x, y, 0));
+                    x = x - (this.canvas.width / 2);
+                    y = y - (this.canvas.height / 2);
+                    drawInterface.shearClick(this.v, new Vertex(x, y, 0));
                     break;
             }
         },

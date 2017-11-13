@@ -289,14 +289,8 @@ function Interface () {
         }
     };
 
-    this.shearHorizontalClick = function (h, vertex) {
-        this.selectedSolid.solid.shearH(h, vertex);
-        this.scene.makeDirty();
-        this.redraw();
-    };
-
-    this.shearVerticalClick = function (v, vertex) {
-        this.selectedSolid.solid.shearV(v, vertex);
+    this.shearClick = function (axis, vertex) {
+        this.selectedSolid.solid.shear(axis, vertex);
         this.scene.makeDirty();
         this.redraw();
     };
