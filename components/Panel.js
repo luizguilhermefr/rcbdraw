@@ -240,8 +240,9 @@ Vue.component('panel', {
         },
         drawSolids (solids, shouldWireframe = false) {
             solids.forEach(function (solid) {
+                let shouldIgnoreVisibility = solid.countPolygons() < 2;
                 solid.getPolygons().forEach(function (polygon) {
-                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp);                
+                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility);
                     if (polygon.isVisible(this.h, this.v)) {
                         if (solid.shouldFill() && !shouldWireframe) {
                             this.fillPoly(polygon, solid.getFillColor());

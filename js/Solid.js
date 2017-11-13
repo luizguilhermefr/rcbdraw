@@ -156,6 +156,10 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         return vertices;
     };
 
+    this.countPolygons = function () {
+        return this.polygons.length;
+    };
+
     this.runRevolution = function(faces, axis, degree) {
         let teta = degree / (faces - 1);
         teta *= Math.PI / 180;
@@ -166,15 +170,15 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
             this.polygons[0].clone()
         ];
         for (let i = 1; i < faces; i++) {
-            if(axis == 'x'){
+            if(axis === 'x'){
                 tetaX = teta;
                 tetaY = 0;
                 tetaZ = 0;
-            } else if ( axis == 'y'){
+            } else if ( axis === 'y'){
                 tetaX = 0;
                 tetaY = teta;
                 tetaZ = 0;
-            }else if ( axis == 'z'){
+            }else if ( axis === 'z'){
                 tetaX = 0;
                 tetaY = 0;
                 tetaZ = teta;
@@ -237,11 +241,11 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
 
     this.getSelected = function () {
         return this.selected;
-    }
+    };
 
     this.changeSelected = function () {
         this.selected = !this.selected;
-    }
+    };
 
     this.selected = false;
 
