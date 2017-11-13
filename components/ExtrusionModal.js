@@ -63,7 +63,7 @@ Vue.component('extrusion-modal', {
 
     methods: {
         distanceOk () {
-            return this.distance >= 1;
+            return this.distance >= 50;
         },
         increaseDistance () {
             this.distance++;
