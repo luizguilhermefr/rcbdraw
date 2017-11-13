@@ -289,7 +289,6 @@ function Interface () {
         }
     };
 
-
     this.shearHorizontalClick = function (h, vertex) {
         this.selectedSolid.solid.shearH(h, vertex);
         this.scene.makeDirty();
@@ -303,7 +302,7 @@ function Interface () {
     };
 
     this.isSomethingSelected = function () {
-        return !(this.selectedSolid === null);
+        return this.selectedSolid !== null;
     };
 
     this.selectionClick = function (x, y, h, v) {
