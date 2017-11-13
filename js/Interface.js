@@ -291,13 +291,13 @@ function Interface () {
     };
 
     this.shearHorizontalClick = function (x, y) {
-        this.selectedSolid.shearX(new Vertex(x, y));
+        this.selectedSolid.solid.shearX(new Vertex(x, y));
         this.scene.makeDirty();
         this.redraw();
     };
 
     this.shearVerticalClick = function (x, y) {
-        this.selectedSolid.shearY(new Vertex(x, y));
+        this.selectedSolid.solid.shearY(new Vertex(x, y));
         this.scene.makeDirty();
         this.redraw();
     };

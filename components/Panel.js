@@ -97,6 +97,7 @@ Vue.component('panel', {
             this.cursor = 'pointer';
         },
         onClick (e) {
+            hideContext();
             let x = this.getRelativeX(e.clientX);
             let y = this.getRelativeY(e.clientY);            
             switch (this.mode) {

@@ -84,7 +84,9 @@
             }
         }, false);
 
-        window.addEventListener('resize', function(){resizeAll(false)}, false);
+        window.addEventListener('resize', function () {
+            resizeAll(false);
+        }, false);
     };
 
     function toggleWireframe () {
@@ -128,6 +130,10 @@
 
     function escape () {
         toggleReset();
+        hideContext();
+    }
+
+    function hideContext () {
         vue.$refs.elementRightClick.hide();
         vue.$refs.panelRightClick.hide();
     }
@@ -146,7 +152,7 @@
         vue.$refs.panelLeft.expectSelection();
     }
 
-    function vrpRotation(){
+    function vrpRotation () {
         vue.$refs.panelPerspective.vrpRotation();
     }
 
@@ -191,7 +197,7 @@
         vue.$emit('show::modal', 'revolution-modal');
     }
 
-    function openExtrusionModal() {
+    function openExtrusionModal () {
         if (!drawInterface.isSomethingSelected()) {
             alert('Nenhum objeto selecionado.');
             return;

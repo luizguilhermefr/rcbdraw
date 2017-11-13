@@ -39,7 +39,6 @@ Vue.component('rcb-navbar', {
                                 }
                             }
                         },
-
                         {
                             id: 2,
                             title: 'Abrir',
@@ -59,7 +58,7 @@ Vue.component('rcb-navbar', {
                             action () {
                                 return null;
                             }
-                        },
+                        }
                         // {
                         //     id: 4,
                         //     title: 'Exportar...',
@@ -112,7 +111,7 @@ Vue.component('rcb-navbar', {
                     id: 3,
                     title: 'Editar',
                     enabled: true,
-                    subitems: [ 
+                    subitems: [
                         {
                             id: 1,
                             title: 'Rotacionar',
@@ -158,15 +157,15 @@ Vue.component('rcb-navbar', {
                                 expectShear('y');
                             }
                         },
-                        {
-                            id: 6,
-                            title: 'Duplicar',
-                            enabled: true,
-                            icon: 'fa fa-files-o',
-                            action () {
-                                duplicateSelected();
-                            }
-                        },
+                        // {
+                        //     id: 6,
+                        //     title: 'Duplicar',
+                        //     enabled: true,
+                        //     icon: 'fa fa-files-o',
+                        //     action () {
+                        //         duplicateSelected();
+                        //     }
+                        // },
                         {
                             id: 10,
                             title: 'Revolução',
