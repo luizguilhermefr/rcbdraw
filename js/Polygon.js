@@ -295,45 +295,17 @@ function Polygon (vertices) {
     };
 
     this.shearX = function (vertex) {
-        let referenceVertex = this.getCenter();
-        let shearFactor = (vertex.getX() - referenceVertex.getX()) / referenceVertex.getY();
-        shearFactor /= 2;
-        this.translatePoint(referenceVertex);
-        this.vertices.forEach(function (v) {
-            v.setX(v.getX() + shearFactor * v.getY());
-        });
-        referenceVertex.invert();
-        this.translatePoint(referenceVertex);
-        this.updateBoundaries();
-
+        //
         return this;
     };
 
     this.shearY = function (vertex) {
-        let referenceVertex = this.getCenter();
-        let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
-        this.translatePoint(referenceVertex);
-        this.vertices.forEach(function (v) {
-            v.setY(v.getY() + shearFactor * v.getX());
-        });
-        referenceVertex.invert();
-        this.translatePoint(referenceVertex);
-        this.updateBoundaries();
-
+        //
         return this;
     };
 
     this.shearZ = function (vertex) {
-        let referenceVertex = this.getCenter();
-        let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
-        this.translatePoint(referenceVertex);
-        this.vertices.forEach(function (v) {
-            v.setY(v.getY() + shearFactor * v.getX());
-        });
-        referenceVertex.invert();
-        this.translatePoint(referenceVertex);
-        this.updateBoundaries();
-
+        //
         return this;
     };
 
