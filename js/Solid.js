@@ -137,6 +137,16 @@ function Solid(polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAUL
         this.updateCenter();
     };
 
+    this.shearX = function(center, tetaX, tetaZ, axis) {
+        for (let i = 0; i < this.polygons.length; i++) {
+            polygons[i].translatePoint(center.invert());
+            polygons[i].shearX(tetaX, tetaZ, axis);
+            polygons[i].translatePoint(center.invert());
+        }
+        this.updateBoundaries();
+        this.updateCenter();
+    };
+
     this.toMatrix = function() {
         let vertices = [
             [],

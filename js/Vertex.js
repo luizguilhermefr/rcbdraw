@@ -58,7 +58,6 @@ function Vertex(x, y, z) {
     };
 
     this.distanceToVertex = function (vertex) {
-        // TODO: Include Z comparison
         return Math.sqrt(Math.pow(vertex.getX() - this.getX(), 2) + Math.pow(vertex.getY() - this.getY(), 2));
     };
 
@@ -201,6 +200,22 @@ function Vertex(x, y, z) {
         this.setX(tempX);
         this.setY(tempY);
         this.setZ(tempZ);
+    };
+
+    this.shearXVertex = function(tetaX, tetaZ, axis){
+        let shearFactor = 0;
+        if(tetaX != 0) {
+            if(axis === 'y') {
+                shearFactor = (this.getX() - tetaX) / this.getY();
+                this.setX(this.getX() + shearFactor * this.getY());
+            } else {
+                shearFactor = (tetaX - this.getX()) / this.getZ();
+                this.setX(this.getX() + shearFactor * this.getZ());
+            }
+        } else {
+            shearFactor = (tetaZ - this.getZ()) / this.getY();
+            this.setZ(this.getZ() + shearFactor * this.getY());
+        }
     };
 
     this.extrusionVertex = function (extrusionDistance) {

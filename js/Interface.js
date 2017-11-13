@@ -258,7 +258,7 @@ function Interface () {
     };
 
     this.rotationClick = function (tetaX, tetaY, h, v) {
-        let centerClone, deep, tetaZ;
+        let centerClone, tetaZ;
         if (this.rotationSolid === null) {
             this.rotationSolid = this.selectedSolid.solid.clone();
         } else {
@@ -290,8 +290,24 @@ function Interface () {
         }
     };
 
-    this.shearHorizontalClick = function (x, y) {
-        this.selectedSolid.solid.shearX(new Vertex(x, y));
+
+    this.shearHorizontalClick = function (tetaX, h, v) {
+        let centerClone, tetaZ;
+        if (this.shearXSolid === null) {
+            this.shearXSolid = this.selectedSolid.solid.clone();
+        } else {
+            this.scene.changeSolid(this.selectedSolid.index, this.shearXSolid.clone());
+        }
+        centerClone = this.shearXSolid.getCenter().clone();
+        if (h === 'x' && v === 'y') {
+            tetaZ = 0;
+        } else if (h === 'x' && v === 'z') {
+            tetaZ = 0;
+        } else if (h === 'z' && v === 'y') {
+            tetaZ = tetaX;
+        }
+        this.selectedSolid.solid.shearX(centerClone, tetaX, tetaZ, v);
+        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());
         this.scene.makeDirty();
         this.redraw();
     };
@@ -372,6 +388,8 @@ function Interface () {
     this.rotationSolid = null;
 
     this.scaleSolid = null;
+
+    this.shearXSolid = null;
 
     this.shouldWireframe = false;
 }
