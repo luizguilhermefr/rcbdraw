@@ -290,29 +290,14 @@ function Interface () {
     };
 
 
-    this.shearHorizontalClick = function (tetaX, h, v) {
-        let centerClone, tetaZ;
-        if (this.shearXSolid === null) {
-            this.shearXSolid = this.selectedSolid.solid.clone();
-        } else {
-            this.scene.changeSolid(this.selectedSolid.index, this.shearXSolid.clone());
-        }
-        centerClone = this.shearXSolid.getCenter().clone();
-        if (h === 'x' && v === 'y') {
-            tetaZ = 0;
-        } else if (h === 'x' && v === 'z') {
-            tetaZ = 0;
-        } else if (h === 'z' && v === 'y') {
-            tetaZ = tetaX;
-        }
-        this.selectedSolid.solid.shearX(centerClone, tetaX, tetaZ, v);
-        this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());
+    this.shearHorizontalClick = function (h, vertex) {
+        this.selectedSolid.solid.shearH(h, vertex);
         this.scene.makeDirty();
         this.redraw();
     };
 
-    this.shearVerticalClick = function (x, y) {
-        this.selectedSolid.solid.shearY(new Vertex(x, y));
+    this.shearVerticalClick = function (v, vertex) {
+        this.selectedSolid.solid.shearV(v, vertex);
         this.scene.makeDirty();
         this.redraw();
     };

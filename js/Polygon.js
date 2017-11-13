@@ -1,6 +1,6 @@
-function Polygon(vertices) {
+function Polygon (vertices) {
 
-    this.updateBoundaries = function() {
+    this.updateBoundaries = function () {
         let maxX = Number.MIN_VALUE;
         let minX = Number.MAX_VALUE;
         let maxY = Number.MIN_VALUE;
@@ -29,11 +29,11 @@ function Polygon(vertices) {
         return this;
     };
 
-    this.getBoundaries = function() {
+    this.getBoundaries = function () {
         return this.boundaries;
     };
 
-    this.getDrawablePerspectiveVertices = function(canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp) {   
+    this.getDrawablePerspectiveVertices = function (canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp) {
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp, true);
         // noinspection UnnecessaryLocalVariableJS
         let vertices = pipeline.run();
@@ -41,7 +41,7 @@ function Polygon(vertices) {
         return vertices;
     };
 
-    this.updateDrawableVertices = function(h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp = null, viewUp = null, forceVisible = false) {
+    this.updateDrawableVertices = function (h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp = null, viewUp = null, forceVisible = false) {
         if (h === 'x' && v === 'y') {
             vrp = new Vertex(0, 0, 100);
             viewUp = new Vertex(0, 1, 0);
@@ -51,7 +51,7 @@ function Polygon(vertices) {
         } else if (h === 'z' && v === 'y') {
             vrp = new Vertex(100, 0, 0);
             viewUp = new Vertex(0, 1, 0);
-        } else {                        
+        } else {
             perspective = true;
         }
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp);
@@ -64,7 +64,7 @@ function Polygon(vertices) {
         return this;
     };
 
-    this.setVisibility = function(visible, h, v) {
+    this.setVisibility = function (visible, h, v) {
         if (h === 'x' && v === 'y') {
             this.visibleXY = visible;
         } else if (h === 'x' && v === 'z') {
@@ -90,7 +90,7 @@ function Polygon(vertices) {
         }
     };
 
-    this.setDrawableVertices = function(vertices, h, v) {
+    this.setDrawableVertices = function (vertices, h, v) {
         if (h === 'x' && v === 'y') {
             this.drawableVerticesXY = vertices;
         } else if (h === 'x' && v === 'z') {
@@ -105,7 +105,7 @@ function Polygon(vertices) {
         return this;
     };
 
-    this.getDrawableVertices = function(h, v) {
+    this.getDrawableVertices = function (h, v) {
         if (h === 'x' && v === 'y') {
             return this.drawableVerticesXY;
         } else if (h === 'x' && v === 'z') {
@@ -117,27 +117,25 @@ function Polygon(vertices) {
         }
     };
 
-    this.getDrawableVertexAt = function(index, h, v) {
+    this.getDrawableVertexAt = function (index, h, v) {
         if (h === 'x' && v === 'y') {
-            return this.drawableVerticesXY[index];
+            return this.drawableVerticesXY[ index ];
         } else if (h === 'x' && v === 'z') {
-            return this.drawableVerticesXZ[index];
+            return this.drawableVerticesXZ[ index ];
         } else if (h === 'z' && v === 'y') {
-            return this.drawableVerticesZY[index];
+            return this.drawableVerticesZY[ index ];
         } else {
-            return this.drawableVerticesPerspective[index];
+            return this.drawableVerticesPerspective[ index ];
         }
-
-        return null;
     };
 
-    this.updateDrawableBoundaries = function(h, v) {
+    this.updateDrawableBoundaries = function (h, v) {
         let maxX = Number.MIN_VALUE;
         let minX = Number.MAX_VALUE;
         let maxY = Number.MIN_VALUE;
         let minY = Number.MAX_VALUE;
 
-        this.getDrawableVertices(h, v).forEach(function(v) {
+        this.getDrawableVertices(h, v).forEach(function (v) {
             let vx = v.getX();
             let vy = v.getY();
 
@@ -153,7 +151,7 @@ function Polygon(vertices) {
         return this;
     };
 
-    this.getDrawableBoundaries = function(h, v) {
+    this.getDrawableBoundaries = function (h, v) {
         if (h === 'x' && v === 'y') {
             return this.drawableBoundariesXY;
         } else if (h === 'x' && v === 'z') {
@@ -165,7 +163,7 @@ function Polygon(vertices) {
         }
     };
 
-    this.setDrawableBoundaries = function(boundary, h, v) {
+    this.setDrawableBoundaries = function (boundary, h, v) {
         if (h === 'x' && v === 'y') {
             this.drawableBoundariesXY = boundary;
         } else if (h === 'x' && v === 'z') {
@@ -179,24 +177,24 @@ function Polygon(vertices) {
         return this;
     };
 
-    this.getVertices = function() {
+    this.getVertices = function () {
         return this.vertices;
     };
 
-    this.countVertices = function() {
+    this.countVertices = function () {
         return this.vertices.length;
     };
 
-    this.vertexAt = function(index) {
-        return this.vertices[index].clone();
+    this.vertexAt = function (index) {
+        return this.vertices[ index ].clone();
     };
 
-    this.closestPoint = function(vertex) {
+    this.closestPoint = function (vertex) {
         let closestPoint = {
             distance: Number.POSITIVE_INFINITY,
             vertex: null
         };
-        this.vertices.forEach(function(v) {
+        this.vertices.forEach(function (v) {
             let distance = v.distanceToVertex(vertex);
             if (distance < closestPoint.distance) {
                 closestPoint.distance = distance;
@@ -210,14 +208,14 @@ function Polygon(vertices) {
     this.invertOrientation = function () {
         let newVertices = [];
         for (i = this.vertices.length - 1; i >= 0; i--) {
-            newVertices.push(this.vertices[i]);
+            newVertices.push(this.vertices[ i ]);
         }
         this.vertices = newVertices;
 
         return this;
     };
 
-    this.closestDrawedEdge = function(clickVertex, h, v) {
+    this.closestDrawedEdge = function (clickVertex, h, v) {
         let closestEdge = {
             distance: Number.POSITIVE_INFINITY,
             index: -1
@@ -237,20 +235,20 @@ function Polygon(vertices) {
         return closestEdge;
     };
 
-    this.translatePoint = function(vertex) {
+    this.translatePoint = function (vertex) {
         for (let v = 0; v < this.vertices.length; v++) {
-            let tempX = vertices[v].getX() + vertex.getX();
-            let tempY = vertices[v].getY() + vertex.getY();
-            let tempZ = vertices[v].getZ() + vertex.getZ();
-            vertices[v].setX(tempX);
-            vertices[v].setY(tempY);
-            vertices[v].setZ(tempZ);
+            let tempX = vertices[ v ].getX() + vertex.getX();
+            let tempY = vertices[ v ].getY() + vertex.getY();
+            let tempZ = vertices[ v ].getZ() + vertex.getZ();
+            vertices[ v ].setX(tempX);
+            vertices[ v ].setY(tempY);
+            vertices[ v ].setZ(tempZ);
         }
         this.updateCenter();
         this.updateBoundaries();
     };
 
-    this.extrusionPoint = function(distance, axis) {
+    this.extrusionPoint = function (distance, axis) {
         let extrusionDistance;
         if (axis === 'x') {
             extrusionDistance = new Vertex(distance, 0, 0);
@@ -259,100 +257,108 @@ function Polygon(vertices) {
         } else if (axis === 'z') {
             extrusionDistance = new Vertex(0, 0, distance);
         }
-        for(let i = 0; i < this.vertices.length; i++){
-            vertices[i].extrusionVertex(extrusionDistance);
+        for (let i = 0; i < this.vertices.length; i++) {
+            vertices[ i ].extrusionVertex(extrusionDistance);
         }
     };
 
-    this.rotate = function(tetaX, tetaY, tetaZ) {
-        for(let i = 0; i < this.vertices.length; i++){
-            vertices[i].rotationVertex(tetaX, tetaY, tetaZ);
+    this.rotate = function (tetaX, tetaY, tetaZ) {
+        for (let i = 0; i < this.vertices.length; i++) {
+            vertices[ i ].rotationVertex(tetaX, tetaY, tetaZ);
         }
         this.updateBoundaries();
         this.updateCenter();
     };
 
-    this.rotateFace = function(){
-        if(this.vertices.length % 2 === 0){
-            for(let i = 1; i < this.vertices[i].length-1; i+=2){
-                let temp = this.vertexAt(i+1);
-                this.vertices[i+1] = this.vertices[i];
-                this.vertices[i] = temp;
+    this.rotateFace = function () {
+        if (this.vertices.length % 2 === 0) {
+            for (let i = 1; i < this.vertices[ i ].length - 1; i += 2) {
+                let temp = this.vertexAt(i + 1);
+                this.vertices[ i + 1 ] = this.vertices[ i ];
+                this.vertices[ i ] = temp;
             }
         } else {
-            for(let i = 0; i < this.vertices[i].length-1; i++){
-                let temp = this.vertexAt(i+1);
-                this.vertices[i+1] = this.vertices[i];
-                this.vertices[i] = temp;
+            for (let i = 0; i < this.vertices[ i ].length - 1; i++) {
+                let temp = this.vertexAt(i + 1);
+                this.vertices[ i + 1 ] = this.vertices[ i ];
+                this.vertices[ i ] = temp;
             }
         }
     };
 
-    this.scale = function(tetaX, tetaY, tetaZ) {
-        for(let i = 0; i < this.vertices.length; i++){
-            vertices[i].scaleVertex(tetaX, tetaY, tetaZ);
+    this.scale = function (tetaX, tetaY, tetaZ) {
+        for (let i = 0; i < this.vertices.length; i++) {
+            vertices[ i ].scaleVertex(tetaX, tetaY, tetaZ);
         }
         this.updateBoundaries();
         this.updateCenter();
     };
 
-    this.shearX = function(tetaX, tetaZ, axis) {
-        for(let i = 0; i < this.vertices.length; i++){
-            vertices[i].shearXVertex(tetaX, tetaZ,axis);
-        }
+    this.shearH = function (h, vertex) {
+        let referenceVertex = this.getCenter();
+        let shearFactor = (vertex.getX() - referenceVertex.getX()) / referenceVertex.getY();
+        this.translatePoint(referenceVertex);
+        this.vertices.forEach(function (v) {
+            v.setX(v.getX() + shearFactor * v.getY());
+        });
+        referenceVertex.invert();
+        this.translatePoint(referenceVertex);
         this.updateBoundaries();
-        this.updateCenter();
+
+        return this;
     };
 
-    this.shearY = function(vertex) {
-        // let referenceVertex = this.getCenter();
-        // let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
-        // this.translatePoint(referenceVertex);
-        // this.vertices.forEach(function(v) {
-        //     v.setY(v.getY() + shearFactor * v.getX());
-        // });
-        // referenceVertex.invert();
-        // this.translatePoint(referenceVertex);
-        // this.updateBoundaries();
-        //
-        // return this;
+    this.shearV = function (v, vertex) {
+        let referenceVertex = this.getCenter();
+        let shearFactor = (vertex.getY() - referenceVertex.getY()) / referenceVertex.getX();
+        this.translatePoint(referenceVertex);
+        this.vertices.forEach(function (v) {
+            v.setY(v.getY() + shearFactor * v.getX());
+        });
+        referenceVertex.invert();
+        this.translatePoint(referenceVertex);
+        this.updateBoundaries();
+
+        return this;
     };
 
     // noinspection SyntaxError
-    this.clone = function(displacement = 0) {
+    this.clone = function (displacement = 0) {
         let nextVertices = [];
-        this.vertices.forEach(function(v) {
-            nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement, v.getZ() + displacement));            
+        this.vertices.forEach(function (v) {
+            nextVertices.push(new Vertex(v.getX() + displacement, v.getY() + displacement, v.getZ() + displacement));
         });
         return new Polygon(nextVertices, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
-    };    
+    };
 
-    this.toMatrix = function() {
+    this.toMatrix = function () {
         let vertices = [
             [],
             [],
             [],
             []
         ];
-        this.getVertices().forEach(function(v) {
-            vertices[0].push(v.getX());
-            vertices[1].push(v.getY());
-            vertices[2].push(v.getZ());
-            vertices[3].push(1);
+        this.getVertices().forEach(function (v) {
+            vertices[ 0 ].push(v.getX());
+            vertices[ 1 ].push(v.getY());
+            vertices[ 2 ].push(v.getZ());
+            vertices[ 3 ].push(1);
         });
 
         return vertices;
-    };    
+    };
 
-    this.isInsideDrawableBoundaryTolerance = function(clickVertex, h, v) {
-        if (! this.isVisible(h, v)) {
+    this.isInsideDrawableBoundaryTolerance = function (clickVertex, h, v) {
+        if (!this.isVisible(h, v)) {
             return false;
         }
         let tolerance = 20;
         let boundary = this.getDrawableBoundaries(h, v);
 
-        let insideX = (clickVertex.getX() < (boundary.maxX + tolerance)) && (clickVertex.getX() > (boundary.minX - tolerance));
-        let insideY = (clickVertex.getY() < (boundary.maxY + tolerance)) && (clickVertex.getY() > (boundary.minY - tolerance));
+        let insideX = (clickVertex.getX() < (boundary.maxX + tolerance)) &&
+            (clickVertex.getX() > (boundary.minX - tolerance));
+        let insideY = (clickVertex.getY() < (boundary.maxY + tolerance)) &&
+            (clickVertex.getY() > (boundary.minY - tolerance));
 
         return insideX && insideY;
     };
@@ -370,13 +376,15 @@ function Polygon(vertices) {
     };
 
     this.getDistance = function (vertex) {
-        return new Vertex(Math.abs(this.center.getX() - vertex.getX()), Math.abs(this.center.getY() - vertex.getY()), Math.abs(this.center.getZ() -
+        return new Vertex(Math.abs(this.center.getX() - vertex.getX()), Math.abs(this.center.getY() -
+            vertex.getY()), Math.abs(this.center.getZ() -
             vertex.getZ()));
     };
 
     this.getEuclideanDistance = function (vertex) {
-        return Math.sqrt(Math.pow(this.center.getX() - vertex.getX(), 2) + Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2))
-    };    
+        return Math.sqrt(Math.pow(this.center.getX() - vertex.getX(), 2) +
+            Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2));
+    };
 
     this.vertices = vertices;
 
@@ -401,7 +409,7 @@ function Polygon(vertices) {
     this.visibleXZ = false;
 
     this.visibleZY = false;
-    
+
     this.visiblePersp = false;
 
     this.edges = [];

@@ -115,16 +115,16 @@ Vue.component('panel', {
                     this.freehandClick(x, y);
                     break;
                 case SHEAR_H:
-                    drawInterface.shearHorizontalClick((x - this.tempClickX) / 80, this.h, this.v);
+                    drawInterface.shearHorizontalClick(this.h, new Vertex(x, y, 0));
                     break;
                 case SHEAR_V:
-                    drawInterface.shearVerticalClick((x - this.tempClickX) / 80, ((y - this.tempClickY) / 80), this.h, this.v);
+                    drawInterface.shearVerticalClick(this.v, new Vertex(x, y, 0));
                     break;
             }                                             
         },
         mouseDown (e) {
-            if (this.mode >= TRANSLATE && this.mode <= MOVE_VRP) {
-                this.dragging = true;                
+            if (this.mode === TRANSLATE || this.mode === MOVE_VRP || this.mode === RESIZE || this.mode === ROTATE) {
+                this.dragging = true;
                 this.tempClickX = this.getRelativeX(e.clientX);
                 this.tempClickY = this.getRelativeY(e.clientY);                
             }
