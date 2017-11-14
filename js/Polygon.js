@@ -294,28 +294,101 @@ function Polygon (vertices) {
         this.updateCenter();
     };
 
-    this.shearX = function (vertex) {
-        //
+    this.shearXbyY = function (vertex) {
+        let center = this.getCenter();
+        let shearFactor = (vertex.getX() - center.getX()) * .005;
+        this.translatePoint(center); // move center to origin
+        this.vertices.forEach(function (v) {
+            v.setX(v.getX() + shearFactor * v.getY());
+        });
+        this.translatePoint(center.invert()); // move back to previous location
+
         return this;
     };
 
-    this.shearY = function (vertex) {
-        //
+    this.shearXbyZ = function (vertex) {
+        let center = this.getCenter();
+        let shearFactor = (vertex.getX() - center.getX()) * .005;
+        this.translatePoint(center); // move center to origin
+        this.vertices.forEach(function (v) {
+            v.setX(v.getX() + shearFactor * v.getZ());
+        });
+        this.translatePoint(center.invert()); // move back to previous location
+
         return this;
     };
 
-    this.shearZ = function (vertex) {
-        //
+    this.shearYbyX = function (vertex) {
+        let center = this.getCenter();
+        let shearFactor = (vertex.getY() - center.getY()) * .005;
+        this.translatePoint(center); // move center to origin
+        this.vertices.forEach(function (v) {
+            v.setY(v.getY() + shearFactor * v.getX());
+        });
+        this.translatePoint(center.invert()); // move back to previous location
+
         return this;
     };
 
-    this.shear = function (axis, vertex) {
-        if (axis === 'x') {
-            return this.shearX(vertex);
-        } else if (axis === 'y') {
-            return this.shearY(vertex);
-        } else {
-            return this.shearZ(vertex);
+    this.shearYbyZ = function (vertex) {
+        let center = this.getCenter();
+        let shearFactor = (vertex.getY() - center.getY()) * .005;
+        this.translatePoint(center); // move center to origin
+        this.vertices.forEach(function (v) {
+            v.setY(v.getY() + shearFactor * v.getZ());
+        });
+        this.translatePoint(center.invert()); // move back to previous location
+
+        return this;
+    };
+
+    this.shearZbyY = function (vertex) {
+        vertex.setZ(vertex.getX());
+        vertex.setX(0);
+        let center = this.getCenter();
+        let shearFactor = (vertex.getZ() - center.getZ()) * .005;
+        this.translatePoint(center); // move center to origin
+        this.vertices.forEach(function (v) {
+            v.setZ(v.getZ() + shearFactor * v.getY());
+        });
+        this.translatePoint(center.invert()); // move back to previous location
+
+        return this;
+    };
+
+    this.shearZbyX = function (vertex) {
+        vertex.setZ(vertex.getY());
+        vertex.setY(0);
+        let center = this.getCenter();
+        let shearFactor = (vertex.getZ() - center.getZ()) * .005;
+        this.translatePoint(center); // move center to origin
+        this.vertices.forEach(function (v) {
+            v.setZ(v.getZ() + shearFactor * v.getX());
+        });
+        this.translatePoint(center.invert()); // move back to previous location
+
+        return this;
+    };
+
+    this.shear = function (sAxis, rAxis, vertex) {
+        if (sAxis === 'x') {
+            if (rAxis === 'y') {
+                return this.shearXbyY(vertex);
+            } else if (rAxis === 'z') {
+                return this.shearXbyZ(vertex);
+            }
+        } else if (sAxis === 'y') {
+            if (rAxis === 'x') {
+                return this.shearYbyX(vertex);
+            } else if (rAxis === 'z') {
+                return this.shearYbyZ(vertex);
+            }
+        } else if (sAxis === 'z') {
+            if (rAxis === 'x') {
+                return this.shearZbyX(vertex);
+            } else if (rAxis === 'y') {
+                return this.shearZbyY(vertex);
+            }
         }
     };
 

@@ -261,9 +261,9 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this.countPolygons() === 1;
     };
 
-    this.shear = function (axis, vertex) {
+    this.shear = function (sAxis, rAxis, vertex) {
         this.polygons.forEach(function (p) {
-            p.shear(axis, vertex);
+            p.shear(sAxis, rAxis, vertex);
         });
     };
 
