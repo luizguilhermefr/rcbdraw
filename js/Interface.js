@@ -81,7 +81,7 @@ function Interface () {
 
     this.clearSelectedSolid = function (redraw = false) {
         if (this.selectedSolid !== null) {
-            this.scene.getSolidAt(this.selectedSolid.index).changeSelected();
+            this.scene.getSolidAt(this.selectedSolid.index).deleteSelected();
             this.selectedSolid = null;
         }
         if (redraw) {
@@ -322,19 +322,29 @@ function Interface () {
                     }
                 }
             }
-        }
-
+        }        
         if (lowestDistance.distance < 10) {
-            this.selectedSolid = {
-                index: lowestDistance.solid,
-                solid: solids[ lowestDistance.solid ]
-            };            
-            this.scene.getSolidAt(this.selectedSolid.index).changeSelected();
+            if(this.selectedSolid) {
+                if(this.selectedSolid.index != lowestDistance.index) {
+                    this.clearSelectedSolid();
+                    this.changeSelected(lowestDistance, solids);
+                }
+            } else {
+                this.changeSelected(lowestDistance, solids);
+            }
         } else {
             this.clearSelectedSolid();
         }
 
         this.redraw();
+    };
+
+    this.changeSelected = function (lowestDistance, solids) {
+        this.selectedSolid = {
+            index: lowestDistance.solid,
+            solid: solids[ lowestDistance.solid ]
+        };            
+        this.scene.getSolidAt(this.selectedSolid.index).startSelected();
     };
 
     this.duplicateSelected = function () {
