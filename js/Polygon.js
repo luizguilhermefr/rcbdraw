@@ -296,7 +296,7 @@ function Polygon (vertices) {
 
     this.shearXbyY = function (vertex) {
         let center = this.getCenter();
-        let shearFactor = (vertex.getX() - center.getX()) * .005;
+        let shearFactor = -(vertex.getX() - center.getX()) * .005;
         this.translatePoint(center); // move center to origin
         this.vertices.forEach(function (v) {
             v.setX(v.getX() + shearFactor * v.getY());
@@ -308,7 +308,7 @@ function Polygon (vertices) {
 
     this.shearXbyZ = function (vertex) {
         let center = this.getCenter();
-        let shearFactor = (vertex.getX() - center.getX()) * .005;
+        let shearFactor = -(vertex.getX() - center.getX()) * .005;
         this.translatePoint(center); // move center to origin
         this.vertices.forEach(function (v) {
             v.setX(v.getX() + shearFactor * v.getZ());
@@ -320,7 +320,7 @@ function Polygon (vertices) {
 
     this.shearYbyX = function (vertex) {
         let center = this.getCenter();
-        let shearFactor = (vertex.getY() - center.getY()) * .005;
+        let shearFactor = -(vertex.getY() - center.getY()) * .005;
         this.translatePoint(center); // move center to origin
         this.vertices.forEach(function (v) {
             v.setY(v.getY() + shearFactor * v.getX());
@@ -332,7 +332,7 @@ function Polygon (vertices) {
 
     this.shearYbyZ = function (vertex) {
         let center = this.getCenter();
-        let shearFactor = (vertex.getY() - center.getY()) * .005;
+        let shearFactor = -(vertex.getY() - center.getY()) * .005;
         this.translatePoint(center); // move center to origin
         this.vertices.forEach(function (v) {
             v.setY(v.getY() + shearFactor * v.getZ());
@@ -346,7 +346,7 @@ function Polygon (vertices) {
         vertex.setZ(vertex.getX());
         vertex.setX(0);
         let center = this.getCenter();
-        let shearFactor = (vertex.getZ() - center.getZ()) * .005;
+        let shearFactor = -(vertex.getZ() - center.getZ()) * .005;
         this.translatePoint(center); // move center to origin
         this.vertices.forEach(function (v) {
             v.setZ(v.getZ() + shearFactor * v.getY());
@@ -360,7 +360,7 @@ function Polygon (vertices) {
         vertex.setZ(vertex.getY());
         vertex.setY(0);
         let center = this.getCenter();
-        let shearFactor = (vertex.getZ() - center.getZ()) * .005;
+        let shearFactor = -(vertex.getZ() - center.getZ()) * .005;
         this.translatePoint(center); // move center to origin
         this.vertices.forEach(function (v) {
             v.setZ(v.getZ() + shearFactor * v.getX());
