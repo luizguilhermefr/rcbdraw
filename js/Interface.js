@@ -289,8 +289,8 @@ function Interface () {
         }
     };
 
-    this.shearClick = function (axis, vertex) {
-        this.selectedSolid.solid.shear(axis, vertex);
+    this.shearClick = function (sAxis, rAxis, vertex) {
+        this.selectedSolid.solid.shear(sAxis, rAxis, vertex);
         this.scene.makeDirty();
         this.redraw();
     };
