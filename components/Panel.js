@@ -215,7 +215,7 @@ Vue.component('panel', {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
         },
         selectionClick (x, y) {
-            drawInterface.selectionClick(x, y, this.h, this.v);
+            drawInterface.selectionClick(x, y, this.h, this.v, this.mode);
         },
         freehandClick (x, y) {
             drawInterface.clearSelectedSolid(true);

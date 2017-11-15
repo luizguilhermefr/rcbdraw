@@ -1,4 +1,4 @@
-function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false) {
+function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false, selected = false) {
 
     this.getPolygons = function () {
         return this.polygons;
@@ -240,7 +240,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         this.polygons.forEach(function (p) {
             nextPolygons.push(p.clone(displacement));
         });
-        return new Solid(nextPolygons, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill);
+        return new Solid(nextPolygons, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill, this.selected);
     };
 
     this.paintersAlgorithm = function (depthAxis, vrp) {
@@ -253,8 +253,12 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this.selected;
     };
 
-    this.changeSelected = function () {
-        this.selected = !this.selected;
+    this.deleteSelected = function () {
+        this.selected = false;
+    };
+
+    this.startSelected = function () {
+        this.selected = true;
     };
 
     this.canBeSheared = function () {
@@ -267,7 +271,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         });
     };
 
-    this.selected = false;
+    this.selected = selected;
 
     this.polygons = polygons;
 
