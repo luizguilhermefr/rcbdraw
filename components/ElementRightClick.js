@@ -3,7 +3,7 @@ Vue.component('element-right-click', {
     template: `
         <b-list-group class="rightclick" v-bind:style="styles" size="lg">
           <b-list-group-item class="rightclick-item" v-for="item in items" :key="item.id" href="#" v-on:click.native="click(item.action)">
-            {{item.title}}
+            <i v-bind:class="item.icon" aria-hidden="true"></i>&nbsp;{{item.title}}
           </b-list-group-item>
         </b-list-group>
     `,
@@ -18,6 +18,7 @@ Vue.component('element-right-click', {
                     id: 1,
                     title: 'Rotacionar',
                     enabled: true,
+                    icon: 'fa fa-repeat',
                     action () {
                         expectRotation();
                     }
@@ -26,6 +27,7 @@ Vue.component('element-right-click', {
                     id: 2,
                     title: 'Transladar',
                     enabled: true,
+                    icon: 'fa fa-arrows',
                     action () {
                         expectTranslate();
                     }
@@ -34,38 +36,43 @@ Vue.component('element-right-click', {
                     id: 3,
                     title: 'Escalar',
                     enabled: true,
+                    icon: 'fa fa-compress',
                     action () {
                         expectScale();
                     }
                 },
                 {
-                    id: 4,
-                    title: 'Cisalhar Horizontalmente',
+                    id: 10,
+                    title: 'Revolução',
                     enabled: true,
+                    icon: 'fa fa-circle-o-notch',
                     action () {
-                        expectShear('x');
+                        openRevolutionModal();
                     }
                 },
                 {
-                    id: 5,
-                    title: 'Cisalhar Verticalmente',
+                    id: 11,
+                    title: 'Extrusão',
                     enabled: true,
+                    icon: 'fa fa-cube',
                     action () {
-                        expectShear('y');
+                        openExtrusionModal();
                     }
                 },
                 {
                     id: 6,
                     title: 'Excluir',
                     enabled: true,
+                    icon: 'fa fa-trash-o',
                     action () {
-                        deletePolygon();
+                        deleteSolid();
                     }
                 },
                 {
                     id: 7,
                     title: 'Propriedades do objeto...',
                     enabled: true,
+                    icon: 'fa fa-info',
                     action () {
                         openPropertiesModal();
                     }
@@ -94,12 +101,12 @@ Vue.component('element-right-click', {
         }
     },
     computed: {
-        styles: function() {
+        styles: function () {
             return {
                 left: this.x + 'px',
                 top: this.y + 'px',
                 'margin-left': this.visible ? 0 : '-999em'
             };
         }
-    },
+    }
 });
