@@ -253,7 +253,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this.selected;
     };
 
-    this.deleteSelected = function () {
+    this.deleteSelected = function () {        
         this.selected = false;
     };
 

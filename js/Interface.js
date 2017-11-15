@@ -80,7 +80,7 @@ function Interface () {
     };
 
     this.clearSelectedSolid = function (redraw = false) {
-        if (this.selectedSolid !== null) {
+        if (this.selectedSolid !== null) {            
             this.scene.getSolidAt(this.selectedSolid.index).deleteSelected();
             this.selectedSolid = null;
         }
@@ -90,8 +90,9 @@ function Interface () {
     };
 
     this.deleteSolid = function () {
-        this.scene.removeSolid(this.selectedSolid.index);
-        this.clearSelectedSolid();
+        let index = this.selectedSolid.index;
+        this.clearSelectedSolid();        
+        this.scene.removeSolid(index);        
         this.redraw();
 
         return false;
