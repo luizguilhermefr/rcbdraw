@@ -456,6 +456,18 @@ function Polygon (vertices) {
             Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2));
     };
 
+    this.setNormalVector = function () {
+        let p1 = this.polygon.vertexAt(2);
+        let p2 = this.polygon.vertexAt(1);
+        let p3 = this.polygon.vertexAt(0);
+        let a = p1.sub(p2);
+        let b = p3.sub(p2);
+        let i = (b.getY() * a.getZ()) - (b.getZ() * a.getY());
+        let j = (b.getZ() * a.getX()) - (b.getX() * a.getZ());
+        let k = (b.getX() * a.getY()) - (b.getY() * a.getX());
+        return new Vertex(i, j, k);
+    };
+
     this.vertices = vertices;
 
     this.drawableVerticesXY = null;

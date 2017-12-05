@@ -40,6 +40,7 @@ Vue.component('panel', {
             fill: null,
             mustStroke: true,
             mustFill: false,
+            lightIntensity: 0,
             cursor: 'default',
             dragging: false,
             prevScaleFactor: {
@@ -62,6 +63,11 @@ Vue.component('panel', {
             this.mustStroke = mustStroke;
             this.mustFill = mustFill;
             this.mode = PUT_POLY;
+            this.cursor = 'copy';
+        },
+        expectLightSource (intensity) {
+            this.lightIntensity = intensity;
+            this.mode = PUT_LIGHT;
             this.cursor = 'copy';
         },
         expectSelection () {
@@ -124,6 +130,10 @@ Vue.component('panel', {
                     y = y - (this.canvas.height / 2);
                     drawInterface.shearClick(this.v, this.h, new Vertex(x, y, 0));
                     break;
+                case PUT_LIGHT:
+                    x = x - (this.canvas.width / 2);
+                    y = y - (this.canvas.height / 2);
+                    this.putLight(x, y);
             }
         },
         mouseDown (e) {
@@ -214,6 +224,9 @@ Vue.component('panel', {
         putPoly (x, y) {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
         },
+        putLight (x, y) {
+            drawInterface.newLightSource(this.lightIntensity, x, y, this.h, this.v);
+        },
         selectionClick (x, y) {
             drawInterface.selectionClick(x, y, this.h, this.v, this.mode);
         },
@@ -291,7 +304,8 @@ Vue.component('panel', {
         },
         fillPoly (polygon, color) {
             this.context.lineWidth = 1;
-            this.context.strokeStyle = color;
+            let fs = new FlatShading(polygon, color);
+            this.context.strokeStyle = fs.getColor();
             this.context.beginPath();
             let filler = new PolyFill(polygon, this.h, this.v);
             filler.run(this.context);

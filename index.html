@@ -55,6 +55,7 @@
 <script type="text/javascript" src="components/Toolbar.js"></script>
 <script type="text/javascript" src="components/ElementRightClick.js"></script>
 <script type="text/javascript" src="components/PanelRightClick.js"></script>
+<script type="text/javascript" src="components/LightSourceModal.js"></script>
 
 <script type="text/javascript" src="js/Colors.js"></script>
 <script type="text/javascript" src="js/Vertex.js"></script>
@@ -63,6 +64,7 @@
 <script type="text/javascript" src="js/Scene.js"></script>
 <script type="text/javascript" src="js/Interface.js"></script>
 <script type="text/javascript" src="js/Edge.js"></script>
+<script type="text/javascript" src="js/LightSource.js"></script>
 <script type="text/javascript" src="js/Utils/PolyFill.js"></script>
 <script type="text/javascript" src="js/Utils/Pipeline.js"></script>
 <script type="text/javascript" src="js/Utils/Lighting.js"></script>
@@ -79,6 +81,7 @@
     const SHEAR_V = 7;
     const ROTATE = 8;
     const MOVE_VRP = 9;
+    const PUT_LIGHT = 10;
 
     window.onload = function () {
         vue = new Vue({
@@ -174,6 +177,13 @@
         vue.$refs.panelFront.expectFreehand();
         vue.$refs.panelTop.expectFreehand();
         vue.$refs.panelLeft.expectFreehand();
+    }
+
+    function defineLightSource (intensity) {
+        toggleReset();
+        vue.$refs.panelFront.expectLightSource(intensity);
+        vue.$refs.panelTop.expectLightSource(intensity);
+        vue.$refs.panelLeft.expectLightSource(intensity);
     }
 
     function toggleReset () {

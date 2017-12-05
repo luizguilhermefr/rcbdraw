@@ -98,6 +98,19 @@ function Interface () {
         return false;
     };
 
+    this.newLightSource = function (intensity, x, y, h, v) {
+        let position;
+        if (h === 'x' && v === 'y') { // front
+            position = new Vertex(x, y, 0);
+        } else if (h === 'x' && v === 'z') { // top
+            position = new Vertex(x, 0, y);
+        } else if (h === 'z' && v === 'y') { // left
+            position = new Vertex(0, y, z);
+        }
+        this.lightSources.push(new LightSource(position, intensity));
+        console.log(this.lightSources); // TODO: Remove
+    };
+
     this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, h, v) {
         let dotX;
         let dotY;
@@ -380,4 +393,6 @@ function Interface () {
     this.shearXSolid = null;
 
     this.shouldWireframe = false;
+
+    this.lightSources = [];
 }

@@ -104,6 +104,16 @@ Vue.component('rcb-navbar', {
                             action () {
                                 return null;
                             }
+                        },
+                        {
+                            id: 4,
+                            title: 'Fonte de Luminosidade',
+                            modal: 'light-source-modal',
+                            icon: 'fa fa-lightbulb-o',
+                            enabled: true,
+                            action () {
+                                return null;
+                            }
                         }
                     ]
                 },

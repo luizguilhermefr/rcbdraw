@@ -13,9 +13,12 @@ Vue.component('properties-modal', {
                     <br>
                     <input type="color" v-model="fill" @change="setMustFillSelected">
                     <input class="custom-checkbox form-control-lg" type="checkbox" v-model="mustFill"/>
-                    <br>
+                    <br><br>
                     <label>Coeficiente de reflexão ambiente (Ka)</label>
                     <b-input-group>
+                        <b-input-group-addon v-show="!kaOk()">
+                            <strong class="text-danger">!</strong>
+                        </b-input-group-addon>
                         <b-form-input placeholder="Coeficiente de reflexão ambiente (Ka)" v-model.number="ka"></b-form-input>
                         <b-input-group-button>
                             <b-btn variant="danger" v-on:click="decreaseKa()">-</b-btn>
@@ -26,6 +29,9 @@ Vue.component('properties-modal', {
                     </b-input-group>
                     <label>Coeficiente de reflexão difusa (Kd)</label>
                     <b-input-group>
+                        <b-input-group-addon v-show="!kdOk()">
+                            <strong class="text-danger">!</strong>
+                        </b-input-group-addon>
                         <b-form-input placeholder="Coeficiente de reflexão difusa (Kd)" v-model.number="kd"></b-form-input>
                         <b-input-group-button>
                             <b-btn variant="danger" v-on:click="decreaseKd()">-</b-btn>
@@ -36,6 +42,9 @@ Vue.component('properties-modal', {
                     </b-input-group>
                     <label>Coeficiente de reflexão especular (Ks)</label>
                     <b-input-group>
+                        <b-input-group-addon v-show="!ksOk()">
+                            <strong class="text-danger">!</strong>
+                        </b-input-group-addon>
                         <b-form-input placeholder="Coeficiente de reflexão especular (Ks)" v-model.number="ks"></b-form-input>
                         <b-input-group-button>
                             <b-btn variant="danger" v-on:click="decreaseKs()">-</b-btn>
@@ -46,6 +55,9 @@ Vue.component('properties-modal', {
                     </b-input-group>
                     <label>Aproximação da distribuição espacial da luz refletida especularmente (n)</label>
                     <b-input-group>
+                        <b-input-group-addon v-show="!nOk()">
+                            <strong class="text-danger">!</strong>
+                        </b-input-group-addon>
                         <b-form-input placeholder="Aproximação da distribuição espacial da luz refletida especularmente (n)" v-model.number="n"></b-form-input>
                         <b-input-group-button>
                             <b-btn variant="danger" v-on:click="decreaseN()">-</b-btn>
@@ -55,6 +67,9 @@ Vue.component('properties-modal', {
                         </b-input-group-button>
                     </b-input-group>
                 </div>
+                <b-alert variant="warning" :show="!canSet()">
+                    Insira parâmetros de luminosidade entre 0 e 100. A aproximação da distribuição espacial pode conter qualquer valor positivo.
+                </b-alert>
             </div>
         </b-modal>
         `,
@@ -97,8 +112,20 @@ Vue.component('properties-modal', {
             this.ks = drawInterface.selectedSolid.solid.getKs();
             this.n = drawInterface.selectedSolid.solid.getN();
         },
-        canSet() {
+        kaOk() {
             return this.ka <= 1 && this.ka >= 0;
+        },
+        kdOk() {
+            return this.kd <= 1 && this.kd >= 0;
+        },
+        ksOk() {
+            return this.ks <= 1 && this.ks >= 0;
+        },
+        nOk () {
+            return this.n >= 0;
+        },
+        canSet() {
+            return this.kaOk() && this.kdOk() && this.ksOk() && this.nOk();
         },
         increaseKa() {
             this.ka = (this.ka + 0.1);
