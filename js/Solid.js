@@ -271,6 +271,28 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         });
     };
 
+    this.setLighting = function (ka, kd, ks, n) {
+        this.lightning.setKa(ka).setKd(kd).setKs(ks).setN(n);
+
+        return this;
+    };
+
+    this.getKa = function () {
+        return this.lightning.ka;
+    };
+
+    this.getKd = function () {
+        return this.lightning.kd;
+    };
+
+    this.getKs = function () {
+        return this.lightning.ks;
+    };
+
+    this.getN = function () {
+        return this.lightning.n;
+    };
+
     this.selected = selected;
 
     this.polygons = polygons;
@@ -282,6 +304,8 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
     this.mustStroke = mustStroke;
 
     this.mustFill = mustFill;
+
+    this.lightning = new Lighting(0, 0, 0, 0);
 
     this.boundaries = null;
 
