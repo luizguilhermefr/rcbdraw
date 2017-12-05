@@ -37,14 +37,12 @@ FlatShading = function (polygon, color, ka, kd, ks, n, vrp) {
 
         this.it = this.ia + this.id + this.is;
 
-
-
         return ;
     };
 
-    this.ambientIntensity = 150;
+    this.ambientIntensity = 150; // TODO fazer para cara cor de RGB
 
-    this.ambientLightIntensity = 120;
+    this.ambientLightIntensity = 120; // TODO passar por parametro
 
     this.polygon = polygon;
 
