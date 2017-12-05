@@ -117,6 +117,14 @@ function Vertex(x, y, z) {
         return this;
     };
 
+    this.multScalar = function (value) {
+        this.x *= value;
+        this.y *= value;
+        this.z *= value;
+
+        return this;
+    };
+
     this.dotProduct = function (vertex) {
         let value = 0;
         value += this.x * vertex.getX();

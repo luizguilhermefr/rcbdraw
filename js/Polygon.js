@@ -456,7 +456,7 @@ function Polygon (vertices) {
             Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2));
     };
 
-    this.setNormalVector = function () {
+    this.getNormalVector = function () {
         let p1 = this.polygon.vertexAt(2);
         let p2 = this.polygon.vertexAt(1);
         let p3 = this.polygon.vertexAt(0);
