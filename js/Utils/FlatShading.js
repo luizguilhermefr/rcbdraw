@@ -1,48 +1,46 @@
-FlatShading = function (polygon, color, ka, kd, ks, n, vrp) {
+FlatShading = function (polygon, ka, kd, ks, n, vrp) {
 
-    this.getColor = function() {
+    this.getColor = function(color) {
+        this.ia = 120 * this.ka;
 
-        this.ia = this.ambientLightIntensity * this.ka;
+        this.L.sub(this.polygon.getCenter());
+        let normOfL = this.L.distanceToVertex(this.polygon.getCenter());
 
-        this.lightPosition = new Vertex(70, 20, 35);
-        let centerFace = this.polygon.getCenter();
+        this.L.setX(this.L.getX() / normOfL);
+        this.L.setY(this.L.getY() / normOfL);
+        this.L.setZ(this.L.getZ() / normOfL);
 
-        this.l = this.lightPosition.sub(centerFace);
-        this.lNorm = this.lightPosition.distanceToVertex(centerFace);
+        // TODO nesse caso precisa verificar se o this.L é maior que zero
+        let N = this.polygon.getNormalVector();
 
-        this.l.setX(this.l.getX / lNorm);
-        this.l.setY(this.l.getY / lNorm);
-        this.l.setZ(this.l.getZ / lNorm);
+        nDotProductL = this.L.dotProduct(N);
+        // TODO falar com o professor para saber qual variavel é a cor, se é IL ou ILA
+        this.id = color * this.kd * nDotProductL;
 
-        let faceNormL = this.l.dotProduct(this.polygon.getNormalVector());
+        this.R = N.multScalar(2 * nDotProductL);
 
-        this.id = this.ambientIntensity * this.kd * faceNorm;
+        this.R.sub(this.L);
 
-        this.s = this.vrp.sub(centerFace);
-        let sNorm = this.s.distanceToVertex(centerFace);
+        this.S = vrp.sub(this.polygon.getCenter());
+        let normOfS = this.S.distanceToVertex(this.polygon.getCenter());
 
-        this.s.setX(this.s.getX / sNorm);
-        this.s.setY(this.s.getY / sNorm);
-        this.s.setZ(this.s.getZ / sNorm);
+        this.S.setX(this.S.getX() / normOfS);
+        this.S.setY(this.S.getY() / normOfS);
+        this.S.setZ(this.S.getZ() / normOfS);
 
-        let tempR = 2 * (this.l.dotProduct(faceNormL));
-        faceNormL.sub(this.l);
+        let sDotProductR = this.S.dotProduct(this.R);
 
-        this.r = faceNormL.clone().multScalar(tempR);
+        // TODO nesse caso precisa verificar se o this.S é maior que zero
+        this.is = color * this.ks * Math.pow(sDotProductR, this.n);
 
-        let rs = this.r.dotProduct(this.s);
-        if( rs > 0) {
-            this.is = this.ambientIntensity * this.ks * (rs ** this.n);
-        }
+        console.log(this.ia);
+        console.log(this.id);
+        console.log(this.is);
 
-        this.it = this.ia + this.id + this.is;
-
-        return ;
+        return this.ia + this.id + this.is;
     };
 
-    this.ambientIntensity = 150; // TODO fazer para cara cor de RGB
-
-    this.ambientLightIntensity = 120; // TODO passar por parametro
+    this.L = new Vertex(70, 20, 35);
 
     this.polygon = polygon;
 
@@ -58,16 +56,11 @@ FlatShading = function (polygon, color, ka, kd, ks, n, vrp) {
 
     this.ia = 0;
 
-    this.l = null;
+    this.S = null;
 
-    this.s = null;
-
-    this.r = null;
+    this.R = null;
 
     this.id = 0;
 
     this.vrp = vrp;
-
-    this.color = color;
-
 };

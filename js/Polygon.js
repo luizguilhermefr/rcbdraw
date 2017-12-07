@@ -41,7 +41,7 @@ function Polygon (vertices) {
         return vertices;
     };
 
-    this.updateDrawableVertices = function (h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp = null, viewUp = null, forceVisible = false) {
+    this.updateDrawableVertices = function (h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp = null, viewUp = null, forceVisible = false, color = null) {
         if (h === 'x' && v === 'y') {
             vrp = new Vertex(0, 0, 100);
             viewUp = new Vertex(0, 1, 0);
@@ -54,6 +54,7 @@ function Polygon (vertices) {
         } else {
             perspective = true;
         }
+
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp);
         let visible = pipeline.normal(forceVisible);
         this.setVisibility(visible, h, v);
@@ -457,9 +458,9 @@ function Polygon (vertices) {
     };
 
     this.getNormalVector = function () {
-        let p1 = this.polygon.vertexAt(2);
-        let p2 = this.polygon.vertexAt(1);
-        let p3 = this.polygon.vertexAt(0);
+        let p1 = this.vertexAt(2);
+        let p2 = this.vertexAt(1);
+        let p3 = this.vertexAt(0);
         let a = p1.sub(p2);
         let b = p3.sub(p2);
         let i = (b.getY() * a.getZ()) - (b.getZ() * a.getY());

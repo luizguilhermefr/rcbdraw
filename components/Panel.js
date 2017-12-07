@@ -263,7 +263,7 @@ Vue.component('panel', {
             solids.forEach(function (solid) {
                 let shouldIgnoreVisibility = solid.countPolygons() < 2;
                 solid.getPolygons().forEach(function (polygon) {
-                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility);
+                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility, this.fillColor);
                     if (polygon.isVisible(this.h, this.v)) {
                         if (solid.shouldFill() && !shouldWireframe) {
                             this.fillPoly(polygon, solid.getFillColor());
@@ -304,8 +304,14 @@ Vue.component('panel', {
         },
         fillPoly (polygon, color) {
             this.context.lineWidth = 1;
-            let fs = new FlatShading(polygon, color);
-            this.context.strokeStyle = fs.getColor();
+            let li = new FlatShading(polygon, 0.5, 0.5, 0.5, 2.15, this.vrp);
+            let RGB = color.substring(1).match(/.{1,2}/g);
+            color = "#";
+            for (let i = 0; i < 3; i++) {
+                RGB[i] = parseInt(RGB[i], 16);
+                color += (li.getColor(RGB[i])).toString(16);
+            }
+            this.context.strokeStyle = color;
             this.context.beginPath();
             let filler = new PolyFill(polygon, this.h, this.v);
             filler.run(this.context);
