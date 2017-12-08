@@ -463,9 +463,11 @@ function Polygon (vertices) {
         let p3 = this.vertexAt(0);
         let a = p1.sub(p2);
         let b = p3.sub(p2);
+
         let i = (b.getY() * a.getZ()) - (b.getZ() * a.getY());
         let j = (b.getZ() * a.getX()) - (b.getX() * a.getZ());
         let k = (b.getX() * a.getY()) - (b.getY() * a.getX());
+
         return new Vertex(i, j, k);
     };
 

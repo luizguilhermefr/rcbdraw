@@ -215,11 +215,8 @@ Vue.component('panel', {
             }
         },
         normalizeViewUp () {
-            let norma = Math.sqrt(Math.pow(this.viewUp.getX(), 2) + Math.pow(this.viewUp.getY(), 2) +
-                Math.pow(this.viewUp.getZ(), 2));
-            this.viewUp.setX(this.viewUp.getX() / norma);
-            this.viewUp.setY(this.viewUp.getY() / norma);
-            this.viewUp.setZ(this.viewUp.getZ() / norma);
+            let norm = this.viewUp.getMagnitude();
+            this.viewUp.divScalar(norm);
         },
         putPoly (x, y) {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
@@ -309,7 +306,11 @@ Vue.component('panel', {
             color = "#";
             for (let i = 0; i < 3; i++) {
                 RGB[i] = parseInt(RGB[i], 16);
-                color += (li.getColor(RGB[i])).toString(16);
+                let tempColor = (li.getColor(RGB[i])).toString(16);
+                if(tempColor.length === 1){
+                    tempColor = '0' + tempColor;
+                }
+                color +=tempColor;
             }
             this.context.strokeStyle = color;
             this.context.beginPath();
