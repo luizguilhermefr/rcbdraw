@@ -240,7 +240,8 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         this.polygons.forEach(function (p) {
             nextPolygons.push(p.clone(displacement));
         });
-        return new Solid(nextPolygons, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill, this.selected);
+        solid = new Solid(nextPolygons, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill, this.selected);
+        return solid.setLighting(this.getKa(), this.getKd(), this.getKs(), this.getN());
     };
 
     this.paintersAlgorithm = function (depthAxis, vrp) {
@@ -275,6 +276,10 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         this.lightning.setKa(ka).setKd(kd).setKs(ks).setN(n);
 
         return this;
+    };
+
+    this.getLighting = function () {
+        return this.lightning;
     };
 
     this.getKa = function () {

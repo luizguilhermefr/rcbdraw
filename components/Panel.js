@@ -256,14 +256,14 @@ Vue.component('panel', {
         getRelativeY (y) {
             return Math.round(y - this.canvas.offsetTop);
         },
-        drawSolids (solids, shouldWireframe = false) {
+        drawSolids (solids, shouldWireframe = false, shouldHideSurfaces = true, shouldShade = true) {
             solids.forEach(function (solid) {
-                let shouldIgnoreVisibility = solid.countPolygons() < 2;
+                let shouldIgnoreVisibility = (solid.countPolygons() < 2) || !shouldHideSurfaces;
                 solid.getPolygons().forEach(function (polygon) {
                     polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility, this.fillColor);
                     if (polygon.isVisible(this.h, this.v)) {
                         if (solid.shouldFill() && !shouldWireframe) {
-                            this.fillPoly(polygon, solid.getFillColor());
+                            this.fillPoly(polygon, solid.getFillColor(), solid.getLighting(), shouldShade);
                         }
                         if (solid.shouldStroke() || shouldWireframe) {
                             let color = solid.getStrokeColor();
@@ -299,25 +299,27 @@ Vue.component('panel', {
             }
             this.context.stroke();
         },
-        fillPoly (polygon, color) {
+        fillPoly (polygon, color, lighting, shouldShade = true) {
             this.context.lineWidth = 1;
-            let li = new FlatShading(polygon, 0.5, 0.5, 0.5, 2.15, this.vrp);
-            let RGB = color.substring(1).match(/.{1,2}/g);
-            color = "#";
-            for (let i = 0; i < 3; i++) {
-                RGB[i] = parseInt(RGB[i], 16);
-                let tempColor = (li.getColor(RGB[i])).toString(16);
-                if(tempColor.length === 1){
-                    tempColor = '0' + tempColor;
+            if (shouldShade) {
+                let li = new FlatShading(polygon, lighting.getKa(), lighting.getKd(), lighting.getKs(), lighting.getN(), this.vrp);
+                let RGB = color.substring(1).match(/.{1,2}/g);
+                color = "#";
+                for (let i = 0; i < 3; i++) {
+                    RGB[i] = parseInt(RGB[i], 16);
+                    let tempColor = (li.getColor(RGB[i])).toString(16);
+                    if (tempColor.length === 1) {
+                        tempColor = '0' + tempColor;
+                    }
+                    color += tempColor;
                 }
-                color +=tempColor;
             }
             this.context.strokeStyle = color;
             this.context.beginPath();
             let filler = new PolyFill(polygon, this.h, this.v);
             filler.run(this.context);
         },
-        drawTemporaryPolygon (vrp = false) {
+        drawTemporaryPolygon () {
             if (this.freeHandDots.length > 1) {
                 let polygon = new Polygon(this.freeHandDots);
                 polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, true);

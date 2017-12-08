@@ -23,7 +23,7 @@ Vue.component('toolbar', {
                     title: 'Selecionar',
                     icon: 'icons/select.png',
                     enabled: true,
-                    action () {
+                    action() {
                         expectSelection();
                     }
                 },
@@ -32,7 +32,7 @@ Vue.component('toolbar', {
                     title: 'Excluir',
                     icon: 'icons/delete.png',
                     enabled: true,
-                    action () {
+                    action() {
                         deleteSolid();
                     }
                 },
@@ -41,7 +41,7 @@ Vue.component('toolbar', {
                     title: 'Triângulo',
                     icon: 'icons/triangle.png',
                     enabled: true,
-                    action () {
+                    action() {
                         definePolygon(3, 50);
                     }
                 },
@@ -50,7 +50,7 @@ Vue.component('toolbar', {
                     title: 'Quadrado',
                     icon: 'icons/square.png',
                     enabled: true,
-                    action () {
+                    action() {
                         definePolygon(4, 50);
                     }
                 },
@@ -59,7 +59,7 @@ Vue.component('toolbar', {
                     title: 'Pentágono',
                     icon: 'icons/pentagon.png',
                     enabled: true,
-                    action () {
+                    action() {
                         definePolygon(5, 50);
                     }
                 },
@@ -68,7 +68,7 @@ Vue.component('toolbar', {
                     title: 'Polígono Regular',
                     icon: 'icons/regular.png',
                     enabled: true,
-                    action () {
+                    action() {
                         openRegularPolygonModal();
                     }
                 },
@@ -77,7 +77,7 @@ Vue.component('toolbar', {
                     title: 'Mão Livre',
                     icon: 'icons/freehand.png',
                     enabled: true,
-                    action () {
+                    action() {
                         expectFreehand();
                     }
                 },
@@ -86,8 +86,26 @@ Vue.component('toolbar', {
                     title: 'Wireframe',
                     icon: 'icons/wireframe.png',
                     enabled: true,
-                    action () {
+                    action() {
                         toggleWireframe();
+                    }
+                },
+                {
+                    id: 10,
+                    title: 'Ocultação de Faces',
+                    icon: 'icons/hide-surfaces.png',
+                    enabled: true,
+                    action() {
+                        toggleSurfaceHiding();
+                    }
+                },
+                {
+                    id: 11,
+                    title: 'Sombreamento',
+                    icon: 'icons/disable-shading.png',
+                    enabled: true,
+                    action() {
+                        toggleShading();
                     }
                 }
             ],
