@@ -1,16 +1,16 @@
-FlatShading = function (polygon, lighting, vrp) {
+FlatShading = function (polygon, lighting, vrp, position) {
 
-    this.calculateColor = function (lValue) {
-        lValue.sub(this.polygon.getCenter());
-        let normOfL = this.L.distanceToVertex(this.polygon.getCenter());
-        lValue.divScalar(normOfL);
+    this.calculateColor = function () {
+        this.lValue.sub(this.polygon.getCenter());
+        let normOfL = this.lValue.distanceToVertex(this.polygon.getCenter());
+        this.lValue.divScalar(normOfL);
         let N = this.polygon.getNormalVector();
         let magnitude = N.getMagnitude();
         N.divScalar(magnitude);
-        this.nDotProductL = lValue.dotProduct(N);
+        this.nDotProductL = this.lValue.dotProduct(N);
         if(this.nDotProductL > 0) {
             this.R = N.multScalar(2 * this.nDotProductL);
-            this.R.sub(lValue);
+            this.R.sub(this.lValue);
             this.S = vrp.sub(this.polygon.getCenter());
             let normOfS = this.S.distanceToVertex(this.polygon.getCenter());
             this.S.divScalar(normOfS);
@@ -48,6 +48,8 @@ FlatShading = function (polygon, lighting, vrp) {
     this.vrp = vrp;
 
     this.lighting = lighting;
+
+    this.lValue = position;
 
     this.calculateColor();
 };

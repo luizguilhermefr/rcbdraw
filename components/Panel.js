@@ -256,14 +256,14 @@ Vue.component('panel', {
         getRelativeY (y) {
             return Math.round(y - this.canvas.offsetTop);
         },
-        drawSolids (solids, shouldWireframe = false, shouldHideSurfaces = true, shouldShade = true) {
+        drawSolids (solids, lightSource, shouldWireframe = false, shouldHideSurfaces = true, shouldShade = true) {
             solids.forEach(function (solid) {
                 let shouldIgnoreVisibility = (solid.countPolygons() < 2) || !shouldHideSurfaces;
                 solid.getPolygons().forEach(function (polygon) {
                     polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility, this.fillColor);
                     if (polygon.isVisible(this.h, this.v)) {
                         if (solid.shouldFill() && !shouldWireframe) {
-                            this.fillPoly(polygon, solid.getLighting(), shouldShade);
+                            this.fillPoly(polygon, solid.getLighting(), lightSource, shouldShade);
                         }
                         if (solid.shouldStroke() || shouldWireframe) {
                             let color = solid.getStrokeColor();
@@ -299,18 +299,20 @@ Vue.component('panel', {
             }
             this.context.stroke();
         },
-        fillPoly (polygon, lighting, shouldShade = true) {
+        fillPoly (polygon, lighting, lightSource, shouldShade = true) {
             this.context.lineWidth = 1;
             let color = "#";
             if (shouldShade) {
-                let li = new FlatShading(polygon, lighting, this.vrp);
-                let rgb = ['r', 'g', 'b'];
-                for (let i = 0; i < 3; i++) {
-                    let tempColor = li.getColor(rgb[i]).toString(16);
-                    if (tempColor.length === 1) {
-                        tempColor = '0' + tempColor;
+                for(let j = 0; j < lightSource.length; j++) {
+                    let li = new FlatShading(polygon, lighting, this.vrp, lightSource[j].getPosition());
+                    let rgb = ['r', 'g', 'b'];
+                    for (let i = 0; i < 3; i++) {
+                        let tempColor = li.getColor(rgb[i], lightSource[j].getIntensity()).toString(16);
+                        if (tempColor.length === 1) {
+                            tempColor = '0' + tempColor;
+                        }
+                        color += tempColor;
                     }
-                    color += tempColor;
                 }
             }
             this.context.strokeStyle = color;

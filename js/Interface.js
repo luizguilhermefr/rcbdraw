@@ -50,20 +50,20 @@ function Interface () {
 
         this.scene.paintersAlgorithm('z', new Vertex(0, 0, -100));
         solids = this.scene.getSolids();
-        vue.$refs.panelFront.drawSolids(solids, this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
+        vue.$refs.panelFront.drawSolids(solids, this.scene.getLightingSource(), this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
 
         this.scene.paintersAlgorithm('y', new Vertex(0, -100, 0));
         solids = this.scene.getSolids();
-        vue.$refs.panelTop.drawSolids(solids, this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
+        vue.$refs.panelTop.drawSolids(solids, this.scene.getLightingSource(), this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
 
         this.scene.paintersAlgorithm('x', new Vertex(-100, 0, 0));
         solids = this.scene.getSolids();
-        vue.$refs.panelLeft.drawSolids(solids, this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
+        vue.$refs.panelLeft.drawSolids(solids, this.scene.getLightingSource(), this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
 
         // painters algorithm for perspective?
         this.scene.paintersAlgorithm('z', new Vertex(0, 0, 100));
         solids = this.scene.getSolids();
-        vue.$refs.panelPerspective.drawSolids(solids, this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
+        vue.$refs.panelPerspective.drawSolids(solids, this.scene.getLightingSource(), this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
     };
 
     this.drawTemporaryPolygon = function () {
@@ -117,7 +117,7 @@ function Interface () {
         } else if (h === 'z' && v === 'y') { // left
             position = new Vertex(0, y, z);
         }
-        this.lightSources.push(new LightSource(position, intensity));
+        this.scene.lightSources.push(new LightSource(position, intensity));
     };
 
     this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, h, v) {
@@ -404,6 +404,4 @@ function Interface () {
     this.shouldShade = true;
 
     this.shouldHideSurfaces = true;
-
-    this.lightSources = [];
 }

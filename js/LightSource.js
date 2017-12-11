@@ -6,12 +6,27 @@ function LightSource(position, intensity) {
         return this;
     };
 
-    this.getIntensity = function (value) {
+    this.getIntensity = function () {
         return this.intensity;
     };
 
     this.getPosition = function () {
         return this.position;
+    };
+
+    this.setX = function (x) {
+        this.position.setX(x);
+        return this;
+    };
+
+    this.setY = function (y) {
+        this.position.setY(y);
+        return this;
+    };
+
+    this.setZ = function (z) {
+        this.position.setZ(z);
+        return this;
     };
 
     this.intensity = intensity;
