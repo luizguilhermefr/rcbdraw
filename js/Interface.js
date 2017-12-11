@@ -399,8 +399,6 @@ function Interface () {
 
     this.scaleSolid = null;
 
-    this.shearXSolid = null;
-
     this.shouldWireframe = false;
 
     this.shouldShade = true;
