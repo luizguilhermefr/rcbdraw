@@ -1,4 +1,4 @@
-Vue.component('regular-polygon-modal', {
+Vue.component('light-source-modal', {
 
     template: `
         <b-modal id="light-source-modal" title="Fonte de Luminosidade" @ok="submit" closeTitle="Cancelar" okTitle="Inserir" :ok-disabled="!canInsert()"> 
