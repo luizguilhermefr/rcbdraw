@@ -263,7 +263,7 @@ Vue.component('panel', {
                     polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility, this.fillColor);
                     if (polygon.isVisible(this.h, this.v)) {
                         if (solid.shouldFill() && !shouldWireframe) {
-                            this.fillPoly(polygon, solid.getFillColor(), solid.getLighting(), shouldShade);
+                            this.fillPoly(polygon, solid.getLighting(), shouldShade);
                         }
                         if (solid.shouldStroke() || shouldWireframe) {
                             let color = solid.getStrokeColor();
@@ -299,15 +299,14 @@ Vue.component('panel', {
             }
             this.context.stroke();
         },
-        fillPoly (polygon, color, lighting, shouldShade = true) {
+        fillPoly (polygon, lighting, shouldShade = true) {
             this.context.lineWidth = 1;
+            let color = "#";
             if (shouldShade) {
-                let li = new FlatShading(polygon, lighting.getKa(), lighting.getKd(), lighting.getKs(), lighting.getN(), this.vrp);
-                let RGB = color.substring(1).match(/.{1,2}/g);
-                color = "#";
+                let li = new FlatShading(polygon, lighting, this.vrp);
+                let rgb = ['r', 'g', 'b'];
                 for (let i = 0; i < 3; i++) {
-                    RGB[i] = parseInt(RGB[i], 16);
-                    let tempColor = (li.getColor(RGB[i])).toString(16);
+                    let tempColor = li.getColor(rgb[i]).toString(16);
                     if (tempColor.length === 1) {
                         tempColor = '0' + tempColor;
                     }

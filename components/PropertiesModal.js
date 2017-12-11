@@ -14,45 +14,6 @@ Vue.component('properties-modal', {
                     <input type="color" v-model="fill" @change="setMustFillSelected">
                     <input class="custom-checkbox form-control-lg" type="checkbox" v-model="mustFill"/>
                     <br><br>
-                    <label>Coeficiente de reflexão ambiente (Ka)</label>
-                    <b-input-group>
-                        <b-input-group-addon v-show="!kaOk()">
-                            <strong class="text-danger">!</strong>
-                        </b-input-group-addon>
-                        <b-form-input placeholder="Coeficiente de reflexão ambiente (Ka)" v-model.number="ka"></b-form-input>
-                        <b-input-group-button>
-                            <b-btn variant="danger" v-on:click="decreaseKa()">-</b-btn>
-                        </b-input-group-button>
-                        <b-input-group-button>
-                            <b-btn variant="success" v-on:click="increaseKa()">+</b-btn>
-                        </b-input-group-button>
-                    </b-input-group>
-                    <label>Coeficiente de reflexão difusa (Kd)</label>
-                    <b-input-group>
-                        <b-input-group-addon v-show="!kdOk()">
-                            <strong class="text-danger">!</strong>
-                        </b-input-group-addon>
-                        <b-form-input placeholder="Coeficiente de reflexão difusa (Kd)" v-model.number="kd"></b-form-input>
-                        <b-input-group-button>
-                            <b-btn variant="danger" v-on:click="decreaseKd()">-</b-btn>
-                        </b-input-group-button>
-                        <b-input-group-button>
-                            <b-btn variant="success" v-on:click="increaseKd()">+</b-btn>
-                        </b-input-group-button>
-                    </b-input-group>
-                    <label>Coeficiente de reflexão especular (Ks)</label>
-                    <b-input-group>
-                        <b-input-group-addon v-show="!ksOk()">
-                            <strong class="text-danger">!</strong>
-                        </b-input-group-addon>
-                        <b-form-input placeholder="Coeficiente de reflexão especular (Ks)" v-model.number="ks"></b-form-input>
-                        <b-input-group-button>
-                            <b-btn variant="danger" v-on:click="decreaseKs()">-</b-btn>
-                        </b-input-group-button>
-                        <b-input-group-button>
-                            <b-btn variant="success" v-on:click="increaseKs()">+</b-btn>
-                        </b-input-group-button>
-                    </b-input-group>
                     <label>Aproximação da distribuição espacial da luz refletida especularmente (n)</label>
                     <b-input-group>
                         <b-input-group-addon v-show="!nOk()">
@@ -66,6 +27,50 @@ Vue.component('properties-modal', {
                             <b-btn variant="success" v-on:click="increaseN()">+</b-btn>
                         </b-input-group-button>
                     </b-input-group>
+                    <br>
+                    <b-tabs>
+                        <b-tab v-for="param in colorParams" :title="param.name" :key="param.name">
+                            <label>Coeficiente de reflexão ambiente (Ka)</label>
+                            <b-input-group>
+                                <b-input-group-addon v-show="!kaOk()">
+                                    <strong class="text-danger">!</strong>
+                                </b-input-group-addon>
+                                <b-form-input placeholder="Coeficiente de reflexão ambiente (Ka)" v-model.number="param.ka"></b-form-input>
+                                <b-input-group-button>
+                                    <b-btn variant="danger" v-on:click="decreaseKa(param)">-</b-btn>
+                                </b-input-group-button>
+                                <b-input-group-button>
+                                    <b-btn variant="success" v-on:click="increaseKa(param)">+</b-btn>
+                                </b-input-group-button>
+                            </b-input-group>
+                            <label>Coeficiente de reflexão difusa (Kd)</label>
+                            <b-input-group>
+                                <b-input-group-addon v-show="!kdOk()">
+                                    <strong class="text-danger">!</strong>
+                                </b-input-group-addon>
+                                <b-form-input placeholder="Coeficiente de reflexão difusa (Kd)" v-model.number="param.kd"></b-form-input>
+                                <b-input-group-button>
+                                    <b-btn variant="danger" v-on:click="decreaseKd(param)">-</b-btn>
+                                </b-input-group-button>
+                                <b-input-group-button>
+                                    <b-btn variant="success" v-on:click="increaseKd(param)">+</b-btn>
+                                </b-input-group-button>
+                            </b-input-group>
+                            <label>Coeficiente de reflexão especular (Ks)</label>
+                            <b-input-group>
+                                <b-input-group-addon v-show="!ksOk()">
+                                    <strong class="text-danger">!</strong>
+                                </b-input-group-addon>
+                                <b-form-input placeholder="Coeficiente de reflexão especular (Ks)" v-model.number="param.ks"></b-form-input>
+                                <b-input-group-button>
+                                    <b-btn variant="danger" v-on:click="decreaseKs(param)">-</b-btn>
+                                </b-input-group-button>
+                                <b-input-group-button>
+                                    <b-btn variant="success" v-on:click="increaseKs(param)">+</b-btn>
+                                </b-input-group-button>
+                            </b-input-group>
+                        </b-tab>
+                    </b-tabs>
                 </div>
                 <b-alert variant="warning" :show="!canSet()">
                     Insira parâmetros de luminosidade entre 0 e 100. A aproximação da distribuição espacial pode conter qualquer valor positivo.
@@ -76,14 +81,31 @@ Vue.component('properties-modal', {
 
     data: function () {
         return {
+            colorParams: [
+                {
+                    name: 'R',
+                    ka: 0,
+                    kd: 0,
+                    ks: 0
+                },
+                {
+                    name: 'G',
+                    ka: 0,
+                    kd: 0,
+                    ks: 0
+                },
+                {
+                    name: 'B',
+                    ka: 0,
+                    kd: 0,
+                    ks: 0
+                }
+            ],
             stroke: Colors.DEFAULT,
             fill: '#ffffff',
             mustStroke: true,
             mustFill: false,
-            ka: 0,
-            kd: 0,
-            ks: 0,
-            n: 0,
+            n: 0
         };
     },
 
@@ -99,7 +121,7 @@ Vue.component('properties-modal', {
             drawInterface.selectedSolid.solid.setFillColor(this.fill);
             drawInterface.selectedSolid.solid.setMustStroke(this.mustStroke);
             drawInterface.selectedSolid.solid.setMustFill(this.mustFill);
-            drawInterface.selectedSolid.solid.setLighting(this.ka, this.kd, this.ks, this.n);
+            drawInterface.selectedSolid.solid.setLighting(this.colorParams, this.n);
             drawInterface.redraw();
         },
         setValues() {
@@ -107,43 +129,65 @@ Vue.component('properties-modal', {
             this.fill = drawInterface.selectedSolid.solid.getFillColor();
             this.mustStroke = drawInterface.selectedSolid.solid.shouldStroke();
             this.mustFill = drawInterface.selectedSolid.solid.shouldFill();
-            this.ka = drawInterface.selectedSolid.solid.getKa();
-            this.kd = drawInterface.selectedSolid.solid.getKd();
-            this.ks = drawInterface.selectedSolid.solid.getKs();
-            this.n = drawInterface.selectedSolid.solid.getN();
+            this.colorParams = drawInterface.selectedSolid.solid.getLighting().getParams();
+            this.n = drawInterface.selectedSolid.solid.getLighting().getN();
         },
         kaOk() {
-            return this.ka <= 1 && this.ka >= 0;
+            let toReturn = true;
+            this.colorParams.every(function (param) {
+                if (param.ka > 1 || param.ka < 0) {
+                    toReturn = false;
+                    return false;
+                }
+                return true;
+            });
+            return toReturn;
         },
         kdOk() {
-            return this.kd <= 1 && this.kd >= 0;
+            let toReturn = true;
+            this.colorParams.every(function (param) {
+                if (param.kd > 1 || param.kd < 0) {
+                    toReturn = false;
+                    return false;
+                }
+                return true;
+            });
+            return toReturn;
         },
         ksOk() {
-            return this.ks <= 1 && this.ks >= 0;
+            let toReturn = true;
+            this.colorParams.every(function (param) {
+                if (param.ks > 1 || param.ks < 0) {
+                    toReturn = false;
+                    return false;
+                }
+                return true;
+            });
+            return toReturn;
         },
-        nOk () {
+        nOk() {
             return this.n >= 0;
         },
         canSet() {
             return this.kaOk() && this.kdOk() && this.ksOk() && this.nOk();
         },
-        increaseKa() {
-            this.ka = (this.ka + 0.1);
+        increaseKa(param) {
+            param.ka += 0.1;
         },
-        decreaseKa() {
-            this.ka = (this.ka - 0.1);
+        decreaseKa(param) {
+            param.ka -= 0.1;
         },
-        increaseKd() {
-            this.kd = (this.kd + 0.1);
+        increaseKd(param) {
+            param.kd += 0.1;
         },
-        decreaseKd() {
-            this.kd = (this.kd - 0.1);
+        decreaseKd(param) {
+            param.kd -= 0.1;
         },
-        increaseKs() {
-            this.ks = (this.ks + 0.1);
+        increaseKs(param) {
+            param.ks += 0.1;
         },
-        decreaseKs() {
-            this.ks = (this.ks - 0.1);
+        decreaseKs(param) {
+            param.ks -= 0.1;
         },
         increaseN() {
             this.n = (this.n + 0.1);

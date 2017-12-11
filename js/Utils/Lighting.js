@@ -1,46 +1,85 @@
-function Lighting(ka, kd, ks, n) {
+function Lighting() {
 
-    this.setKa = function (value) {
-        this.ka = value;
+    this.setParams = function (params, n = null) {
+        this.colorParams = params;
+        this.n = n === null ? this.n : n;
+
         return this;
     };
 
-    this.setKs = function (value) {
-        this.ks = value;
-        return this;
-    };
-
-    this.setKd = function (value) {
-        this.kd = value;
-        return this;
+    this.getParams = function () {
+        return this.colorParams;
     };
 
     this.setN = function (value) {
         this.n = value;
+
         return this;
-    };
-
-    this.getKa = function () {
-        return this.ka;
-    };
-
-    this.getKd = function () {
-        return this.kd;
-    };
-
-    this.getKs = function () {
-        return this.ks;
     };
 
     this.getN = function () {
         return this.n;
     };
 
-    this.ka = ka;
+    this.getKa = function (color) {
+        let retVal = 0;
+        this.colorParams.every(function (p) {
+            if (p.name === color) {
+                retVal = p.ka;
+                return false;
+            }
+            return true;
+        });
 
-    this.kd = kd;
+        return retVal;
+    };
 
-    this.ks = ks;
+    this.getKd = function (color) {
+        let retVal = 0;
+        this.colorParams.every(function (p) {
+            if (p.name === color) {
+                retVal = p.kd;
+                return false;
+            }
+            return true;
+        });
 
-    this.n = n;
+        return retVal;
+    };
+
+    this.getKs = function (color) {
+        let retVal = 0;
+        this.colorParams.every(function (p) {
+            if (p.name === color) {
+                retVal = p.ks;
+                return false;
+            }
+            return true;
+        });
+
+        return retVal;
+    };
+
+    this.colorParams = [
+        {
+            name: 'R',
+            ka: 0,
+            kd: 0,
+            ks: 0
+        },
+        {
+            name: 'G',
+            ka: 0,
+            kd: 0,
+            ks: 0
+        },
+        {
+            name: 'B',
+            ka: 0,
+            kd: 0,
+            ks: 0
+        }
+    ];
+
+    this.n = 0;
 }

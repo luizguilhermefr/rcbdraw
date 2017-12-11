@@ -59,16 +59,6 @@ Vue.component('rcb-navbar', {
                                 return null;
                             }
                         }
-                        // {
-                        //     id: 4,
-                        //     title: 'Exportar...',
-                        //     modal: 'export-modal',
-                        //     enabled: true,
-                        //     icon: 'fa fa-cog',
-                        //     action () {
-                        //         return null;
-                        //     }
-                        // }
                     ]
                 }
                 ,
@@ -167,15 +157,6 @@ Vue.component('rcb-navbar', {
                                 expectShear('v');
                             }
                         },
-                        // {
-                        //     id: 6,
-                        //     title: 'Duplicar',
-                        //     enabled: true,
-                        //     icon: 'fa fa-files-o',
-                        //     action () {
-                        //         duplicateSelected();
-                        //     }
-                        // },
                         {
                             id: 10,
                             title: 'Revolução',
