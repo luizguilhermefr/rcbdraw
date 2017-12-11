@@ -304,7 +304,7 @@ Vue.component('panel', {
             let color = "#";
             if (shouldShade) {
                 for(let j = 0; j < lightSource.length; j++) {
-                    let li = new FlatShading(polygon, lighting, this.vrp, lightSource[j].getPosition());
+                    let li = new FlatShading(polygon, lighting, this.vrp, lightSource[j].getPosition().clone());
                     let rgb = ['r', 'g', 'b'];
                     for (let i = 0; i < 3; i++) {
                         let tempColor = li.getColor(rgb[i], lightSource[j].getIntensity()).toString(16);
