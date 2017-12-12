@@ -41,7 +41,7 @@ function Polygon (vertices) {
         return vertices;
     };
 
-    this.updateDrawableVertices = function (h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp = null, viewUp = null, forceVisible = false) {
+    this.updateDrawableVertices = function (h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp = null, viewUp = null, forceVisible = false, color = null) {
         if (h === 'x' && v === 'y') {
             vrp = new Vertex(0, 0, 100);
             viewUp = new Vertex(0, 1, 0);
@@ -54,6 +54,7 @@ function Polygon (vertices) {
         } else {
             perspective = true;
         }
+
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp);
         let visible = pipeline.normal(forceVisible);
         this.setVisibility(visible, h, v);
@@ -454,6 +455,20 @@ function Polygon (vertices) {
     this.getEuclideanDistance = function (vertex) {
         return Math.sqrt(Math.pow(this.center.getX() - vertex.getX(), 2) +
             Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2));
+    };
+
+    this.getNormalVector = function () {
+        let p1 = this.vertexAt(2);
+        let p2 = this.vertexAt(1);
+        let p3 = this.vertexAt(0);
+        let a = p1.sub(p2);
+        let b = p3.sub(p2);
+
+        let i = (b.getY() * a.getZ()) - (b.getZ() * a.getY());
+        let j = (b.getZ() * a.getX()) - (b.getX() * a.getZ());
+        let k = (b.getX() * a.getY()) - (b.getY() * a.getX());
+
+        return new Vertex(i, j, k);
     };
 
     this.vertices = vertices;

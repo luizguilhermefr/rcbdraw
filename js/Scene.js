@@ -47,7 +47,13 @@ function Scene() {
         this.dirty = false;
     };
 
+    this.getLightingSource = function () {
+      return this.lightSources;
+    };
+
     this.solids = [];
+
+    this.lightSources = [];
 
     this.dirty = false;
 }

@@ -19,6 +19,7 @@
     <save-modal></save-modal>
     <export-modal></export-modal>
     <regular-polygon-modal></regular-polygon-modal>
+    <light-source-modal></light-source-modal>
     <properties-modal></properties-modal>
     <revolution-modal></revolution-modal>
     <extrusion-modal></extrusion-modal>
@@ -34,6 +35,7 @@
     <panel ref="panelPerspective" identifier="panelPerspective" title="perspective" h="px" v="py"></panel>
 
     <element-right-click ref="elementRightClick"></element-right-click>
+
     <panel-right-click ref="panelRightClick"></panel-right-click>
 </div>
 
@@ -55,6 +57,7 @@
 <script type="text/javascript" src="components/Toolbar.js"></script>
 <script type="text/javascript" src="components/ElementRightClick.js"></script>
 <script type="text/javascript" src="components/PanelRightClick.js"></script>
+<script type="text/javascript" src="components/LightSourceModal.js"></script>
 
 <script type="text/javascript" src="js/Colors.js"></script>
 <script type="text/javascript" src="js/Vertex.js"></script>
@@ -63,8 +66,11 @@
 <script type="text/javascript" src="js/Scene.js"></script>
 <script type="text/javascript" src="js/Interface.js"></script>
 <script type="text/javascript" src="js/Edge.js"></script>
+<script type="text/javascript" src="js/LightSource.js"></script>
 <script type="text/javascript" src="js/Utils/PolyFill.js"></script>
 <script type="text/javascript" src="js/Utils/Pipeline.js"></script>
+<script type="text/javascript" src="js/Utils/Lighting.js"></script>
+<script type="text/javascript" src="js/Utils/FlatShading.js"></script>
 
 <script type="text/javascript">
 
@@ -78,6 +84,7 @@
     const SHEAR_V = 7;
     const ROTATE = 8;
     const MOVE_VRP = 9;
+    const PUT_LIGHT = 10;
 
     window.onload = function () {
         vue = new Vue({
@@ -173,6 +180,13 @@
         vue.$refs.panelFront.expectFreehand();
         vue.$refs.panelTop.expectFreehand();
         vue.$refs.panelLeft.expectFreehand();
+    }
+
+    function defineLightSource (ambientIntensity, sourceIntensity) {
+        toggleReset();
+        vue.$refs.panelFront.expectLightSource(ambientIntensity, sourceIntensity);
+        vue.$refs.panelTop.expectLightSource(ambientIntensity, sourceIntensity);
+        vue.$refs.panelLeft.expectLightSource(ambientIntensity, sourceIntensity);
     }
 
     function toggleReset () {
@@ -294,6 +308,14 @@
         vue.$refs.panelTop.collapse();
         vue.$refs.panelLeft.collapse();
         vue.$refs.panelPerspective.collapse();
+    }
+
+    function toggleSurfaceHiding () {
+        drawInterface.toggleSurfaceHiding();
+    }
+
+    function toggleShading () {
+        drawInterface.toggleShading();
     }
 
 </script>

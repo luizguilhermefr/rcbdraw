@@ -40,6 +40,8 @@ Vue.component('panel', {
             fill: null,
             mustStroke: true,
             mustFill: false,
+            lightAmbientIntensity: 0,
+            lightSourceIntensity: 0,
             cursor: 'default',
             dragging: false,
             prevScaleFactor: {
@@ -62,6 +64,12 @@ Vue.component('panel', {
             this.mustStroke = mustStroke;
             this.mustFill = mustFill;
             this.mode = PUT_POLY;
+            this.cursor = 'copy';
+        },
+        expectLightSource (ambientIntensity, sourceIntensity) {
+            this.lightAmbientIntensity= ambientIntensity;
+            this.lightSourceIntensity = sourceIntensity;
+            this.mode = PUT_LIGHT;
             this.cursor = 'copy';
         },
         expectSelection () {
@@ -124,6 +132,10 @@ Vue.component('panel', {
                     y = y - (this.canvas.height / 2);
                     drawInterface.shearClick(this.v, this.h, new Vertex(x, y, 0));
                     break;
+                case PUT_LIGHT:
+                    x = x - (this.canvas.width / 2);
+                    y = y - (this.canvas.height / 2);
+                    this.putLight(x, y);
             }
         },
         mouseDown (e) {
@@ -205,14 +217,14 @@ Vue.component('panel', {
             }
         },
         normalizeViewUp () {
-            let norma = Math.sqrt(Math.pow(this.viewUp.getX(), 2) + Math.pow(this.viewUp.getY(), 2) +
-                Math.pow(this.viewUp.getZ(), 2));
-            this.viewUp.setX(this.viewUp.getX() / norma);
-            this.viewUp.setY(this.viewUp.getY() / norma);
-            this.viewUp.setZ(this.viewUp.getZ() / norma);
+            let norm = this.viewUp.getMagnitude();
+            this.viewUp.divScalar(norm);
         },
         putPoly (x, y) {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
+        },
+        putLight (x, y) {
+            drawInterface.newLightSource(this.lightAmbientIntensity,this.lightSourceIntensity, x, y, this.h, this.v);
         },
         selectionClick (x, y) {
             drawInterface.selectionClick(x, y, this.h, this.v, this.mode);
@@ -246,14 +258,14 @@ Vue.component('panel', {
         getRelativeY (y) {
             return Math.round(y - this.canvas.offsetTop);
         },
-        drawSolids (solids, shouldWireframe = false) {
+        drawSolids (solids, lightSource, shouldWireframe = false, shouldHideSurfaces = true, shouldShade = true) {
             solids.forEach(function (solid) {
-                let shouldIgnoreVisibility = solid.countPolygons() < 2;
+                let shouldIgnoreVisibility = (solid.countPolygons() < 2) || !shouldHideSurfaces;
                 solid.getPolygons().forEach(function (polygon) {
-                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility);
+                    polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility, this.fillColor);
                     if (polygon.isVisible(this.h, this.v)) {
                         if (solid.shouldFill() && !shouldWireframe) {
-                            this.fillPoly(polygon, solid.getFillColor());
+                            this.fillPoly(polygon, solid.getLighting(), lightSource, shouldShade);
                         }
                         if (solid.shouldStroke() || shouldWireframe) {
                             let color = solid.getStrokeColor();
@@ -289,14 +301,28 @@ Vue.component('panel', {
             }
             this.context.stroke();
         },
-        fillPoly (polygon, color) {
+        fillPoly (polygon, lighting, lightSource, shouldShade = true) {
             this.context.lineWidth = 1;
+            let color = "#";
+            if (shouldShade) {
+                for(let j = 0; j < lightSource.length; j++) {
+                    let li = new FlatShading(polygon, lighting, this.vrp, lightSource[j].getPosition().clone());
+                    let rgb = ['R', 'G', 'B'];
+                    for (let i = 0; i < 3; i++) {
+                        let tempColor = li.getColor(rgb[i], lightSource[j].ambientIntensity, lightSource[j].sourceIntensity).toString(16);
+                        if (tempColor.length === 1) {
+                            tempColor = '0' + tempColor;
+                        }
+                        color += tempColor;
+                    }
+                }
+            }
             this.context.strokeStyle = color;
             this.context.beginPath();
             let filler = new PolyFill(polygon, this.h, this.v);
             filler.run(this.context);
         },
-        drawTemporaryPolygon (vrp = false) {
+        drawTemporaryPolygon () {
             if (this.freeHandDots.length > 1) {
                 let polygon = new Polygon(this.freeHandDots);
                 polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, true);

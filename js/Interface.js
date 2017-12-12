@@ -5,6 +5,16 @@ function Interface () {
         this.redraw();
     };
 
+    this.toggleSurfaceHiding = function () {
+        this.shouldHideSurfaces = !this.shouldHideSurfaces;
+        this.redraw();
+    };
+
+    this.toggleShading = function () {
+        this.shouldShade = !this.shouldShade;
+        this.redraw();
+    };
+
     this.getNewDotX = function (x, y, teta) {
         return (x * Math.cos(teta)) - (y * Math.sin(teta));
     };
@@ -40,20 +50,20 @@ function Interface () {
 
         this.scene.paintersAlgorithm('z', new Vertex(0, 0, -100));
         solids = this.scene.getSolids();
-        vue.$refs.panelFront.drawSolids(solids, this.shouldWireframe);
+        vue.$refs.panelFront.drawSolids(solids, this.scene.getLightingSource(), this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
 
         this.scene.paintersAlgorithm('y', new Vertex(0, -100, 0));
         solids = this.scene.getSolids();
-        vue.$refs.panelTop.drawSolids(solids, this.shouldWireframe);
+        vue.$refs.panelTop.drawSolids(solids, this.scene.getLightingSource(), this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
 
         this.scene.paintersAlgorithm('x', new Vertex(-100, 0, 0));
         solids = this.scene.getSolids();
-        vue.$refs.panelLeft.drawSolids(solids, this.shouldWireframe);
+        vue.$refs.panelLeft.drawSolids(solids, this.scene.getLightingSource(), this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
 
         // painters algorithm for perspective?
         this.scene.paintersAlgorithm('z', new Vertex(0, 0, 100));
         solids = this.scene.getSolids();
-        vue.$refs.panelPerspective.drawSolids(solids, this.shouldWireframe);
+        vue.$refs.panelPerspective.drawSolids(solids, this.scene.getLightingSource(), this.shouldWireframe, this.shouldHideSurfaces, this.shouldShade);
     };
 
     this.drawTemporaryPolygon = function () {
@@ -96,6 +106,18 @@ function Interface () {
         this.redraw();
 
         return false;
+    };
+
+    this.newLightSource = function (ambientIntensity, sourceIntensity, x, y, h, v) {
+        let position;
+        if (h === 'x' && v === 'y') { // front
+            position = new Vertex(x, y, 0);
+        } else if (h === 'x' && v === 'z') { // top
+            position = new Vertex(x, 0, y);
+        } else if (h === 'z' && v === 'y') { // left
+            position = new Vertex(0, y, x);
+        }
+        this.scene.lightSources.push(new LightSource(position, ambientIntensity, sourceIntensity));
     };
 
     this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, h, v) {
@@ -326,7 +348,7 @@ function Interface () {
         }        
         if (lowestDistance.distance < 10) {
             if(this.selectedSolid) {
-                if(this.selectedSolid.index != lowestDistance.index) {
+                if(this.selectedSolid.index !== lowestDistance.index) {
                     this.clearSelectedSolid();
                     this.changeSelected(lowestDistance, solids);
                 }
@@ -377,7 +399,9 @@ function Interface () {
 
     this.scaleSolid = null;
 
-    this.shearXSolid = null;
-
     this.shouldWireframe = false;
+
+    this.shouldShade = true;
+
+    this.shouldHideSurfaces = true;
 }
