@@ -139,7 +139,6 @@ Vue.component('light-source-modal', {
             }.bind(this));
         },
         updateSource(id, x, y, z, ambientIntensity, sourceIntensity) {
-            console.log(sourceIntensity);
             drawInterface.scene.lightSources[id].setX(x).setY(y).setZ(z).setAmbientIntensity(ambientIntensity).setSourceIntensity(sourceIntensity);
         }
     }

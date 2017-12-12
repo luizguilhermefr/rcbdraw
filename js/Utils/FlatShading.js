@@ -18,15 +18,23 @@ FlatShading = function (polygon, lighting, vrp, position) {
         }
     };
 
-    this.getColor = function (color, ila) {
-        this.ia = ila * this.lighting.getKa(color);
+    this.getColor = function (color, ila, il) {
+        console.log(this.lighting.getParams()[color]);
+        this.ia = ila * this.lighting.getParams()[color].getKa();
         if(this.nDotProductL > 0) {
-            this.id = ila * this.lighting.getKd(color) * this.nDotProductL;
+            this.id = il * this.lighting.getParams()[color].getKd() * this.nDotProductL;
             if (this.sDotProductR > 0) {
-                this.is = ila * this.lighting.getKs(color) * Math.pow(this.sDotProductR, this.lighting.getN());
+                this.is = il * this.lighting.getParams()[color].getKs() * Math.pow(this.sDotProductR, this.lighting.getN());
             }
         }
-        return Math.ceil(this.ia + this.id + this.is);
+        let tempColor = Math.ceil(this.ia + this.id + this.is);
+        console.log(tempColor);
+        if(tempColor > 255){
+            tempColor = 255;
+        } else if( tempColor < 0){
+            tempColor = 0;
+        }
+        return tempColor
     };
 
     this.sDotProductR = 0;
