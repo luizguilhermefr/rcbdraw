@@ -8,7 +8,7 @@ FlatShading = function (polygon, lighting, vrp, position) {
         let magnitude = N.getMagnitude();
         N.divScalar(magnitude);
         this.nDotProductL = this.lValue.dotProduct(N);
-        if(this.nDotProductL > 0) {
+        if (this.nDotProductL > 0) {
             this.R = N.multScalar(2 * this.nDotProductL);
             this.R.sub(this.lValue);
             this.S = vrp.sub(this.polygon.getCenter());
@@ -19,19 +19,17 @@ FlatShading = function (polygon, lighting, vrp, position) {
     };
 
     this.getColor = function (color, ila, il) {
-        console.log(this.lighting.getParams()[color]);
-        this.ia = ila * this.lighting.getParams()[color].getKa();
-        if(this.nDotProductL > 0) {
-            this.id = il * this.lighting.getParams()[color].getKd() * this.nDotProductL;
+        this.ia = ila * this.lighting.getKa(color);
+        if (this.nDotProductL > 0) {
+            this.id = il * this.lighting.getKd(color) * this.nDotProductL;
             if (this.sDotProductR > 0) {
-                this.is = il * this.lighting.getParams()[color].getKs() * Math.pow(this.sDotProductR, this.lighting.getN());
+                this.is = il * this.lighting.getKs(color) * Math.pow(this.sDotProductR, this.lighting.getN());
             }
         }
         let tempColor = Math.ceil(this.ia + this.id + this.is);
-        console.log(tempColor);
-        if(tempColor > 255){
+        if (tempColor > 255) {
             tempColor = 255;
-        } else if( tempColor < 0){
+        } else if (tempColor < 0) {
             tempColor = 0;
         }
         return tempColor
