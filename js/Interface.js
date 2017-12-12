@@ -108,16 +108,16 @@ function Interface () {
         return false;
     };
 
-    this.newLightSource = function (intensity, x, y, h, v) {
+    this.newLightSource = function (ambientIntensity, sourceIntensity, x, y, h, v) {
         let position;
         if (h === 'x' && v === 'y') { // front
             position = new Vertex(x, y, 0);
         } else if (h === 'x' && v === 'z') { // top
             position = new Vertex(x, 0, y);
         } else if (h === 'z' && v === 'y') { // left
-            position = new Vertex(0, y, z);
+            position = new Vertex(0, y, x);
         }
-        this.scene.lightSources.push(new LightSource(position, intensity));
+        this.scene.lightSources.push(new LightSource(position, ambientIntensity, sourceIntensity));
     };
 
     this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, h, v) {

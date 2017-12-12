@@ -40,7 +40,8 @@ Vue.component('panel', {
             fill: null,
             mustStroke: true,
             mustFill: false,
-            lightIntensity: 0,
+            lightAmbientIntensity: 0,
+            lightSourceIntensity: 0,
             cursor: 'default',
             dragging: false,
             prevScaleFactor: {
@@ -65,8 +66,9 @@ Vue.component('panel', {
             this.mode = PUT_POLY;
             this.cursor = 'copy';
         },
-        expectLightSource (intensity) {
-            this.lightIntensity = intensity;
+        expectLightSource (ambientIntensity, sourceIntensity) {
+            this.lightAmbientIntensity= ambientIntensity;
+            this.lightSourceIntensity = sourceIntensity;
             this.mode = PUT_LIGHT;
             this.cursor = 'copy';
         },
@@ -222,7 +224,7 @@ Vue.component('panel', {
             drawInterface.newRegularPolygon(this.sides, this.size, this.stroke, this.fill, this.mustStroke, this.mustFill, x, y, this.h, this.v);
         },
         putLight (x, y) {
-            drawInterface.newLightSource(this.lightIntensity, x, y, this.h, this.v);
+            drawInterface.newLightSource(this.lightAmbientIntensity,this.lightSourceIntensity, x, y, this.h, this.v);
         },
         selectionClick (x, y) {
             drawInterface.selectionClick(x, y, this.h, this.v, this.mode);

@@ -182,11 +182,11 @@
         vue.$refs.panelLeft.expectFreehand();
     }
 
-    function defineLightSource (intensity) {
+    function defineLightSource (ambientIntensity, sourceIntensity) {
         toggleReset();
-        vue.$refs.panelFront.expectLightSource(intensity);
-        vue.$refs.panelTop.expectLightSource(intensity);
-        vue.$refs.panelLeft.expectLightSource(intensity);
+        vue.$refs.panelFront.expectLightSource(ambientIntensity, sourceIntensity);
+        vue.$refs.panelTop.expectLightSource(ambientIntensity, sourceIntensity);
+        vue.$refs.panelLeft.expectLightSource(ambientIntensity, sourceIntensity);
     }
 
     function toggleReset () {
