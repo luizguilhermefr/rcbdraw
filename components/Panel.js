@@ -265,7 +265,7 @@ Vue.component('panel', {
                     polygon.updateDrawableVertices(this.h, this.v, this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility, this.fillColor);
                     if (polygon.isVisible(this.h, this.v)) {
                         if (solid.shouldFill() && !shouldWireframe) {
-                            this.fillPoly(polygon, solid.getLighting(), lightSource, shouldShade);
+                            this.fillPoly(polygon, solid.getLighting(), solid.getFillColor(), lightSource, shouldShade);
                         }
                         if (solid.shouldStroke() || shouldWireframe) {
                             let color = solid.getStrokeColor();
@@ -301,21 +301,26 @@ Vue.component('panel', {
             }
             this.context.stroke();
         },
-        fillPoly (polygon, lighting, lightSource, shouldShade = true) {
+        fillPoly (polygon, lighting, color, lightSource, shouldShade = true) {
             this.context.lineWidth = 1;
-            let color = "#";
             if (shouldShade) {
-                for(let j = 0; j < lightSource.length; j++) {
-                    let li = new FlatShading(polygon, lighting, this.vrp, lightSource[j].getPosition().clone());
-                    let rgb = ['R', 'G', 'B'];
-                    for (let i = 0; i < 3; i++) {
-                        let tempColor = li.getColor(rgb[i], lightSource[j].ambientIntensity, lightSource[j].sourceIntensity).toString(16);
-                        if (tempColor.length === 1) {
-                            tempColor = '0' + tempColor;
-                        }
-                        color += tempColor;
-                    }
-                }
+                let r = 0, g = 0, b = 0;
+                lightSource.forEach(function (ls) {
+                    let li = new FlatShading(polygon, lighting, this.vrp, ls.getPosition().clone());
+                    r += li.getColor('R', ls.ambientIntensity, ls.sourceIntensity);
+                    g += li.getColor('G', ls.ambientIntensity, ls.sourceIntensity);
+                    b += li.getColor('B', ls.ambientIntensity, ls.sourceIntensity);
+                }.bind(this));
+                r = r > 255 ? 255 : r;
+                g = g > 255 ? 255 : g;
+                b = b > 255 ? 255 : b;
+                r = r.toString(16);
+                g = g.toString(16);
+                b = b.toString(16);
+                r = r.length === 0x2 ? r : '0' + r;
+                g = g.length === 0x2 ? g : '0' + g;
+                b = b.length === 0x2 ? b : '0' + b;
+                color = '#' + r + g + b;
             }
             this.context.strokeStyle = color;
             this.context.beginPath();
