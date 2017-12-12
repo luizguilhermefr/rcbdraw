@@ -8,7 +8,13 @@ Vue.component('light-source-modal', {
                 <div class="form-group" v-for="source in currentSources">
                     <label>Intensidade {{source.index + 1}}</label>
                     <b-input-group>
-                        <b-form-input placeholder="Intensidade" v-model.number="source.intensity"></b-form-input>                        
+                        <b-form-input placeholder="Intensidade" v-model.number="source.ambientIntensity"></b-form-input>
+                        <b-input-group-addon>ILA</b-input-group-addon>                        
+                    </b-input-group>       
+                    <br/>
+                    <b-input-group>
+                        <b-form-input placeholder="Intensidade" v-model.number="source.sourceIntensity"></b-form-input>
+                        <b-input-group-addon>IL</b-input-group-addon>                        
                     </b-input-group>       
                     <br/>
                     <label>Coordenadas:</label>
@@ -37,32 +43,48 @@ Vue.component('light-source-modal', {
                         <div class="col-md-4">
                         </div>                        
                         <div class="col-md-4">  
-                            <button class="btn btn-primary btn-block" v-on:click="updateSource(source.index, source.x, source.y, source.z, source.intensity)">Ok</button>
+                            <button class="btn btn-primary btn-block" v-on:click="updateSource(source.index, source.x, source.y, source.z, source.ambientIntensity, source.sourceIntensity)">Ok</button>
                         </div>    
                     </div> 
                     <hr>                          
                 </div>
                 <h3>Adicionar Fonte</h3>
                 <div class="form-group">
-                    <label>Intensidade</label>
+                    <label>Intensidade da Luz Ambiente</label>
                     <b-input-group>
-                        <b-input-group-addon v-show="!intensityOk()">
+                        <b-input-group-addon v-show="!ambientIntensityOk()">
                             <strong class="text-danger">!</strong>
                         </b-input-group-addon>
-                        <b-form-input placeholder="Intensidade" v-model.number="intensity"></b-form-input>                        
+                        <b-form-input placeholder="Intensidade" v-model.number="ambientIntensity"></b-form-input>                        
                         <b-input-group-button>
-                            <b-btn variant="danger" v-on:click="decreaseIntensity()">-</b-btn>
+                            <b-btn variant="danger" v-on:click="decreaseAmbientIntensity()">-</b-btn>
                         </b-input-group-button>
                         <b-input-group-button>
-                            <b-btn variant="success" v-on:click="increaseIntensity()">+</b-btn>
+                            <b-btn variant="success" v-on:click="increaseAmbientIntensity()">+</b-btn>
                         </b-input-group-button>
-                        <b-input-group-addon v-show="!intensityOk()">
+                        <b-input-group-addon v-show="!ambientIntensityOk()">
+                            <strong class="text-danger">!</strong>
+                        </b-input-group-addon>
+                    </b-input-group>
+                    <label>Intensidade da Fonte de Luz</label>
+                    <b-input-group>
+                        <b-input-group-addon v-show="!sourceIntensityOk()">
+                            <strong class="text-danger">!</strong>
+                        </b-input-group-addon>
+                        <b-form-input placeholder="Intensidade" v-model.number="sourceIntensity"></b-form-input>                        
+                        <b-input-group-button>
+                            <b-btn variant="danger" v-on:click="decreaseSourceIntensity()">-</b-btn>
+                        </b-input-group-button>
+                        <b-input-group-button>
+                            <b-btn variant="success" v-on:click="increaseSourceIntensity()">+</b-btn>
+                        </b-input-group-button>
+                        <b-input-group-addon v-show="!sourceIntensityOk()">
                             <strong class="text-danger">!</strong>
                         </b-input-group-addon>
                     </b-input-group>
                 </div>
                 <b-alert variant="warning" :show="!canInsert()">
-                    Insira uma intensidade entre 0 e 255.
+                    Insira as intensidades entre 0 e 255.
                 </b-alert>
             </div>
         </b-modal>
@@ -70,33 +92,45 @@ Vue.component('light-source-modal', {
 
     data: function () {
         return {
-            intensity: 50,
+            ambientIntensity: 50,
+            sourceIntensity: 50,
             currentSources: []
         };
     },
 
     methods: {
-        intensityOk() {
-            return this.intensity >= 0 && this.intensity <= 255;
+        ambientIntensityOk() {
+            return this.ambientIntensity >= 0 && this.ambientIntensity <= 255;
         },
-        increaseIntensity() {
-            this.intensity++;
+        sourceIntensityOk() {
+            return this.sourceIntensity >= 0 && this.sourceIntensity <= 255;
         },
-        decreaseIntensity() {
-            this.intensity--;
+        increaseAmbientIntensity() {
+            this.ambientIntensity++;
+        },
+        decreaseAmbientIntensity() {
+            this.ambientIntensity--;
+        },
+        increaseSourceIntensity() {
+            this.sourceIntensity++;
+        },
+        decreaseSourceIntensity() {
+            this.sourceIntensity--;
         },
         canInsert () {
-            return this.intensityOk();
+            return this.ambientIntensityOk() && this.sourceIntensityOk();
         },
         submit () {
-            defineLightSource(this.intensity);
-            this.intensity = 0;
+            defineLightSource(this.ambientIntensity, this.sourceIntensity);
+            this.ambientIntensity = 0;
+            this.sourceIntensity = 0;
         },
         setValues() {
             this.currentSources = [];
             drawInterface.scene.lightSources.forEach(function (ls, i) {
                 this.currentSources.push({
-                    intensity: ls.getIntensity(),
+                    ambientIntensity: ls.getAmbientIntensity(),
+                    sourceIntensity: ls.getSourceIntensity(),
                     x: ls.getPosition().getX(),
                     y: ls.getPosition().getY(),
                     z: ls.getPosition().getZ(),
@@ -104,8 +138,9 @@ Vue.component('light-source-modal', {
                 });
             }.bind(this));
         },
-        updateSource(id, x, y, z, intensity) {
-            drawInterface.scene.lightSources[id].setX(x).setY(y).setZ(z).setIntensity(intensity);
+        updateSource(id, x, y, z, ambientIntensity, sourceIntensity) {
+            console.log(sourceIntensity);
+            drawInterface.scene.lightSources[id].setX(x).setY(y).setZ(z).setAmbientIntensity(ambientIntensity).setSourceIntensity(sourceIntensity);
         }
     }
 });

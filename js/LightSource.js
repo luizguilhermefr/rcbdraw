@@ -1,13 +1,23 @@
-function LightSource(position, intensity) {
+function LightSource(position, ambientIntensity, sourceIntensity) {
 
-    this.setIntensity = function (value) {
-        this.intensity = value;
+    this.setAmbientIntensity = function (value) {
+        this.ambientIntensity = value;
 
         return this;
     };
 
-    this.getIntensity = function () {
-        return this.intensity;
+    this.getAmbientIntensity = function () {
+        return this.ambientIntensity;
+    };
+
+    this.setSourceIntensity = function (value) {
+        this.sourceIntensity = value;
+
+        return this;
+    };
+
+    this.getSourceIntensity = function () {
+        return this.sourceIntensity;
     };
 
     this.getPosition = function () {
@@ -29,7 +39,9 @@ function LightSource(position, intensity) {
         return this;
     };
 
-    this.intensity = intensity;
+    this.ambientIntensity = ambientIntensity;
+
+    this.sourceIntensity = sourceIntensity;
 
     this.position = position;
 }
