@@ -58,7 +58,7 @@ Vue.component('light-source-modal', {
                         <b-input-group-addon v-show="!ambientIntensityOk()">
                             <strong class="text-danger">!</strong>
                         </b-input-group-addon>
-                        <b-form-input placeholder="Intensidade" v-model.number="ambientIntensity"></b-form-input>                        
+                        <b-form-input placeholder="Intensidade" v-model.number="ambientIntensity" disabled></b-form-input>                        
                         <b-input-group-button>
                             <b-btn variant="danger" v-on:click="decreaseAmbientIntensity()">-</b-btn>
                         </b-input-group-button>
@@ -74,7 +74,7 @@ Vue.component('light-source-modal', {
                         <b-input-group-addon v-show="!sourceIntensityOk()">
                             <strong class="text-danger">!</strong>
                         </b-input-group-addon>
-                        <b-form-input placeholder="Intensidade" v-model.number="sourceIntensity"></b-form-input>                        
+                        <b-form-input placeholder="Intensidade" v-model.number="sourceIntensity" disabled></b-form-input>                        
                         <b-input-group-button>
                             <b-btn variant="danger" v-on:click="decreaseSourceIntensity()">-</b-btn>
                         </b-input-group-button>

@@ -19,7 +19,7 @@ Vue.component('properties-modal', {
                         <b-input-group-addon v-show="!nOk()">
                             <strong class="text-danger">!</strong>
                         </b-input-group-addon>
-                        <b-form-input placeholder="Aproximação da distribuição espacial da luz refletida especularmente (n)" v-model.number="n"></b-form-input>
+                        <b-form-input placeholder="Aproximação da distribuição espacial da luz refletida especularmente (n)" v-model.number="n" disabled></b-form-input>
                         <b-input-group-button>
                             <b-btn variant="danger" v-on:click="decreaseN()">-</b-btn>
                         </b-input-group-button>
@@ -35,7 +35,7 @@ Vue.component('properties-modal', {
                                 <b-input-group-addon v-show="!kaOk()">
                                     <strong class="text-danger">!</strong>
                                 </b-input-group-addon>
-                                <b-form-input placeholder="Coeficiente de reflexão ambiente (Ka)" v-model.number="param.ka"></b-form-input>
+                                <b-form-input placeholder="Coeficiente de reflexão ambiente (Ka)" v-model.number="param.ka" disabled></b-form-input>
                                 <b-input-group-button>
                                     <b-btn variant="danger" v-on:click="decreaseKa(param)">-</b-btn>
                                 </b-input-group-button>
@@ -48,7 +48,7 @@ Vue.component('properties-modal', {
                                 <b-input-group-addon v-show="!kdOk()">
                                     <strong class="text-danger">!</strong>
                                 </b-input-group-addon>
-                                <b-form-input placeholder="Coeficiente de reflexão difusa (Kd)" v-model.number="param.kd"></b-form-input>
+                                <b-form-input placeholder="Coeficiente de reflexão difusa (Kd)" v-model.number="param.kd" disabled></b-form-input>
                                 <b-input-group-button>
                                     <b-btn variant="danger" v-on:click="decreaseKd(param)">-</b-btn>
                                 </b-input-group-button>
@@ -61,7 +61,7 @@ Vue.component('properties-modal', {
                                 <b-input-group-addon v-show="!ksOk()">
                                     <strong class="text-danger">!</strong>
                                 </b-input-group-addon>
-                                <b-form-input placeholder="Coeficiente de reflexão especular (Ks)" v-model.number="param.ks"></b-form-input>
+                                <b-form-input placeholder="Coeficiente de reflexão especular (Ks)" v-model.number="param.ks" disabled></b-form-input>
                                 <b-input-group-button>
                                     <b-btn variant="danger" v-on:click="decreaseKs(param)">-</b-btn>
                                 </b-input-group-button>
