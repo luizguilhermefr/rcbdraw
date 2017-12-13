@@ -7,15 +7,17 @@ Vue.component('light-source-modal', {
                 <b-alert :show="!currentSources.length">Nenhuma fonte de luz inserida.</b-alert>
                 <div class="form-group" v-for="source in currentSources">
                     <label>Intensidade {{source.index + 1}}</label>
-                    <b-input-group>
-                        <b-form-input placeholder="Intensidade" v-model.number="source.ambientIntensity"></b-form-input>
-                        <b-input-group-addon>ILA</b-input-group-addon>                        
-                    </b-input-group>       
-                    <br/>
-                    <b-input-group>
-                        <b-form-input placeholder="Intensidade" v-model.number="source.sourceIntensity"></b-form-input>
-                        <b-input-group-addon>IL</b-input-group-addon>                        
-                    </b-input-group>       
+                    <div class="row">
+                        <b-input-group class="col-md-6">
+                            <b-form-input placeholder="Intensidade" v-model.number="source.ambientIntensity"></b-form-input>
+                            <b-input-group-addon>ILA</b-input-group-addon>                        
+                        </b-input-group>       
+                        <br/>
+                        <b-input-group class="col-md-6">
+                            <b-form-input placeholder="Intensidade" v-model.number="source.sourceIntensity"></b-form-input>
+                            <b-input-group-addon>IL</b-input-group-addon>                        
+                        </b-input-group>  
+                    </div>     
                     <br/>
                     <label>Coordenadas:</label>
                     <div class="row">
@@ -40,10 +42,11 @@ Vue.component('light-source-modal', {
                     </div>
                     <br>
                     <div class="row">
-                        <div class="col-md-4">
-                        </div>                        
-                        <div class="col-md-4">  
+                        <div class="col-md-6">
                             <button class="btn btn-primary btn-block" v-on:click="updateSource(source.index, source.x, source.y, source.z, source.ambientIntensity, source.sourceIntensity)">Ok</button>
+                        </div>                        
+                        <div class="col-md-6">                            
+                            <button class="btn btn-danger btn-block" v-on:click="removeSource(source.index)">Remover</button>
                         </div>    
                     </div> 
                     <hr>                          
@@ -122,8 +125,6 @@ Vue.component('light-source-modal', {
         },
         submit () {
             defineLightSource(this.ambientIntensity, this.sourceIntensity);
-            this.ambientIntensity = 0;
-            this.sourceIntensity = 0;
         },
         setValues() {
             this.currentSources = [];
@@ -139,7 +140,14 @@ Vue.component('light-source-modal', {
             }.bind(this));
         },
         updateSource(id, x, y, z, ambientIntensity, sourceIntensity) {
+            alert('Fonte de luz atualizada.');
             drawInterface.scene.lightSources[id].setX(x).setY(y).setZ(z).setAmbientIntensity(ambientIntensity).setSourceIntensity(sourceIntensity);
+            drawInterface.redraw();
+        },
+        removeSource(id) {
+            drawInterface.scene.lightSources.splice(id, 1);
+            this.setValues();
+            drawInterface.redraw();
         }
     }
 });

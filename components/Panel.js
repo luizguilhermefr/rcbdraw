@@ -225,6 +225,8 @@ Vue.component('panel', {
         },
         putLight (x, y) {
             drawInterface.newLightSource(this.lightAmbientIntensity,this.lightSourceIntensity, x, y, this.h, this.v);
+            toggleReset();
+            drawInterface.redraw();
         },
         selectionClick (x, y) {
             drawInterface.selectionClick(x, y, this.h, this.v, this.mode);
