@@ -46,13 +46,13 @@ function Polygon (vertices) {
             vrp = new Vertex(0, 0, 100);
             viewUp = new Vertex(0, 1, 0);
         } else if (h === 'x' && v === 'z') {
-            vrp = new Vertex(0, 100, 0);
+            vrp = new Vertex(0, -100, 0);
             viewUp = new Vertex(0, 0, 1);
         } else if (h === 'z' && v === 'y') {
             vrp = new Vertex(100, 0, 0);
             viewUp = new Vertex(0, 1, 0);
         } else {
-            perspective = true;
+           perspective = true;
         }
 
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp);
