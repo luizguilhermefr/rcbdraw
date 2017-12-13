@@ -26,13 +26,7 @@ FlatShading = function (polygon, lighting, vrp, position) {
                 this.is = il * this.lighting.getKs(color) * Math.pow(this.sDotProductR, this.lighting.getN());
             }
         }
-        let tempColor = Math.ceil(this.ia + this.id + this.is);
-        if (tempColor > 255) {
-            tempColor = 255;
-        } else if (tempColor < 0) {
-            tempColor = 0;
-        }
-        return tempColor
+        return Math.ceil(this.ia + this.id + this.is);
     };
 
     this.sDotProductR = 0;
