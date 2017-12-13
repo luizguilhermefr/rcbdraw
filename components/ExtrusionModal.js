@@ -10,7 +10,7 @@ Vue.component('extrusion-modal', {
                     <b-input-group-addon v-show="!distanceOk()">
                         <strong class="text-danger">!</strong>
                     </b-input-group-addon>
-                    <b-form-input placeholder="Distância" v-model.number="distance"></b-form-input>
+                    <b-form-input placeholder="Distância" v-model.number="distance" disabled></b-form-input>
                     <b-input-group-addon>px</b-input-group-addon>
                     <b-input-group-button>
                         <b-btn variant="danger" v-on:click="decreaseDistance()">-</b-btn>
@@ -26,7 +26,7 @@ Vue.component('extrusion-modal', {
                     <b-input-group-addon v-show="!facesOk()">
                         <strong class="text-danger">!</strong>
                     </b-input-group-addon>
-                    <b-form-input placeholder="Faces" v-model.number="faces"></b-form-input>
+                    <b-form-input placeholder="Faces" v-model.number="faces" disabled></b-form-input>
                     <b-input-group-button>
                         <b-btn variant="danger" v-on:click="decreaseFaces()">-</b-btn>
                     </b-input-group-button>

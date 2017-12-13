@@ -4,7 +4,7 @@ Vue.component('rcb-navbar', {
     <b-navbar id="navbar" toggleable fixed="top" type="inverse" variant="inverse"> 
         <b-nav-toggle target="nav_collapse"></b-nav-toggle> 
         <b-link class="navbar-brand" to="#"> 
-            <span>RCBDraw 3D</span> 
+            <span>RCBDraw 3D Plus</span> 
         </b-link> 
         <b-collapse is-nav id="nav_collapse"> 
             <b-nav is-nav-bar class="ml-0"> 
@@ -59,16 +59,6 @@ Vue.component('rcb-navbar', {
                                 return null;
                             }
                         }
-                        // {
-                        //     id: 4,
-                        //     title: 'Exportar...',
-                        //     modal: 'export-modal',
-                        //     enabled: true,
-                        //     icon: 'fa fa-cog',
-                        //     action () {
-                        //         return null;
-                        //     }
-                        // }
                     ]
                 }
                 ,
@@ -101,6 +91,16 @@ Vue.component('rcb-navbar', {
                             modal: 'regular-polygon-modal',
                             enabled: true,
                             icon: 'fa fa-square-o',
+                            action () {
+                                return null;
+                            }
+                        },
+                        {
+                            id: 4,
+                            title: 'Fonte de Luminosidade',
+                            modal: 'light-source-modal',
+                            icon: 'fa fa-lightbulb-o',
+                            enabled: true,
                             action () {
                                 return null;
                             }
@@ -157,15 +157,6 @@ Vue.component('rcb-navbar', {
                                 expectShear('v');
                             }
                         },
-                        // {
-                        //     id: 6,
-                        //     title: 'Duplicar',
-                        //     enabled: true,
-                        //     icon: 'fa fa-files-o',
-                        //     action () {
-                        //         duplicateSelected();
-                        //     }
-                        // },
                         {
                             id: 10,
                             title: 'Revolução',

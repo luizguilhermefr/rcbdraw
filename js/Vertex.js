@@ -58,7 +58,7 @@ function Vertex(x, y, z) {
     };
 
     this.distanceToVertex = function (vertex) {
-        return Math.sqrt(Math.pow(vertex.getX() - this.getX(), 2) + Math.pow(vertex.getY() - this.getY(), 2));
+        return Math.sqrt(Math.pow(vertex.getX() - this.getX(), 2) + Math.pow(vertex.getY() - this.getY(), 2) + Math.pow(vertex.getZ() - this.getZ(), 2));
     };
 
     this.distanceToEdgeXY = function (edge) {
@@ -113,6 +113,14 @@ function Vertex(x, y, z) {
         this.x *= vertex.getX();
         this.y *= vertex.getY();
         this.z *= vertex.getZ();
+
+        return this;
+    };
+
+    this.multScalar = function (value) {
+        this.x *= value;
+        this.y *= value;
+        this.z *= value;
 
         return this;
     };
