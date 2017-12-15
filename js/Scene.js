@@ -1,11 +1,11 @@
 function Scene() {
 
-    this.paintersAlgorithm = function(depthAxis, vrp) {
+    this.paintersAlgorithm = function (vrp) {
         this.solids.sort(function(a, b) {
             return a.getEuclideanDistance(vrp) - b.getEuclideanDistance(vrp);
         });
         this.solids.forEach(function(s) {
-            s.paintersAlgorithm(depthAxis, vrp);
+            s.paintersAlgorithm(vrp);
         });
     };
 

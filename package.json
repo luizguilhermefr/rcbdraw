@@ -1,0 +1,30 @@
+{
+  "name": "rcbdraw",
+  "version": "5.0.0",
+  "description": "RCBDraw is a JavaScript 3D modeler.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luizguilhermefr/rcbdraw.git"
+  },
+  "keywords": [
+    "computer graphics",
+    "graphics",
+    "3d",
+    "canvas"
+  ],
+  "authors": [
+    "luizguilhermefr",
+    "jcanabarro",
+    "ElixandreBaldi",
+    "Adair Santa Catarina"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luizguilhermefr/rcbdraw/issues"
+  },
+  "homepage": "https://github.com/luizguilhermefr/rcbdraw#readme"
+}

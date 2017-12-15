@@ -1,14 +1,15 @@
-function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, vrp, viewUp, perspective = false, p = null) {
+function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, vrp, viewUp, p = null) {
 
-    this.setVectorN = function () {        
+    this.setVectorN = function () {
         let N = this.vrp.clone().sub(this.p);
-        let magnitude = N.getMagnitude();                
-        this.n = N.divScalar(magnitude);               
+        let magnitude = N.getMagnitude();
+        this.n = N.divScalar(magnitude);
     };
 
-    this.setVectorV = function () {     
-        if(this.n === null)           
+    this.setVectorV = function () {
+        if (this.n === null) {
             this.setVectorN();
+        }
         let V = this.viewUp.clone().sub((this.viewUp.clone().mult(this.n)).mult(this.n));
         let magnitude = V.getMagnitude();
         this.v = V.divScalar(magnitude);
@@ -23,11 +24,11 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
 
     this.setMatrixSruSrc = function () {
         this.sruSrc = [
-            [this.u.getX(), this.u.getY(), this.u.getZ(), this.vrp.clone().invert().dotProduct(this.u)],
-            [this.v.getX(), this.v.getY(), this.v.getZ(), this.vrp.clone().invert().dotProduct(this.v)],
-            [this.n.getX(), this.n.getY(), this.n.getZ(), this.vrp.clone().invert().dotProduct(this.n)],
-            [0, 0, 0, 1]
-        ]
+            [ this.u.getX(), this.u.getY(), this.u.getZ(), this.vrp.clone().invert().dotProduct(this.u) ],
+            [ this.v.getX(), this.v.getY(), this.v.getZ(), this.vrp.clone().invert().dotProduct(this.v) ],
+            [ this.n.getX(), this.n.getY(), this.n.getZ(), this.vrp.clone().invert().dotProduct(this.n) ],
+            [ 0, 0, 0, 1 ]
+        ];
     };
 
     this.setPSrc = function () {
@@ -35,41 +36,20 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         this.pSrc.splice(2, 1);
     };
 
-    this.setMatrixPersp = function (){
-        let zvp = this.dp * -1;
-        this.mPersp = [
-            [1, 0 , 0 , 0],
-            [0 , 1, 0 , 0],
-            [0, 0, (-zvp/ this.dp), 0],
-            [0, 0, -1/this.dp, 0]
-        ]                 
-    };
-
-    this.setPpersp = function () {
-        this.pPersp = math.multiply(this.mPersp, this.pSrc);
-        this.pPersp.splice(2, 1);
-    };
-    
-    this.setMatrixHomogeneous = function() {
-        for(let i = 0; i < this.pPersp.length; i++){
-            for(let j = 0; j < pPersp[i].length - 1; j++) {
-                pPersp[i][j] /= pPersp[pPersp[i].length - 1][j];
-            }
-        }
-    };    
-
     this.setWorldCoordinates = function () {
-        this.wMaxX = this.worldWidth/2;
-        this.wMinX = -this.worldWidth/2;
-        this.wMaxY = this.worldHeight/2;
-        this.wMinY = -this.worldHeight/2;
+        this.wMaxX = this.worldWidth / 2;
+        this.wMinX = -this.worldWidth / 2;
+        this.wMaxY = this.worldHeight / 2;
+        this.wMinY = -this.worldHeight / 2;
     };
 
     this.setMatrixMjp = function () {
         this.mJp = [
-            [(this.screenWidth) / (this.wMaxX - this.wMinX), 0, -this.wMinX * (this.screenWidth / (this.wMaxX - this.wMinX))],
-            [0, -this.screenHeight / (this.wMaxY - this.wMinY), (this.wMinY * (this.screenHeight / (this.wMaxY - this.wMinY))) + this.screenHeight],
-            [0, 0, 1]
+            [ (this.screenWidth) / (this.wMaxX - this.wMinX), 0, -this.wMinX *
+            (this.screenWidth / (this.wMaxX - this.wMinX)) ],
+            [ 0, -this.screenHeight / (this.wMaxY - this.wMinY), (this.wMinY *
+                (this.screenHeight / (this.wMaxY - this.wMinY))) + this.screenHeight ],
+            [ 0, 0, 1 ]
         ];
     };
 
@@ -77,10 +57,10 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         this.pSrt = math.multiply(this.mJp, this.pSrc);
     };
 
-    this.getCol = function (matrix, col){
+    this.getCol = function (matrix, col) {
         let column = [];
         for (let i = 0; i < matrix.length; i++) {
-            column.push(matrix[i][col]);
+            column.push(matrix[ i ][ col ]);
         }
 
         return column;
@@ -88,31 +68,31 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
 
     this.to2DVertices = function () {
         let columns = [];
-        let len = this.pSrt[0].length;
+        let len = this.pSrt[ 0 ].length;
         for (let i = 0; i < len; i++) {
             columns.push(this.getCol(this.pSrt, i));
         }
         let vertices = [];
         columns.forEach(function (c) {
-            if (this.vrp.getZ() !== 0 ){
-                vertices.push(new Vertex(c[0], this.worldHeight - c[1], 0));
+            if (this.vrp.getZ() !== 0) {
+                vertices.push(new Vertex(c[ 0 ], this.worldHeight - c[ 1 ], 0));
             } else {
-                vertices.push(new Vertex(this.worldWidth - c[0], this.worldHeight - c[1], 0));    
+                vertices.push(new Vertex(this.worldWidth - c[ 0 ], this.worldHeight - c[ 1 ], 0));
             }
         }.bind(this));
         return vertices;
     };
 
     this.setNormalVector = function () {
-      let p1 = this.polygon.vertexAt(2);
-      let p2 = this.polygon.vertexAt(1);
-      let p3 = this.polygon.vertexAt(0);
-      let a = p1.sub(p2);
-      let b = p3.sub(p2);
-      let i = (b.getY() * a.getZ()) - (b.getZ() * a.getY());
-      let j = (b.getZ() * a.getX()) - (b.getX() * a.getZ());
-      let k = (b.getX() * a.getY()) - (b.getY() * a.getX());
-      this.normalVector = new Vertex(i, j, k);
+        let p1 = this.polygon.vertexAt(2);
+        let p2 = this.polygon.vertexAt(1);
+        let p3 = this.polygon.vertexAt(0);
+        let a = p1.sub(p2);
+        let b = p3.sub(p2);
+        let i = (b.getY() * a.getZ()) - (b.getZ() * a.getY());
+        let j = (b.getZ() * a.getX()) - (b.getX() * a.getZ());
+        let k = (b.getX() * a.getY()) - (b.getY() * a.getX());
+        this.normalVector = new Vertex(i, j, k);
     };
 
     this.normal = function (forceVisible = false) {
@@ -129,10 +109,6 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
         this.setVectorU();
         this.setMatrixSruSrc();
         this.setPSrc();
-        if (this.perspective) {
-            this.setMatrixPersp();
-            this.setMatrixHomogeneous();
-        }
         this.setWorldCoordinates();
         this.setMatrixMjp();
         this.setMatrixPsrt();
@@ -140,8 +116,6 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
     };
 
     this.p = p === null ? new Vertex(0, 0, 0) : p;
-
-    this.dp = 100;
 
     this.polygon = polygon;
 
@@ -173,15 +147,11 @@ function Pipeline (polygon, screenWidth, screenHeight, worldWidth, worldHeight, 
 
     this.pSrc = [];
 
-    this.pPersp = [];
-
     this.mJp = [];
 
     this.pSrt = [];
 
     this.viewUp = viewUp;
-
-    this.perspective = perspective;
 
     this.normalVector = null;
 }

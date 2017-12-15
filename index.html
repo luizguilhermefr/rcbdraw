@@ -26,13 +26,7 @@
     <about-modal></about-modal>
     <toolbar></toolbar>
 
-    <panel ref="panelFront" identifier="panelFront" title="front" h="x" v="y"></panel>
-
-    <panel ref="panelTop" identifier="panelTop" title="top" h="x" v="z"></panel>
-
-    <panel ref="panelLeft" identifier="panelLeft" title="left" h="z" v="y"></panel>
-
-    <panel ref="panelPerspective" identifier="panelPerspective" title="perspective" h="px" v="py"></panel>
+    <panel ref="panel" identifier="panel"></panel>
 
     <element-right-click ref="elementRightClick"></element-right-click>
 
@@ -119,32 +113,8 @@
         };
     }
 
-    function getHalfScreenDimensions () {
-        return {
-            width: (window.innerWidth - 310) / 2,
-            height: (window.innerHeight * 0.92) / 2
-        };
-    }
-
     function resizeAll (isInitialResize = false) {
-        vue.$refs.panelFront.resizeDefault(isInitialResize);
-        vue.$refs.panelTop.resizeDefault(isInitialResize);
-        vue.$refs.panelLeft.resizeDefault(isInitialResize);
-        vue.$refs.panelPerspective.resizeDefault(isInitialResize);
-    }
-
-    function makeEveryoneInvisible () {
-        vue.$refs.panelFront.makeInvisible();
-        vue.$refs.panelTop.makeInvisible();
-        vue.$refs.panelLeft.makeInvisible();
-        vue.$refs.panelPerspective.makeInvisible();
-    }
-
-    function makeEveryoneVisible () {
-        vue.$refs.panelFront.makeVisible();
-        vue.$refs.panelTop.makeVisible();
-        vue.$refs.panelLeft.makeVisible();
-        vue.$refs.panelPerspective.makeVisible();
+        vue.$refs.panel.resizeDefault(isInitialResize);
     }
 
     function escape () {
@@ -159,16 +129,12 @@
 
     function definePolygon (sides, size, stroke, fill, mustStroke, mustFill) {
         toggleReset();
-        vue.$refs.panelFront.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
-        vue.$refs.panelTop.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
-        vue.$refs.panelLeft.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
+        vue.$refs.panel.expectPolygon(sides, size, stroke, fill, mustStroke, mustFill);
     }
 
     function expectSelection () {
         toggleReset();
-        vue.$refs.panelFront.expectSelection();
-        vue.$refs.panelTop.expectSelection();
-        vue.$refs.panelLeft.expectSelection();
+        vue.$refs.panel.expectSelection();
     }
 
     function vrpRotation () {
@@ -177,22 +143,16 @@
 
     function expectFreehand () {
         toggleReset();
-        vue.$refs.panelFront.expectFreehand();
-        vue.$refs.panelTop.expectFreehand();
-        vue.$refs.panelLeft.expectFreehand();
+        vue.$refs.panel.expectFreehand();
     }
 
     function defineLightSource (ambientIntensity, sourceIntensity) {
         toggleReset();
-        vue.$refs.panelFront.expectLightSource(ambientIntensity, sourceIntensity);
-        vue.$refs.panelTop.expectLightSource(ambientIntensity, sourceIntensity);
-        vue.$refs.panelLeft.expectLightSource(ambientIntensity, sourceIntensity);
+        vue.$refs.panel.expectLightSource(ambientIntensity, sourceIntensity);
     }
 
     function toggleReset () {
-        vue.$refs.panelFront.reset();
-        vue.$refs.panelTop.reset();
-        vue.$refs.panelLeft.reset();
+        vue.$refs.panel.reset();
     }
 
     function duplicateSelected () {
@@ -237,9 +197,7 @@
             return;
         }
         toggleReset();
-        vue.$refs.panelFront.expectRotation();
-        vue.$refs.panelTop.expectRotation();
-        vue.$refs.panelLeft.expectRotation();
+        vue.$refs.panel.expectRotation();
     }
 
     function expectTranslate () {
@@ -248,9 +206,7 @@
             return;
         }
         toggleReset();
-        vue.$refs.panelFront.expectTranslate();
-        vue.$refs.panelTop.expectTranslate();
-        vue.$refs.panelLeft.expectTranslate();
+        vue.$refs.panel.expectTranslate();
     }
 
     function expectScale () {
@@ -259,24 +215,7 @@
             return;
         }
         toggleReset();
-        vue.$refs.panelFront.expectScale();
-        vue.$refs.panelTop.expectScale();
-        vue.$refs.panelLeft.expectScale();
-    }
-
-    function expectShear (direction) {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
-        }
-        if (!drawInterface.selectedSolid.solid.canBeSheared()) {
-            alert('Apenas para objetos de face única.');
-            return;
-        }
-        toggleReset();
-        vue.$refs.panelFront.expectShear(direction);
-        vue.$refs.panelTop.expectShear(direction);
-        vue.$refs.panelLeft.expectShear(direction);
+        vue.$refs.panel.expectScale();
     }
 
     function deleteSolid () {
@@ -301,13 +240,6 @@
             return;
         }
         drawInterface.bringBackward();
-    }
-
-    function collapseAll () {
-        vue.$refs.panelFront.collapse();
-        vue.$refs.panelTop.collapse();
-        vue.$refs.panelLeft.collapse();
-        vue.$refs.panelPerspective.collapse();
     }
 
     function toggleSurfaceHiding () {

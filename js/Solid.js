@@ -4,14 +4,6 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this.polygons;
     };
 
-    this.getPolygonAt = function (index) {
-        return this.polygons[ index ];
-    };
-
-    this.setPolygons = function (polygons) {
-        this.polygons = polygons;
-    };
-
     this.getStrokeColor = function () {
         return this.strokeColor;
     };
@@ -42,10 +34,6 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
 
     this.shouldStroke = function () {
         return this.mustStroke;
-    };
-
-    this.deletePolygon = function (index) {
-        this.polygons.splice(index, 1);
     };
 
     this.updateBoundaries = function () {
@@ -89,12 +77,6 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this.center;
     };
 
-    this.getDistance = function (vertex) {
-        return new Vertex(Math.abs(this.center.getX() - vertex.getX()), Math.abs(this.center.getY() -
-            vertex.getY()), Math.abs(this.center.getZ() -
-            vertex.getZ()));
-    };
-
     this.getEuclideanDistance = function (vertex) {
         return Math.sqrt(Math.pow(this.center.getX() - vertex.getX(), 2) +
             Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2));
@@ -127,7 +109,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         }
     };
 
-    this.scale = function (center, tetaX, tetaY, tetaZ) {
+    this.scale = function (center, tetaX, tetaY, tetaZ = 0) {
         for (let i = 0; i < this.polygons.length; i++) {
             polygons[ i ].translatePoint(center.invert());
             polygons[ i ].scale(tetaX, tetaY, tetaZ);
@@ -174,7 +156,6 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         let teta = degree / (faces - 1);
         teta *= Math.PI / 180;
         let tetaX, tetaY, tetaZ;
-        // noinspection UnnecessaryLocalVariableJS
         let initialTeta = teta;
         let tempPolygons = [
             this.polygons[ 0 ].clone()
@@ -244,7 +225,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return solid.setLighting(this.ligthing.getParams(), this.n);
     };
 
-    this.paintersAlgorithm = function (depthAxis, vrp) {
+    this.paintersAlgorithm = function (vrp) {
         this.polygons.sort(function (a, b) {
             return a.getEuclideanDistance(vrp) - b.getEuclideanDistance(vrp);
         });
@@ -282,6 +263,11 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this.ligthing;
     };
 
+    this.updateParameters = function () {
+        this.updateBoundaries();
+        this.updateCenter();
+    };
+
     this.selected = selected;
 
     this.polygons = polygons;
@@ -298,9 +284,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
 
     this.boundaries = null;
 
-    this.updateBoundaries();
-
     this.center = null;
 
-    this.updateCenter();
+    this.updateParameters();
 }
