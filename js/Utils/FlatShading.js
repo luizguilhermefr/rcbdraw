@@ -1,6 +1,6 @@
 FlatShading = function (polygon, lighting, vrp, position) {
 
-    this.calculateColor = function () {
+    this.prepare = function () {
         this.lValue.sub(this.polygon.getCenter());
         let normOfL = this.lValue.distanceToVertex(this.polygon.getCenter());
         this.lValue.divScalar(normOfL);
@@ -19,14 +19,14 @@ FlatShading = function (polygon, lighting, vrp, position) {
     };
 
     this.getColor = function (color, ila, il) {
-        this.ia = ila * this.lighting.getKa(color);
+        ia = ila * this.lighting.getKa(color);
         if (this.nDotProductL > 0) {
-            this.id = il * this.lighting.getKd(color) * this.nDotProductL;
+            id = il * this.lighting.getKd(color) * this.nDotProductL;
             if (this.sDotProductR > 0) {
-                this.is = il * this.lighting.getKs(color) * Math.pow(this.sDotProductR, this.lighting.getN());
+                is = il * this.lighting.getKs(color) * Math.pow(this.sDotProductR, this.lighting.getN());
             }
         }
-        return Math.ceil(this.ia + this.id + this.is);
+        return Math.ceil(ia + id + is);
     };
 
     this.sDotProductR = 0;
@@ -35,15 +35,9 @@ FlatShading = function (polygon, lighting, vrp, position) {
 
     this.polygon = polygon;
 
-    this.is = 0;
-
-    this.ia = 0;
-
     this.S = null;
 
     this.R = null;
-
-    this.id = 0;
 
     this.vrp = vrp;
 
@@ -51,5 +45,5 @@ FlatShading = function (polygon, lighting, vrp, position) {
 
     this.lValue = position;
 
-    this.calculateColor();
+    this.prepare();
 };
