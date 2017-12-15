@@ -16,7 +16,7 @@ Vue.component('panel-right-click', {
             items: [
                 {
                     id: 1,
-                    title: 'Mão Livre',
+                    title: 'Freehand',
                     enabled: true,
                     icon: 'fa fa-hand-pointer-o',
                     action () {
@@ -25,10 +25,20 @@ Vue.component('panel-right-click', {
                 },
                 {
                     id: 2,
-                    title: 'Polígono Regular',
+                    title: 'Regular Polygon',
                     modal: 'regular-polygon-modal',
                     enabled: true,
                     icon: 'fa fa-square-o',
+                    action () {
+                        return null;
+                    }
+                },
+                {
+                    id: 3,
+                    title: 'Light Source',
+                    modal: 'light-source-modal',
+                    enabled: true,
+                    icon: 'fa fa-lightbulb-o',
                     action () {
                         return null;
                     }

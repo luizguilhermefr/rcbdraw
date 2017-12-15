@@ -16,7 +16,7 @@ Vue.component('element-right-click', {
             items: [
                 {
                     id: 1,
-                    title: 'Rotacionar',
+                    title: 'Rotate',
                     enabled: true,
                     icon: 'fa fa-repeat',
                     action () {
@@ -25,7 +25,7 @@ Vue.component('element-right-click', {
                 },
                 {
                     id: 2,
-                    title: 'Transladar',
+                    title: 'Move',
                     enabled: true,
                     icon: 'fa fa-arrows',
                     action () {
@@ -34,7 +34,7 @@ Vue.component('element-right-click', {
                 },
                 {
                     id: 3,
-                    title: 'Escalar',
+                    title: 'Scale',
                     enabled: true,
                     icon: 'fa fa-compress',
                     action () {
@@ -43,7 +43,7 @@ Vue.component('element-right-click', {
                 },
                 {
                     id: 10,
-                    title: 'Revolução',
+                    title: 'Revolution',
                     enabled: true,
                     icon: 'fa fa-circle-o-notch',
                     action () {
@@ -52,7 +52,7 @@ Vue.component('element-right-click', {
                 },
                 {
                     id: 11,
-                    title: 'Extrusão',
+                    title: 'Extrusion',
                     enabled: true,
                     icon: 'fa fa-cube',
                     action () {
@@ -61,7 +61,7 @@ Vue.component('element-right-click', {
                 },
                 {
                     id: 6,
-                    title: 'Excluir',
+                    title: 'Delete',
                     enabled: true,
                     icon: 'fa fa-trash-o',
                     action () {
@@ -70,7 +70,7 @@ Vue.component('element-right-click', {
                 },
                 {
                     id: 7,
-                    title: 'Propriedades do objeto...',
+                    title: 'Object properties...',
                     enabled: true,
                     icon: 'fa fa-info',
                     action () {

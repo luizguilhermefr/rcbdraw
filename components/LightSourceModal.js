@@ -1,64 +1,64 @@
 Vue.component('light-source-modal', {
 
     template: `
-        <b-modal id="light-source-modal" title="Fonte de Luminosidade" @ok="submit" @shown="setValues" closeTitle="Cancelar" okTitle="Inserir" :ok-disabled="!canInsert()"> 
+        <b-modal id="light-source-modal" title="Light Source" @ok="submit" @shown="setValues" okTitle="Insert" :ok-disabled="!canInsert()"> 
             <div class="modal-body">
-                <h3>Fontes Atuais</h3>
-                <b-alert :show="!currentSources.length">Nenhuma fonte de luz inserida.</b-alert>
+                <h3>Current Sources</h3>
+                <b-alert :show="!currentSources.length">No light source inserted.</b-alert>
                 <div class="form-group" v-for="source in currentSources">
-                    <label>Intensidade {{source.index + 1}}</label>
+                    <label>Intensity {{source.index + 1}}</label>
                     <div class="row">
                         <b-input-group class="col-md-6">
-                            <b-form-input placeholder="Intensidade" v-model.number="source.ambientIntensity"></b-form-input>
-                            <b-input-group-addon>ILA</b-input-group-addon>                        
+                            <b-form-input placeholder="Intensity" v-model.number="source.ambientIntensity"></b-form-input>
+                            <b-input-group-addon>ALI</b-input-group-addon>                        
                         </b-input-group>       
                         <br/>
                         <b-input-group class="col-md-6">
-                            <b-form-input placeholder="Intensidade" v-model.number="source.sourceIntensity"></b-form-input>
-                            <b-input-group-addon>IL</b-input-group-addon>                        
+                            <b-form-input placeholder="Intensity" v-model.number="source.sourceIntensity"></b-form-input>
+                            <b-input-group-addon>LI</b-input-group-addon>                        
                         </b-input-group>  
                     </div>     
                     <br/>
-                    <label>Coordenadas:</label>
+                    <label>Coordinates:</label>
                     <div class="row">
                         <div class="col-md-4">                            
                            <b-input-group>                      
                                 <b-input-group-addon>X</b-input-group-addon>
-                                <b-form-input placeholder="" v-model.number="source.x"></b-form-input>                                 
+                                <b-form-input v-model.number="source.x"></b-form-input>                                 
                             </b-input-group>                                                      
                         </div>
                         <div class="col-md-4">                            
                             <b-input-group>                      
                                 <b-input-group-addon>Y</b-input-group-addon>
-                                <b-form-input placeholder="" v-model.number="source.y"></b-form-input>                                 
+                                <b-form-input v-model.number="source.y"></b-form-input>                                 
                             </b-input-group>                                                         
                         </div>
                         <div class="col-md-4">      
                             <b-input-group>                      
                                 <b-input-group-addon>Z</b-input-group-addon>
-                                <b-form-input placeholder="" v-model.number="source.z"></b-form-input>                                 
+                                <b-form-input v-model.number="source.z"></b-form-input>                                 
                             </b-input-group>                                                                                            
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-6">
-                            <button class="btn btn-primary btn-block" v-on:click="updateSource(source.index, source.x, source.y, source.z, source.ambientIntensity, source.sourceIntensity)">Ok</button>
+                            <button class="btn btn-primary btn-block" v-on:click="updateSource(source.index, source.x, source.y, source.z, source.ambientIntensity, source.sourceIntensity)">Update</button>
                         </div>                        
                         <div class="col-md-6">                            
-                            <button class="btn btn-danger btn-block" v-on:click="removeSource(source.index)">Remover</button>
+                            <button class="btn btn-danger btn-block" v-on:click="removeSource(source.index)">Delete</button>
                         </div>    
                     </div> 
                     <hr>                          
                 </div>
-                <h3>Adicionar Fonte</h3>
+                <h3>Add Source</h3>
                 <div class="form-group">
-                    <label>Intensidade da Luz Ambiente</label>
+                    <label>Ambient Light Intensity</label>
                     <b-input-group>
                         <b-input-group-addon v-show="!ambientIntensityOk()">
                             <strong class="text-danger">!</strong>
                         </b-input-group-addon>
-                        <b-form-input placeholder="Intensidade" v-model.number="ambientIntensity" disabled></b-form-input>                        
+                        <b-form-input placeholder="Intensity" v-model.number="ambientIntensity" disabled></b-form-input>                        
                         <b-input-group-button>
                             <b-btn variant="danger" v-on:click="decreaseAmbientIntensity()">-</b-btn>
                         </b-input-group-button>
@@ -69,7 +69,7 @@ Vue.component('light-source-modal', {
                             <strong class="text-danger">!</strong>
                         </b-input-group-addon>
                     </b-input-group>
-                    <label>Intensidade da Fonte de Luz</label>
+                    <label>Light Source Intensity</label>
                     <b-input-group>
                         <b-input-group-addon v-show="!sourceIntensityOk()">
                             <strong class="text-danger">!</strong>
@@ -87,7 +87,7 @@ Vue.component('light-source-modal', {
                     </b-input-group>
                 </div>
                 <b-alert variant="warning" :show="!canInsert()">
-                    Insira as intensidades entre 0 e 255.
+                    Intensities must be between 0 and 255.
                 </b-alert>
             </div>
         </b-modal>
@@ -140,7 +140,7 @@ Vue.component('light-source-modal', {
             }.bind(this));
         },
         updateSource(id, x, y, z, ambientIntensity, sourceIntensity) {
-            alert('Fonte de luz atualizada.');
+            alert('Light source updated.');
             drawInterface.scene.lightSources[id].setX(x).setY(y).setZ(z).setAmbientIntensity(ambientIntensity).setSourceIntensity(sourceIntensity);
             drawInterface.redraw();
         },

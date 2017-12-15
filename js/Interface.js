@@ -88,7 +88,7 @@ function Interface () {
         this.scene.lightSources.push(new LightSource(position, ambientIntensity, sourceIntensity));
     };
 
-    this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y, h, v) {
+    this.newRegularPolygon = function (sides, size, stroke, fill, mustStroke, mustFill, x, y) {
         let dotX;
         let dotY;
         let temp;
@@ -107,19 +107,9 @@ function Interface () {
             dotX = this.getNewDotX(dotX, dotY, angle);
             dotY = this.getNewDotY(temp, dotY, angle);
         }
-        let tempX = 0;
-        let tempY = 0;
+        let tempX = dotX + x;
+        let tempY = (dotY * (-1)) + y;
         let tempZ = 0;
-        if (h === 'x' && v === 'y') { // front
-            tempX = dotX + x;
-            tempY = (dotY * (-1)) + y;
-        } else if (h === 'x' && v === 'z') { // top
-            tempX = dotX + x;
-            tempZ = (dotY * (-1)) + y;
-        } else if (h === 'z' && v === 'y') { // left
-            tempZ = dotX + x;
-            tempY = (dotY * (-1)) + y;
-        }
 
         let tempVertex = new Vertex(tempX, tempY, tempZ);
         tempVertices.push(tempVertex);
@@ -127,19 +117,9 @@ function Interface () {
             temp = dotX;
             dotX = this.getNewDotX(dotX, dotY, teta);
             dotY = this.getNewDotY(temp, dotY, teta);
-            if (h === 'x' && v === 'y') { // front
-                tempX = dotX + x;
-                tempY = (dotY * (-1)) + y;
-                tempZ = 0;
-            } else if (h === 'x' && v === 'z') { // top
-                tempX = dotX + x;
-                tempZ = (dotY * (-1)) + y;
-                tempY = 0;
-            } else if (h === 'z' && v === 'y') { // left
-                tempZ = dotX + x;
-                tempY = (dotY * (-1)) + y;
-                tempX = 0;
-            }
+            tempX = dotX + x;
+            tempY = (dotY * (-1)) + y;
+            tempZ = 0;
 
             tempVertices.push(new Vertex(tempX, tempY, tempZ));
         }
@@ -212,9 +192,9 @@ function Interface () {
         this.redraw();
     };
 
-    this.translateClick = function (x, y, h, v) {
+    this.translateClick = function (x, y) {
         let newPoint = new Vertex(x, y, 0);
-        this.selectedSolid.solid.translate(newPoint, h, v);
+        this.selectedSolid.solid.translate(newPoint);
         this.scene.makeDirty();
         this.redraw();
     };
@@ -241,16 +221,7 @@ function Interface () {
             this.scene.changeSolid(this.selectedSolid.index, this.rotationSolid.clone());
         }
         centerClone = this.rotationSolid.getCenter().clone();
-        if (h === 'x' && v === 'y') {
-            tetaZ = 0;
-        } else if (h === 'x' && v === 'z') {
-            tetaZ = tetaY;
-            tetaY = 0;
-        } else if (h === 'z' && v === 'y') {
-            tetaZ = tetaX;
-            tetaX = 0;
-        }
-        this.selectedSolid.solid.rotate(centerClone, tetaX, tetaY, tetaZ);
+        this.selectedSolid.solid.rotate(centerClone, tetaX, tetaY);
         this.scene.changeSolid(this.selectedSolid.index, this.selectedSolid.solid.clone());
         this.scene.makeDirty();
         this.redraw();

@@ -171,7 +171,7 @@ function Polygon (vertices) {
         }
     };
 
-    this.rotate = function (tetaX, tetaY, tetaZ) {
+    this.rotate = function (tetaX, tetaY, tetaZ = 0) {
         for (let i = 0; i < this.vertices.length; i++) {
             vertices[ i ].rotationVertex(tetaX, tetaY, tetaZ);
         }

@@ -109,7 +109,7 @@ Vue.component('rcb-navbar', {
                 },
                 {
                     id: 3,
-                    title: 'Editar',
+                    title: 'Edit',
                     enabled: true,
                     subitems: [
                         {

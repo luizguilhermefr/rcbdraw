@@ -82,24 +82,17 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
             Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2));
     };
 
-    this.translate = function (vertex, h, v) {
+    this.translate = function (vertex) {
         let center = this.getCenter();
         for (let i = 0; i < this.polygons.length; i++) {
-            let vertexMove;
-            if (h === 'x' && v === 'y') {
-                vertexMove = new Vertex(vertex.getX() - center.getX(), vertex.getY() - center.getY(), vertex.getZ());
-            } else if (h === 'x' && v === 'z') {
-                vertexMove = new Vertex(vertex.getX() - center.getX(), vertex.getY(), vertex.getZ() - center.getZ());
-            } else if (h === 'z' && v === 'y') {
-                vertexMove = new Vertex(vertex.getX(), vertex.getY() - center.getY(), vertex.getZ() - center.getZ());
-            }
+            let vertexMove = new Vertex(vertex.getX() - center.getX(), vertex.getY() - center.getY(), vertex.getZ());
             polygons[ i ].translatePoint(vertexMove);
             this.updateBoundaries();
             this.updateCenter();
         }
     };
 
-    this.rotate = function (center, tetaX, tetaY, tetaZ, deep) {
+    this.rotate = function (center, tetaX, tetaY, tetaZ = 0) {
         for (let i = 0; i < this.polygons.length; i++) {
             polygons[ i ].translatePoint(center.invert());
             polygons[ i ].rotate(tetaX, tetaY, tetaZ);
