@@ -4,7 +4,7 @@ Vue.component('rcb-navbar', {
     <b-navbar id="navbar" toggleable fixed="top" type="inverse" variant="inverse"> 
         <b-nav-toggle target="nav_collapse"></b-nav-toggle> 
         <b-link class="navbar-brand" to="#"> 
-            <span>RCBDraw 3D Plus</span> 
+            <span>RCBDraw 3D</span> 
         </b-link> 
         <b-collapse is-nav id="nav_collapse"> 
             <b-nav is-nav-bar class="ml-0"> 
@@ -21,12 +21,12 @@ Vue.component('rcb-navbar', {
             items: [
                 {
                     id: 1,
-                    title: 'Arquivo',
+                    title: 'File',
                     enabled: true,
                     subitems: [
                         {
                             id: 1,
-                            title: 'Novo',
+                            title: 'New',
                             enabled: true,
                             icon: 'fa fa-file-text',
                             action () {
@@ -41,7 +41,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 2,
-                            title: 'Abrir',
+                            title: 'Open',
                             modal: 'open-modal',
                             icon: 'fa fa-folder-open',
                             enabled: true,
@@ -51,7 +51,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 3,
-                            title: 'Salvar',
+                            title: 'Save',
                             modal: 'save-modal',
                             enabled: true,
                             icon: 'fa fa-save',
@@ -64,12 +64,12 @@ Vue.component('rcb-navbar', {
                 ,
                 {
                     id: 2,
-                    title: 'Ferramentas',
+                    title: 'Tools',
                     enabled: true,
                     subitems: [
                         {
                             id: 1,
-                            title: 'Selecionar',
+                            title: 'Select',
                             enabled: true,
                             icon: 'fa fa-mouse-pointer',
                             action () {
@@ -78,7 +78,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 2,
-                            title: 'Mão Livre',
+                            title: 'Freehand',
                             enabled: true,
                             icon: 'fa fa-hand-pointer-o',
                             action () {
@@ -87,7 +87,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 3,
-                            title: 'Polígono Regular',
+                            title: 'Regular Polygon',
                             modal: 'regular-polygon-modal',
                             enabled: true,
                             icon: 'fa fa-square-o',
@@ -97,7 +97,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 4,
-                            title: 'Fonte de Luminosidade',
+                            title: 'Light Source',
                             modal: 'light-source-modal',
                             icon: 'fa fa-lightbulb-o',
                             enabled: true,
@@ -114,7 +114,7 @@ Vue.component('rcb-navbar', {
                     subitems: [
                         {
                             id: 1,
-                            title: 'Rotacionar',
+                            title: 'Rotate',
                             enabled: true,
                             icon: 'fa fa-repeat',
                             action () {
@@ -123,7 +123,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 2,
-                            title: 'Transladar',
+                            title: 'Move',
                             enabled: true,
                             icon: 'fa fa-arrows',
                             action () {
@@ -132,7 +132,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 3,
-                            title: 'Escalar',
+                            title: 'Scale',
                             enabled: true,
                             icon: 'fa fa-compress',
                             action () {
@@ -140,26 +140,8 @@ Vue.component('rcb-navbar', {
                             }
                         },
                         {
-                            id: 4,
-                            title: 'Cisalhar Horizontalmente',
-                            enabled: true,
-                            icon: 'fa fa-arrows-h',
-                            action () {
-                                expectShear('h');
-                            }
-                        },
-                        {
-                            id: 5,
-                            title: 'Cisalhar Verticalmente',
-                            enabled: true,
-                            icon: 'fa fa-arrows-v',
-                            action () {
-                                expectShear('v');
-                            }
-                        },
-                        {
                             id: 10,
-                            title: 'Revolução',
+                            title: 'Revolution',
                             enabled: true,
                             icon: 'fa fa-circle-o-notch',
                             action () {
@@ -168,7 +150,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 11,
-                            title: 'Extrusão',
+                            title: 'Extrusion',
                             enabled: true,
                             icon: 'fa fa-cube',
                             action () {
@@ -177,7 +159,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 7,
-                            title: 'Excluir',
+                            title: 'Delete',
                             enabled: true,
                             icon: 'fa fa-trash-o',
                             action () {
@@ -186,7 +168,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 11,
-                            title: 'Propriedades do objeto...',
+                            title: 'Object properties...',
                             enabled: true,
                             icon: 'fa fa-info',
                             action () {
@@ -197,12 +179,12 @@ Vue.component('rcb-navbar', {
                 },
                 {
                     id: 4,
-                    title: 'Ajuda',
+                    title: 'Help',
                     enabled: true,
                     subitems: [
                         {
                             id: 1,
-                            title: 'Sobre o RCBDraw',
+                            title: 'About',
                             modal: 'about-modal',
                             enabled: true,
                             icon: 'fa fa-info-circle',
@@ -212,7 +194,7 @@ Vue.component('rcb-navbar', {
                         },
                         {
                             id: 2,
-                            title: 'Ajuda',
+                            title: 'Help',
                             enabled: false,
                             icon: 'fa fa-question-circle',
                             action () {

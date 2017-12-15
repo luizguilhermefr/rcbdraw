@@ -237,8 +237,8 @@ Vue.component('panel', {
             solids.forEach(function (solid) {
                 let shouldIgnoreVisibility = (solid.countPolygons() < 2) || !shouldHideSurfaces;
                 solid.getPolygons().forEach(function (polygon) {
-                    polygon.updateDrawableVertices(this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility, this.fillColor);
-                    if (polygon.isVisible(this.h, this.v)) {
+                    polygon.updateDrawableVertices(this.canvas.width, this.canvas.height, this.initialWidth, this.initialHeight, this.vrp, this.viewUp, shouldIgnoreVisibility);
+                    if (polygon.isVisible()) {
                         if (solid.shouldFill() && !shouldWireframe) {
                             this.fillPoly(polygon, solid.getLighting(), solid.getFillColor(), lightSource, shouldShade);
                         }
@@ -330,7 +330,7 @@ Vue.component('panel', {
         drawSelectedSolid (solid) {
             let polygons = solid.getPolygons();
             for (let i = 0; i < polygons.length; i++) {
-                if (polygons[ i ].isVisible(this.h, this.v)) {
+                if (polygons[ i ].isVisible()) {
                     this.strokePoly(polygons[ i ], Colors.SELECTED);
                 }
             }
@@ -353,7 +353,6 @@ Vue.component('panel', {
             this.context.lineWidth = 1;
             this.context.beginPath();
             this.context.font = '12px Arial';
-            this.context.fillText(this.title, 10, 30);
             this.context.moveTo(10, 40);
             this.context.lineTo(10, 80);
             this.context.lineTo(5, 75);

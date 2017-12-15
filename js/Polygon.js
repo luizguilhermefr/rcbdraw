@@ -33,14 +33,9 @@ function Polygon (vertices) {
         return this.boundaries;
     };
 
-    this.updateDrawableVertices = function (h, v, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp = null, viewUp = null, forceVisible = false, color = null) {
-        if (vrp === null) {
-            vrp = new Vertex(0, 0, 100);
-        }
-        if (viewUp === null) {
-            viewUp = new Vertex(0, 1, 0);
-        }
-
+    this.updateDrawableVertices = function (canvasWidth, canvasHeight, worldWidth, worldHeight, vrp = null, viewUp = null, forceVisible = false) {
+        vrp = vrp === null ? new Vertex(0, 0, 100) : vrp;
+        viewUp = viewUp === null ? new Vertex(0, 1, 0) : viewUp;
         let pipeline = new Pipeline(this, canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp);
         let visible = pipeline.normal(forceVisible);
         this.setVisibility(visible);
@@ -61,14 +56,14 @@ function Polygon (vertices) {
         return this.visible;
     };
 
-    this.setDrawableVertices = function (vertices, h, v) {
+    this.setDrawableVertices = function (vertices) {
         this.drawableVertices = vertices;
         this.updateDrawableBoundaries();
 
         return this;
     };
 
-    this.getDrawableVertices = function (h, v) {
+    this.getDrawableVertices = function () {
         return this.drawableVertices;
     };
 
@@ -216,7 +211,7 @@ function Polygon (vertices) {
     };
 
     this.isInsideDrawableBoundaryTolerance = function (clickVertex) {
-        if (!this.isVisible(h, v)) {
+        if (!this.isVisible()) {
             return false;
         }
         let tolerance = 20;

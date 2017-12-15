@@ -20,7 +20,7 @@ Vue.component('toolbar', {
             items: [
                 {
                     id: 1,
-                    title: 'Selecionar',
+                    title: 'Select',
                     icon: 'icons/select.png',
                     enabled: true,
                     action() {
@@ -29,7 +29,7 @@ Vue.component('toolbar', {
                 },
                 {
                     id: 2,
-                    title: 'Excluir',
+                    title: 'Delete',
                     icon: 'icons/delete.png',
                     enabled: true,
                     action() {
@@ -38,7 +38,7 @@ Vue.component('toolbar', {
                 },
                 {
                     id: 3,
-                    title: 'Triângulo',
+                    title: 'Triangle',
                     icon: 'icons/triangle.png',
                     enabled: true,
                     action() {
@@ -47,7 +47,7 @@ Vue.component('toolbar', {
                 },
                 {
                     id: 4,
-                    title: 'Quadrado',
+                    title: 'Square',
                     icon: 'icons/square.png',
                     enabled: true,
                     action() {
@@ -56,7 +56,7 @@ Vue.component('toolbar', {
                 },
                 {
                     id: 5,
-                    title: 'Pentágono',
+                    title: 'Pentagon',
                     icon: 'icons/pentagon.png',
                     enabled: true,
                     action() {
@@ -65,7 +65,7 @@ Vue.component('toolbar', {
                 },
                 {
                     id: 7,
-                    title: 'Polígono Regular',
+                    title: 'Regular Polygon',
                     icon: 'icons/regular.png',
                     enabled: true,
                     action() {
@@ -74,7 +74,7 @@ Vue.component('toolbar', {
                 },
                 {
                     id: 8,
-                    title: 'Mão Livre',
+                    title: 'Freehand',
                     icon: 'icons/freehand.png',
                     enabled: true,
                     action() {
@@ -92,7 +92,7 @@ Vue.component('toolbar', {
                 },
                 {
                     id: 10,
-                    title: 'Ocultação de Faces',
+                    title: 'Surface Hiding',
                     icon: 'icons/hide-surfaces.png',
                     enabled: true,
                     action() {
@@ -101,7 +101,7 @@ Vue.component('toolbar', {
                 },
                 {
                     id: 11,
-                    title: 'Sombreamento',
+                    title: 'Shading',
                     icon: 'icons/disable-shading.png',
                     enabled: true,
                     action() {
