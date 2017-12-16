@@ -84,42 +84,29 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
 
     this.translate = function (vertex) {
         let center = this.getCenter();
-        for (let i = 0; i < this.polygons.length; i++) {
+        this.polygons.forEach(function (p) {
             let vertexMove = new Vertex(vertex.getX() - center.getX(), vertex.getY() - center.getY(), vertex.getZ());
-            polygons[ i ].translatePoint(vertexMove);
-            this.updateBoundaries();
-            this.updateCenter();
-        }
+            p.translatePoint(vertexMove);
+        }.bind(this));
+        this.updateParameters();
     };
 
     this.rotate = function (center, tetaX, tetaY, tetaZ = 0) {
-        for (let i = 0; i < this.polygons.length; i++) {
-            polygons[ i ].translatePoint(center.invert());
-            polygons[ i ].rotate(tetaX, tetaY, tetaZ);
-            polygons[ i ].translatePoint(center.invert());
-            this.updateBoundaries();
-            this.updateCenter();
-        }
+        this.polygons.forEach(function (p) {
+            p.translatePoint(center.invert());
+            p.rotate(tetaX, tetaY, tetaZ);
+            p.translatePoint(center.invert());
+        }.bind(this));
+        this.updateParameters();
     };
 
     this.scale = function (center, tetaX, tetaY, tetaZ = 0) {
-        for (let i = 0; i < this.polygons.length; i++) {
-            polygons[ i ].translatePoint(center.invert());
-            polygons[ i ].scale(tetaX, tetaY, tetaZ);
-            polygons[ i ].translatePoint(center.invert());
-        }
-        this.updateBoundaries();
-        this.updateCenter();
-    };
-
-    this.shearX = function (center, tetaX, tetaZ, axis) {
-        for (let i = 0; i < this.polygons.length; i++) {
-            polygons[ i ].translatePoint(center.invert());
-            polygons[ i ].shearX(tetaX, tetaZ, axis);
-            polygons[ i ].translatePoint(center.invert());
-        }
-        this.updateBoundaries();
-        this.updateCenter();
+        this.polygons.forEach(function (p) {
+            p.translatePoint(center.invert());
+            p.scale(tetaX, tetaY, tetaZ);
+            p.translatePoint(center.invert());
+        }.bind(this));
+        this.updateParameters();
     };
 
     this.toMatrix = function () {

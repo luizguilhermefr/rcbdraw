@@ -156,7 +156,7 @@
 
     function duplicateSelected () {
         if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
+            alert('Nothing selected.');
             return;
         }
         drawInterface.duplicateSelected();
@@ -168,7 +168,7 @@
 
     function openPropertiesModal () {
         if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
+            alert('Nothing selected.');
             return;
         }
         vue.$emit('show::modal', 'properties-modal');
@@ -176,7 +176,7 @@
 
     function openRevolutionModal () {
         if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
+            alert('Nothing selected.');
             return;
         }
         vue.$emit('show::modal', 'revolution-modal');
@@ -184,7 +184,7 @@
 
     function openExtrusionModal () {
         if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
+            alert('Nothing selected.');
             return;
         }
         vue.$emit('show::modal', 'extrusion-modal');
@@ -192,7 +192,7 @@
 
     function expectRotation () {
         if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
+            alert('Nothing selected.');
             return;
         }
         toggleReset();
@@ -201,7 +201,7 @@
 
     function expectTranslate () {
         if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
+            alert('Nothing selected.');
             return;
         }
         toggleReset();
@@ -210,7 +210,7 @@
 
     function expectScale () {
         if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
+            alert('Nothing selected.');
             return;
         }
         toggleReset();
@@ -219,26 +219,10 @@
 
     function deleteSolid () {
         if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
+            alert('Nothing selected.');
             return;
         }
         drawInterface.deleteSolid();
-    }
-
-    function bringForward () {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
-        }
-        drawInterface.bringForward();
-    }
-
-    function bringBackward () {
-        if (!drawInterface.isSomethingSelected()) {
-            alert('Nenhum objeto selecionado.');
-            return;
-        }
-        drawInterface.bringBackward();
     }
 
     function toggleSurfaceHiding () {

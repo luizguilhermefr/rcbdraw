@@ -213,8 +213,8 @@ function Interface () {
         this.redraw();
     };
 
-    this.rotationClick = function (tetaX, tetaY, h, v) {
-        let centerClone, tetaZ;
+    this.rotationClick = function (tetaX, tetaY) {
+        let centerClone;
         if (this.rotationSolid === null) {
             this.rotationSolid = this.selectedSolid.solid.clone();
         } else {
