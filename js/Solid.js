@@ -189,8 +189,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
             tempPolygons[ i ].extrusionPoint(distance, axis);
             distance += initialDistance;
         }
-        let i;
-        for (i = 0; i < faces - 1; i++) {
+        for (let i = 0; i < faces - 1; i++) {
             this.closePolygon(tempPolygons[ i ], tempPolygons[ i + 1 ]);
         }
         this.polygons.push(tempPolygons[ i ].invertOrientation());

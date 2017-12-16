@@ -1,16 +1,16 @@
 Vue.component('extrusion-modal', {
 
     template: `
-        <b-modal id="extrusion-modal" title="Extrusão de Sólidos" @ok="submit" closeTitle="Cancelar" :ok-disabled="!canExecute()"> 
+        <b-modal id="extrusion-modal" title="Object Extrusion" @ok="submit" :ok-disabled="!canExecute()"> 
         <div class="modal-body">
             <div class="form-group">
-                <label>Distância</label>
+                <label>Distance</label>
                 <br>
                 <b-input-group>
                     <b-input-group-addon v-show="!distanceOk()">
                         <strong class="text-danger">!</strong>
                     </b-input-group-addon>
-                    <b-form-input placeholder="Distância" v-model.number="distance" disabled></b-form-input>
+                    <b-form-input type="number" placeholder="Distance" v-model.number="distance"></b-form-input>
                     <b-input-group-addon>px</b-input-group-addon>
                     <b-input-group-button>
                         <b-btn variant="danger" v-on:click="decreaseDistance()">-</b-btn>
@@ -20,13 +20,13 @@ Vue.component('extrusion-modal', {
                     </b-input-group-button>
                 </b-input-group>
                 <br>
-                <label>Quantidade de faces</label>
+                <label>Surfaces Quantity</label>
                 <br>
                 <b-input-group>
                     <b-input-group-addon v-show="!facesOk()">
                         <strong class="text-danger">!</strong>
                     </b-input-group-addon>
-                    <b-form-input placeholder="Faces" v-model.number="faces" disabled></b-form-input>
+                    <b-form-input type="number" placeholder="Surfaces Quantity" v-model.number="faces"></b-form-input>
                     <b-input-group-button>
                         <b-btn variant="danger" v-on:click="decreaseFaces()">-</b-btn>
                     </b-input-group-button>
@@ -35,19 +35,19 @@ Vue.component('extrusion-modal', {
                     </b-input-group-button>
                 </b-input-group>
                 <br>
-                <label>Eixo de Extrusão </label>
+                <label>Depth Axis</label>
                 <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="X" id="Xaxis" v-model="axis" value="x">X
+                    <input class="form-check-input" type="radio" name="X" v-model="axis" value="x">X
                 </label>
                 <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="Y" id="Yaxis" v-model="axis" value="y">Y
+                    <input class="form-check-input" type="radio" name="Y" v-model="axis" value="y">Y
                 </label>
                 <label class="form-check-label">
-                    <input class="form-check-input" type="radio" name="Z" id="Zaxis" v-model="axis" value="z">Z
+                    <input class="form-check-input" type="radio" name="Z" v-model="axis" value="z">Z
                 </label>
             </div>
             <b-alert variant="warning" :show="!canExecute()">
-                Insira uma distância de pelo menos 50 pixels e duas faces. Além disso, escolha um eixo de extrusão.
+                Insert a distance of least one pixel and two surfaces. Also, choose a depth axis.
             </b-alert>
         </div>
     </b-modal>
@@ -63,7 +63,7 @@ Vue.component('extrusion-modal', {
 
     methods: {
         distanceOk () {
-            return this.distance >= 50;
+            return this.distance >= 1;
         },
         increaseDistance () {
             this.distance++;
