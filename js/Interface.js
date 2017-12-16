@@ -227,22 +227,6 @@ function Interface () {
         this.redraw();
     };
 
-    this.updateSelectionSolid = function (index) {
-        let polygons = this.scene.solids[ index ].getPolygons();
-        for (let i = 0; i < polygons.length; i++) {
-            let vertex = polygons[ i ].getVertices();
-            for (let j = 0; j < vertex.length; j++) {
-                this.selectedSolid.solid.polygons[ i ].vertices[ j ] = vertex[ j ].clone();
-            }
-        }
-    };
-
-    this.shearClick = function (sAxis, rAxis, vertex) {
-        this.selectedSolid.solid.shear(sAxis, rAxis, vertex);
-        this.scene.makeDirty();
-        this.redraw();
-    };
-
     this.isSomethingSelected = function () {
         return this.selectedSolid !== null;
     };
