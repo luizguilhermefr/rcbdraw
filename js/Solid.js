@@ -158,7 +158,8 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
             tempPolygons[ i ].rotate(tetaX, tetaY, tetaZ);
             teta += initialTeta;
         }
-        for (let i = 0; i < faces - 1; i++) {
+        let i;
+        for (i = 0; i < faces - 1; i++) {
             this.closePolygon(tempPolygons[ i ], tempPolygons[ i + 1 ]);
         }
         this.polygons.push(tempPolygons[ i ].invertOrientation());
@@ -176,7 +177,8 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
             tempPolygons[ i ].extrusionPoint(distance, axis);
             distance += initialDistance;
         }
-        for (let i = 0; i < faces - 1; i++) {
+        let i;
+        for (i = 0; i < faces - 1; i++) {
             this.closePolygon(tempPolygons[ i ], tempPolygons[ i + 1 ]);
         }
         this.polygons.push(tempPolygons[ i ].invertOrientation());

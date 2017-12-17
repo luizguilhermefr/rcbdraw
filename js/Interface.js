@@ -199,8 +199,8 @@ function Interface () {
         this.redraw();
     };
 
-    this.scaleClick = function (tetaX, tetaY, h, v) {
-        let centerClone, tetaZ;
+    this.scaleClick = function (tetaX, tetaY) {
+        let centerClone;
         if (this.scaleSolid === null) {
             this.scaleSolid = this.selectedSolid.solid.clone();
         } else {
@@ -281,22 +281,6 @@ function Interface () {
 
     this.duplicateSelected = function () {
         this.scene.addSolid(this.selectedSolid.solid.clone(20));
-        this.redraw();
-    };
-
-    this.bringForward = function () {
-        let forward = this.scene.bringForward(this.selectedSolid.index);
-        if (forward) {
-            this.selectedSolid = forward;
-        }
-        this.redraw();
-    };
-
-    this.bringBackward = function () {
-        let backward = this.scene.bringBackward(this.selectedSolid.index);
-        if (backward) {
-            this.selectedSolid = backward;
-        }
         this.redraw();
     };
 
