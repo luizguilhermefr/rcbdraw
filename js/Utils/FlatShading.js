@@ -19,6 +19,7 @@ FlatShading = function (polygon, lighting, vrp, position) {
     };
 
     this.getColor = function (color, ila, il) {
+        let ia, id = 0, is = 0;
         ia = ila * this.lighting.getKa(color);
         if (this.nDotProductL > 0) {
             id = il * this.lighting.getKd(color) * this.nDotProductL;
