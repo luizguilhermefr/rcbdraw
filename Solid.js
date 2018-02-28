@@ -1,42 +1,55 @@
-function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false, selected = false) {
+export default class Solid {
 
-    this.getPolygons = function () {
+    constructor (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAULT, mustStroke = true, mustFill = false, selected = false) {
+        this.selected = selected;
+        this.polygons = polygons;
+        this.strokeColor = strokeColor;
+        this.fillColor = fillColor;
+        this.mustStroke = mustStroke;
+        this.mustFill = mustFill;
+        this.ligthing = new Lighting();
+        this.boundaries = null;
+        this.center = null;
+        this.updateParameters();
+    }
+
+    getPolygons =  () => {
         return this.polygons;
     };
 
-    this.getStrokeColor = function () {
+    getStrokeColor = () => {
         return this.strokeColor;
     };
 
-    this.getFillColor = function () {
+    getFillColor = () => {
         return this.fillColor;
     };
 
-    this.setFillColor = function (color) {
+    setFillColor = (color) => {
         this.fillColor = color;
     };
 
-    this.setStrokeColor = function (color) {
+    setStrokeColor = (color) => {
         this.strokeColor = color;
     };
 
-    this.setMustStroke = function (must) {
+    setMustStroke = (must) => {
         this.mustStroke = must;
     };
 
-    this.setMustFill = function (must) {
+    setMustFill = (must) => {
         this.mustFill = must;
     };
 
-    this.shouldFill = function () {
+    shouldFill = () => {
         return this.mustFill;
     };
 
-    this.shouldStroke = function () {
+    shouldStroke = () => {
         return this.mustStroke;
     };
 
-    this.updateBoundaries = function () {
+    updateBoundaries = () => {
         let values = {
             minX: Number.MAX_VALUE,
             minY: Number.MAX_VALUE,
@@ -60,11 +73,11 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this;
     };
 
-    this.getBoundaries = function () {
+    getBoundaries = () => {
         return this.boundaries;
     };
 
-    this.updateCenter = function () {
+    updateCenter = () => {
         let values = this.getBoundaries();
 
         this.center = new Vertex((values.maxX + values.minX) / 2, (values.maxY + values.minY) / 2, (values.maxZ +
@@ -73,51 +86,51 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return this;
     };
 
-    this.getCenter = function () {
+    getCenter = () => {
         return this.center;
     };
 
-    this.getEuclideanDistance = function (vertex) {
+    getEuclideanDistance = (vertex) => {
         return Math.sqrt(Math.pow(this.center.getX() - vertex.getX(), 2) +
             Math.pow(this.center.getY() - vertex.getY(), 2) + Math.pow(this.center.getZ() - vertex.getZ(), 2));
     };
 
-    this.translate = function (vertex) {
+    translate = (vertex) => {
         let center = this.getCenter();
-        this.polygons.forEach(function (p) {
+        this.polygons.forEach((p) => {
             let vertexMove = new Vertex(vertex.getX() - center.getX(), vertex.getY() - center.getY(), vertex.getZ());
             p.translatePoint(vertexMove);
-        }.bind(this));
+        });
         this.updateParameters();
     };
 
-    this.rotate = function (center, tetaX, tetaY, tetaZ = 0) {
-        this.polygons.forEach(function (p) {
+    rotate = (center, tetaX, tetaY, tetaZ = 0) => {
+        this.polygons.forEach((p) => {
             p.translatePoint(center.invert());
             p.rotate(tetaX, tetaY, tetaZ);
             p.translatePoint(center.invert());
-        }.bind(this));
+        });
         this.updateParameters();
     };
 
-    this.scale = function (center, tetaX, tetaY, tetaZ = 0) {
-        this.polygons.forEach(function (p) {
+    scale = (center, tetaX, tetaY, tetaZ = 0) => {
+        this.polygons.forEach((p) => {
             p.translatePoint(center.invert());
             p.scale(tetaX, tetaY, tetaZ);
             p.translatePoint(center.invert());
-        }.bind(this));
+        });
         this.updateParameters();
     };
 
-    this.toMatrix = function () {
+    toMatrix = () => {
         let vertices = [
             [],
             [],
             [],
             []
         ];
-        this.polygons.forEach(function (p) {
-            p.getVertices().forEach(function (v) {
+        this.polygons.forEach((p) => {
+            p.getVertices().forEach((v) => {
                 vertices[ 0 ].push(v.getX());
                 vertices[ 1 ].push(v.getY());
                 vertices[ 2 ].push(v.getZ());
@@ -128,11 +141,11 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         return vertices;
     };
 
-    this.countPolygons = function () {
+    countPolygons = () => {
         return this.polygons.length;
     };
 
-    this.runRevolution = function (faces, axis, degree) {
+    runRevolution = (faces, axis, degree) => {
         let teta = degree / (faces - 1);
         teta *= Math.PI / 180;
         let tetaX, tetaY, tetaZ;
@@ -165,7 +178,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         this.polygons.push(tempPolygons[ i ].invertOrientation());
     };
 
-    this.runExtrusion = function (faces, axis, distance) {
+    runExtrusion = (faces, axis, distance) => {
         let tempPolygons = [
             this.polygons[ 0 ].clone()
         ];
@@ -184,7 +197,7 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         this.polygons.push(tempPolygons[ i ].invertOrientation());
     };
 
-    this.closePolygon = function (initial, final) {
+    closePolygon = (initial, final) => {
         for (let i = 0; i < initial.getVertices().length - 1; i++) {
             let vertexPoly = [];
             vertexPoly.push(initial.vertexAt(i));
@@ -196,75 +209,55 @@ function Solid (polygons, strokeColor = Colors.DEFAULT, fillColor = Colors.DEFAU
         }
     };
 
-    this.clone = function (displacement = 0) {
+    clone = (displacement = 0) => {
         let nextPolygons = [];
-        this.polygons.forEach(function (p) {
+        this.polygons.forEach((p) => {
             nextPolygons.push(p.clone(displacement));
         });
         solid = new Solid(nextPolygons, this.strokeColor, this.fillColor, this.mustStroke, this.mustFill, this.selected);
         return solid.setLighting(this.ligthing.getParams(), this.n);
     };
 
-    this.paintersAlgorithm = function (vrp) {
-        this.polygons.sort(function (a, b) {
+    paintersAlgorithm = (vrp) => {
+        this.polygons.sort((a, b) => {
             return a.getEuclideanDistance(vrp) - b.getEuclideanDistance(vrp);
         });
     };
 
-    this.getSelected = function () {
+    getSelected = () => {
         return this.selected;
     };
 
-    this.deleteSelected = function () {        
+    deleteSelected = () => {
         this.selected = false;
     };
 
-    this.startSelected = function () {
+    startSelected = () => {
         this.selected = true;
     };
 
-    this.canBeSheared = function () {
+    canBeSheared = () => {
         return this.countPolygons() === 1;
     };
 
-    this.shear = function (sAxis, rAxis, vertex) {
-        this.polygons.forEach(function (p) {
+    shear = (sAxis, rAxis, vertex) => {
+        this.polygons.forEach((p) => {
             p.shear(sAxis, rAxis, vertex);
         });
     };
 
-    this.setLighting = function (colorParams, n) {
+    setLighting = (colorParams, n) => {
         this.ligthing.setParams(colorParams, n);
 
         return this;
     };
 
-    this.getLighting = function () {
+    getLighting = () => {
         return this.ligthing;
     };
 
-    this.updateParameters = function () {
+    updateParameters = () => {
         this.updateBoundaries();
         this.updateCenter();
     };
-
-    this.selected = selected;
-
-    this.polygons = polygons;
-
-    this.strokeColor = strokeColor;
-
-    this.fillColor = fillColor;
-
-    this.mustStroke = mustStroke;
-
-    this.mustFill = mustFill;
-
-    this.ligthing = new Lighting();
-
-    this.boundaries = null;
-
-    this.center = null;
-
-    this.updateParameters();
 }
