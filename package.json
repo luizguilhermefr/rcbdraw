@@ -26,5 +26,8 @@
   "bugs": {
     "url": "https://github.com/luizguilhermefr/rcbdraw/issues"
   },
-  "homepage": "https://github.com/luizguilhermefr/rcbdraw#readme"
+  "homepage": "https://github.com/luizguilhermefr/rcbdraw#readme",
+  "dependencies": {
+    "mathjs": "4.0.0"
+  }
 }

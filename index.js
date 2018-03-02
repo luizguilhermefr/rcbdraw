@@ -8,12 +8,13 @@ export default class {
     viewReferencePoint = null;
     viewUp = null;
     solids = [];
+    lightSources = [];
     ignoreVisibility = false;
     wireFrame = false;
     surfaceHiding = true;
     wireframeColor = 'red';
 
-    constructor (options = {}) {
+    constructor (parameters) {
         const {
             canvasId,
             worldWidth = window.innerWidth,
@@ -24,7 +25,7 @@ export default class {
             wireFrame = false,
             surfaceHiding = true,
             wireframeColor = 'red'
-        } = options;
+        } = parameters;
         if (!canvasId) {
             throw new ReferenceError('Must specify canvasId.');
         }
@@ -85,15 +86,13 @@ export default class {
         return this;
     };
 
-    strokePoly = ({ polygon, strokeColor }) => {
-
-    };
-
-    fillPoly = ({ polygon, lightProperties, fillColor, lightSource, shouldShade }) => {
-
+    addLightSource = (source) => {
+        this.lightSources.push(source);
+        return this;
     };
 
     reset = () => {
+        this.lightSources = [];
         this.solids = [];
         this.clear();
     };
@@ -102,7 +101,43 @@ export default class {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     };
 
-    drawPolygon = ({ polygon, lightProperties, fillColor = null, strokeColor = null, forceVisible = false, shouldWireframe = false, shouldFill = false, shouldStroke = false }) => {
+    render = () => {
+        const shouldWireframe = this.wireFrame;
+        const forceVisible = this.ignoreVisibility || shouldWireframe;
+        solids.forEach((solid) => this.drawSolid({ solid, forceVisible, shouldWireframe }));
+    };
+
+    drawSolid = (parameters) => {
+        const { solid, forceVisible = false, shouldWireframe = false } = parameters;
+        const shouldFill = solid.shouldFill() && !shouldWireframe;
+        const shouldStroke = solid.shouldStroke() || shouldWireframe;
+        const lightProperties = solid.getLighting();
+        const fillColor = solid.getFillColor();
+        const strokeColor = solid.getStrokeColor();
+        const strokeWidth = solid.getStrokeWidth();
+        solid.getPolygons().forEach((polygon) => this.drawPolygon({
+            polygon,
+            forceVisible,
+            shouldStroke,
+            shouldFill,
+            lightProperties,
+            fillColor,
+            strokeColor,
+            strokeWidth
+        }));
+    };
+
+    drawPolygon = (parameters) => {
+        const {
+            polygon,
+            lightProperties,
+            fillColor = null,
+            strokeColor = null,
+            strokeWidth = 0,
+            forceVisible = false,
+            shouldFill = false,
+            shouldStroke = false
+        } = parameters;
         polygon.updateDrawableVertices({
             canvasWidth: this.canvas.width,
             canvasHeight: this.canvas.height,
@@ -118,37 +153,89 @@ export default class {
                     polygon,
                     lightProperties,
                     fillColor,
-                    lightSource,
                     shouldShade
                 });
             }
             if (shouldStroke) {
-                this.strokePoly({ polygon, strokeColor });
+                this.strokePoly({
+                    polygon,
+                    strokeColor,
+                    strokeWidth
+                });
             }
         }
     };
 
-    drawSolid = ({ solid, forceVisible = false, shouldWireframe = false }) => {
-        const shouldFill = solid.shouldFill() && !shouldWireframe;
-        const shouldStroke = solid.shouldStroke() || shouldWireframe;
-        const lightProperties = solid.getLighting();
-        const fillColor = solid.getFillColor();
-        const strokeColor = solid.getStrokeColor();
-        solid.getPolygons().forEach((polygon) => this.drawPolygon({
+    strokePoly = (parameters) => {
+        const {
             polygon,
-            forceVisible,
-            shouldWireframe,
-            shouldStroke,
-            shouldFill,
-            lightProperties,
-            fillColor,
-            strokeColor
-        }));
+            strokeWidth,
+            strokeColor,
+            autoClose = true
+        } = parameters;
+        this.context.lineWidth = strokeWidth;
+        this.context.strokeStyle = strokeColor;
+        this.context.beginPath();
+        const vertices = polygon.getDrawableVertices();
+        if (vertices.length > 1) {
+            this.context.moveTo(vertices[ 0 ].getX(), vertices[ 0 ].getY());
+            this.context.lineTo(vertices[ 1 ].getX(), vertices[ 1 ].getY());
+        }
+        for (let j = 1; j < vertices.length; j++) {
+            this.context.lineTo(vertices[ j ].getX(), vertices[ j ].getY());
+        }
+        if (autoClose) {
+            this.context.closePath();
+        }
+        this.context.stroke();
     };
 
-    render = () => {
-        const shouldWireframe = this.wireFrame;
-        const forceVisible = this.ignoreVisibility || shouldWireframe;
-        solids.forEach((solid) => this.drawSolid({ solid, forceVisible, shouldWireframe }));
+    fillPoly = (parameters) => {
+        const {
+            polygon,
+            lightProperties,
+            fillColor,
+            shouldShade
+        } = parameters;
+        this.context.lineWidth = 1;
+        let color;
+        if (shouldShade) {
+            let { r, g, b } = this.lightSources.reduce((total, current) =>
+                this.applyShade({ total, current, polygon, lightProperties }), { r: 0, g: 0, b: 0 });
+            r = this.fixTo255Hexa(r);
+            g = this.fixTo255Hexa(g);
+            b = this.fixTo255Hexa(b);
+            color = this.toColorHexaStr(r, g, b);
+        } else {
+            color = fillColor;
+        }
+        this.context.strokeStyle = color;
+        this.context.beginPath();
+        new PolyFill(polygon).run(this.context);
     };
+
+    applyShade = (parameters) => {
+        const { total, current, lightProperties } = parameters;
+        const shader = new FlatShading({
+            polygon,
+            lightProperties,
+            vrp: this.viewReferencePoint,
+            sourcePosition: current.getPosition()
+        });
+        const ambientIntensity = current.getAmbientIntensity();
+        const sourceIntensity = current.getSourceIntensity();
+        return {
+            r: total.r + shader.getColor({ color: 'r', ambientIntensity, sourceIntensity }),
+            g: total.g + shader.getColor({ color: 'g', ambientIntensity, sourceIntensity }),
+            b: total.b + shader.getColor({ color: 'b', ambientIntensity, sourceIntensity })
+        };
+    };
+
+    fixTo255Hexa = (num) => {
+        const hexa = (num > 255 ? 255 : num).toString(16);
+        return hexa.length === 0x2 ? hexa : '0' + hexa;
+    };
+
+    toColorHexaStr = (r, g, b) =>
+        '#' + r + g + b;
 }
