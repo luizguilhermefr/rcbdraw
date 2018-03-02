@@ -1,6 +1,6 @@
 import Vertex from './Vertex';
 
-export default class Rcb {
+export default class {
 
     context = null;
     worldWidth = 0;
@@ -102,36 +102,53 @@ export default class Rcb {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     };
 
-    redraw = () => {
-        const canvasWidth = this.canvas.width;
-        const canvasHeight = this.canvas.height;
-        const vrp = this.viewReferencePoint;
-        const viewUp = this.viewUp;
+    drawPolygon = ({ polygon, lightProperties, fillColor = null, strokeColor = null, forceVisible = false, shouldWireframe = false, shouldFill = false, shouldStroke = false }) => {
+        polygon.updateDrawableVertices({
+            canvasWidth: this.canvas.width,
+            canvasHeight: this.canvas.height,
+            worldWidth: this.worldWidth,
+            worldHeight: this.worldHeight,
+            vrp: this.viewReferencePoint,
+            viewUp: this.viewUp,
+            forceVisible
+        });
+        if (polygon.isVisible()) {
+            if (shouldFill) {
+                this.fillPoly({
+                    polygon,
+                    lightProperties,
+                    fillColor,
+                    lightSource,
+                    shouldShade
+                });
+            }
+            if (shouldStroke) {
+                this.strokePoly({ polygon, strokeColor });
+            }
+        }
+    };
+
+    drawSolid = ({ solid, forceVisible = false, shouldWireframe = false }) => {
+        const shouldFill = solid.shouldFill() && !shouldWireframe;
+        const shouldStroke = solid.shouldStroke() || shouldWireframe;
+        const lightProperties = solid.getLighting();
+        const fillColor = solid.getFillColor();
+        const strokeColor = solid.getStrokeColor();
+        solid.getPolygons().forEach((polygon) => this.drawPolygon({
+            polygon,
+            forceVisible,
+            shouldWireframe,
+            shouldStroke,
+            shouldFill,
+            lightProperties,
+            fillColor,
+            strokeColor
+        }));
+    };
+
+    render = () => {
         const shouldWireframe = this.wireFrame;
         const forceVisible = this.ignoreVisibility || shouldWireframe;
-        solids.forEach((solid) => {
-            solid.getPolygons().forEach((polygon) => {
-                const shouldFill = solid.shouldFill() && !shouldWireframe;
-                const shouldStroke = solid.shouldStroke() || shouldWireframe;
-                const lightProperties = solid.getLighting();
-                const fillColor = solid.getFillColor();
-                const strokeColor = solid.getStrokeColor();
-                polygon.updateDrawableVertices(canvasWidth, canvasHeight, worldWidth, worldHeight, vrp, viewUp, forceVisible);
-                if (polygon.isVisible()) {
-                    if (shouldFill) {
-                        this.fillPoly({
-                            polygon,
-                            lightProperties,
-                            fillColor,
-                            lightSource,
-                            shouldShade
-                        });
-                    }
-                    if (shouldStroke) {
-                        this.strokePoly({ polygon, strokeColor });
-                    }
-                }
-            });
-        });
+        solids.forEach((solid) => this.drawSolid({ solid, forceVisible, shouldWireframe }));
     };
 }
