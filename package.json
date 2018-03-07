@@ -29,5 +29,9 @@
   "homepage": "https://github.com/luizguilhermefr/rcbdraw#readme",
   "dependencies": {
     "mathjs": "4.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
   }
 }
