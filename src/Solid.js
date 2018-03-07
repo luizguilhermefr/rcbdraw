@@ -11,19 +11,16 @@ export default class Solid {
         this.boundaries = null;
         this.center = null;
         this.updateParameters();
-    }
-
-    getPolygons =  () => {
-        return this.polygons;
     };
 
-    getStrokeColor = () => {
-        return this.strokeColor;
-    };
+    getPolygons = () =>
+        this.polygons;
 
-    getFillColor = () => {
-        return this.fillColor;
-    };
+    getStrokeColor = () =>
+        this.strokeColor;
+
+    getFillColor = () =>
+        this.fillColor;
 
     setFillColor = (color) => {
         this.fillColor = color;
@@ -41,13 +38,11 @@ export default class Solid {
         this.mustFill = must;
     };
 
-    shouldFill = () => {
-        return this.mustFill;
-    };
+    shouldFill = () =>
+        this.mustFill;
 
-    shouldStroke = () => {
-        return this.mustStroke;
-    };
+    shouldStroke = () =>
+        this.mustStroke;
 
     updateBoundaries = () => {
         let values = {
@@ -73,9 +68,8 @@ export default class Solid {
         return this;
     };
 
-    getBoundaries = () => {
-        return this.boundaries;
-    };
+    getBoundaries = () =>
+        this.boundaries;
 
     updateCenter = () => {
         let values = this.getBoundaries();
@@ -86,9 +80,8 @@ export default class Solid {
         return this;
     };
 
-    getCenter = () => {
-        return this.center;
-    };
+    getCenter = () =>
+        this.center;
 
     getEuclideanDistance = (vertex) => {
         return Math.sqrt(Math.pow(this.center.getX() - vertex.getX(), 2) +
@@ -141,9 +134,8 @@ export default class Solid {
         return vertices;
     };
 
-    countPolygons = () => {
-        return this.polygons.length;
-    };
+    countPolygons = () =>
+        this.polygons.length;
 
     runRevolution = (faces, axis, degree) => {
         let teta = degree / (faces - 1);
@@ -224,10 +216,6 @@ export default class Solid {
         });
     };
 
-    getSelected = () => {
-        return this.selected;
-    };
-
     deleteSelected = () => {
         this.selected = false;
     };
@@ -252,9 +240,8 @@ export default class Solid {
         return this;
     };
 
-    getLighting = () => {
-        return this.ligthing;
-    };
+    getLighting = () =>
+        this.ligthing;
 
     updateParameters = () => {
         this.updateBoundaries();
