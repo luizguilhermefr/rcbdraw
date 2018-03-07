@@ -1,7 +1,8 @@
 {
   "presets": [
     "env",
-    "es2015"
+    "es2015",
+    "minify"
   ],
   "plugins": [
     "transform-class-properties"
