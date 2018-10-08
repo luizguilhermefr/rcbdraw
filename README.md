@@ -1,20 +1,27 @@
 # RCBDraw #
 
-RCBDraw é um software web para manipulação de polígonos 2D.
+🇺🇸 RCBDraw is a web application for manipulating polygons 2D and 3D.
 
-### Passo-a-passo ###
+🇧🇷 RCBDraw é um software web para manipulação de polígonos 2D e 3D.
 
+### Steps ###
+
+🇺🇸
+* Make a clone.
+* Run `index.html` on the browser of your choice.
+
+🇧🇷
 * Clonar o repositório.
 * Executar `index.html` no navegador de preferência.
 
-### Equipe ###
+### Team ###
 
 * Elixandre Michael Baldi (B).
 * João Victor Canabarro (C).
 * Luiz Guilherme Fonseca Rosa (R).
 
-### Mais... ###
+### About... ###
 
-* UNIOESTE - Universidade Estadual do Oeste do Paraná
+* UNIOESTE - State University of Western Paraná
 * Prof. Adair Santa Catarina
 * Cascavel, 2017.
